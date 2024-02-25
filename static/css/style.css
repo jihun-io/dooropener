@@ -119,10 +119,10 @@ h1 {
 
 }
 
-.status_message, .welcome_message {
+/* .status_message, .welcome_message {
   margin-top: 15px;
   margin-bottom: 120px;
-}
+} */
 
 .opening_message {
 
@@ -159,4 +159,4 @@ h1 {
 
 a .material-symbols-outlined { font-size: 14px; }
 
-.dooropen_icons { margin: 65px; }
+.dooropen_icons, .login_icons { margin: 65px; }
