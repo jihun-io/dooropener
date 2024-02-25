@@ -264,7 +264,6 @@ pyrightconfig.json
 
 
 .DS_Store
-robots.txt
 *.pem
 *.key
 *.db
