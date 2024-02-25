@@ -101,6 +101,7 @@ def openjs():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     message = ''
+    icon = ''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -113,6 +114,7 @@ def login():
 
         if result is None:
             message = '해당 사용자를\n찾을 수 없습니다.'
+            icon = 'error'
         else:
             user_id, db_password, salt = result
             hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
@@ -121,10 +123,12 @@ def login():
                 session.permanent = True
                 session['user_id'] = user_id  # 사용자 아이디를 세션에 저장
                 message = '로그인을\n완료했습니다.'
+                icon = 'done'
             else:
                 message = '해당 사용자를\n찾을 수 없습니다.'
+                icon = 'error'
 
-    return render_template('login.html', message=message)
+    return render_template('login.html', message=message, icon=icon)
 
 @app.route('/logout')
 def logout():
