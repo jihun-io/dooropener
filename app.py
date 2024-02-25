@@ -5,7 +5,6 @@ from threading import Thread
 import hashlib
 import base64
 from datetime import timedelta
-import ssl
 import os
 import subprocess
 
@@ -24,7 +23,6 @@ def dooropen_wrapper():
 def index():
     if 'user_id' in session:
         return render_template('index.html', username=session['user_id'])
-
     else:
         return render_template('index.html')
     
@@ -84,7 +82,6 @@ def openjs():
 #         username = request.form['username']
 #         password = request.form['password']
 
-#         salt = 'bingchatisgod'
 #         salt = os.urandom(32) # 32 bytes long salt
 
 #         hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
@@ -150,12 +147,4 @@ port_num = "4062"
 
 if __name__ == "__main__":
 
-    # ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-    # ssl_context.load_cert_chain(certfile='certificate.crt', keyfile='private.key')    
-    # app.run(host=host_addr, port=port_num, ssl_context=ssl_context)
     app.run(host=host_addr, port=port_num)
-
-
-
-    # app.run(host=host_addr, port=port_num, debug=True)
-
