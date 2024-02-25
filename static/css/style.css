@@ -1,0 +1,156 @@
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard-Bold';
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: bold;
+}
+
+* {
+  font-family: 'Pretendard-Regular';
+  border-radius: 20px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+html, body {
+  height: 100%;
+}
+
+body {
+  /* background-color: rgb(254, 226, 116); */
+}
+
+header {
+
+  height: 200px;
+
+}
+
+main {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  background-color: #f4f5f6;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 20px;
+  text-align: center;
+  border: none;
+}
+
+.text-field {
+  font-size: 20px;
+  padding: 10px;
+  border: none;
+  width: 260px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+
+.submit-btn {
+  font-size: 20px;
+  border: none;
+  padding: 10px;
+  width: 260px;
+  height: 50px;
+  background-color: rgb(254, 226, 0);
+  margin: 50px 0px 15px 0px;
+  color: black;
+}
+
+button {
+  font-size: 20px;
+  border: none;
+  padding: 10px;
+  width: 260px;
+  height: 50px;
+  background-color: rgb(254, 226, 0);
+  margin: 15px 0px 15px 0px;
+  color: black;
+}
+
+
+.links {
+  text-align: center;
+}
+
+.links a {
+  font-size: 12px;
+  color: #9B9B9B;
+}
+
+h1, p {
+  display: block !important;
+}
+
+h1 {
+  margin-top: 15px;
+  font-family: 'Pretendard-Bold';
+
+}
+
+.main_message {
+  margin-bottom: 100px;
+
+}
+
+.status_message, .welcome_message {
+  margin-top: 15px;
+  margin-bottom: 120px;
+}
+
+.opening_message {
+
+  margin-top: 120px;
+  margin-bottom: 120px;
+
+}
+
+.tooltip {
+  background-color: rgb(244, 245, 246);
+  height: 30px;
+  padding: 20px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+}
+
+.goto {
+  color:#9B9B9B;
+  text-decoration-line : none;
+  font-size: 14px;
+}
+
+.success_message { margin: 30px; }
+
+.openbutton { 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.material-symbols-outlined { margin-left: 5px; margin-right: 5px; }
