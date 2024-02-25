@@ -26,9 +26,9 @@ html, body {
   height: 100%;
 }
 
-body {
-  /* background-color: rgb(254, 226, 116); */
-}
+/* body {
+  background-color: rgb(254, 226, 116);
+} */
 
 header {
 
@@ -158,5 +158,7 @@ h1 {
 .material-symbols-outlined { margin-right: 5px; }
 
 a .material-symbols-outlined { font-size: 14px; }
+.tooltip .material-symbols-outlined { font-size: 18px; color: #000000; }
+
 
 .dooropen_icons, .login_icons { margin: 40px; color:rgb(95, 99, 104); }

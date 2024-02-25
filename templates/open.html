@@ -1,43 +1,47 @@
 <html>
+
 <head>
     <title>DoorOpener</title>
     <!-- <link rel="stylesheet" href="style.css"> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" >
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
     <!-- iOS 웹 앱 생성 코드 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <!-- <link rel="manifest" href="/manifest.json"> -->
-    
+
     <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-    $(document).ready(function(){
-        var checkDoorStatus = setInterval(function(){
-            $.getJSON('/check_door_status', function(data){
-                if(data['status'] === 'done'){
-                    clearInterval(checkDoorStatus);
-                    window.location.href = '/success';  // Redirect to the success page
-                }
-            });
-        }, 500);  // Check every half seconds
-    });
+        $(document).ready(function () {
+            var checkDoorStatus = setInterval(function () {
+                $.getJSON('/check_door_status', function (data) {
+                    if (data['status'] === 'done') {
+                        clearInterval(checkDoorStatus);
+                        window.location.href = '/success';  // Redirect to the success page
+                    }
+                });
+            }, 500);  // Check every half seconds
+        });
     </script>
-  </head>
+</head>
 
 <body>
+    <script src="{{ url_for('static',filename='js/onclick.js') }}"></script>
     <!-- <header>
         <h1>DoorOpener</h1>
     </header> -->
-    
+
     <main>
-      <div class="login-form">
-        <h1 class="opening_message"> {{ message }} </h1>
-      </div>
+        <div class="login-form">
+            <h1 class="opening_message"> {{ message }} </h1>
+        </div>
 
 
 

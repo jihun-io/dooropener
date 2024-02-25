@@ -1,52 +1,56 @@
 <html>
+
 <head>
-    <title>DoorOpener</title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" >
-    
-    <!-- iOS 웹 앱 생성 코드 -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- <link rel="manifest" href="/manifest.json"> -->
+  <title>DoorOpener</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <!-- iOS 웹 앱 생성 코드 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- <link rel="manifest" href="/manifest.json"> -->
 
-  </head>
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+</head>
 
 <body>
-    <!-- <header>
+  <script src="{{ url_for('static',filename='js/onclick.js') }}"></script>
+  <!-- <header>
         <h1>DoorOpener</h1>
     </header> -->
-    
-    <main>
-      {% if username %}
-      <div class="login-form">
-        <h1 class="main_message">{{ username }} 님,<br>안녕하세요?</h1>
-        <button class="openbutton" type="button" onclick="location.href='/open'"><span class="material-symbols-outlined">
+
+  <main>
+    {% if username %}
+    <div class="login-form">
+      <h1 class="main_message">{{ username }} 님,<br>안녕하세요?</h1>
+      <button class="openbutton" type="button" onclick="location.href='/open'"><span class="material-symbols-outlined">
           key
-          </span>문 열기</button>
-        <a href='/logout'" class="goto"><span class="material-symbols-outlined">logout</span>로그아웃</button>
-      </div>
+        </span>문 열기</button>
+      <a href='/logout'" class=" goto"><span class="material-symbols-outlined">logout</span>로그아웃</button>
+    </div>
 
-      {% else %}
-      <div class="login-form">
-        <form action="login" method="post">
-          <input type="text" name="username" class="text-field" placeholder="아이디">
-          <input type="password" name="password" class="text-field" placeholder="비밀번호">
-          <input type="submit" value="로그인" class="submit-btn">
-        </form>
-      </div>
-      {% endif %}
+    {% else %}
+    <div class="login-form">
+      <form action="login" method="post">
+        <input type="text" name="username" class="text-field" placeholder="아이디">
+        <input type="password" name="password" class="text-field" placeholder="비밀번호">
+        <input type="submit" value="로그인" class="submit-btn">
+      </form>
+    </div>
+    {% endif %}
 
 
 
-    </main>
+  </main>
 
-    <footer>
+  <footer>
 
-    </footer>
+  </footer>
 
 </body>
 

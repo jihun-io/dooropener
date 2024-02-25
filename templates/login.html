@@ -1,41 +1,45 @@
 <html>
-<head>
-    <title>DoorOpener</title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" >
-    
-    <!-- iOS 웹 앱 생성 코드 -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- <link rel="manifest" href="/manifest.json"> -->
-    
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="../static/css/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-  </head>
+<head>
+  <title>DoorOpener</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <!-- iOS 웹 앱 생성 코드 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- <link rel="manifest" href="/manifest.json"> -->
+
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+</head>
 
 <body>
- 
-    <main>
-        <div class="login-form">
-            <h1 class="status_message">{{ message | replace('\n', '<br>') | safe }}</h1>
-            <div class="login_icons">
-                <span class="material-symbols-outlined" style="font-size: 100px;">
-                {{ icon }}
-                </span>
-              </div>
-            <button type="button" onclick="location.href='/'"><span class="material-symbols-outlined">home</span>메인 화면으로</button>
-        </div>  
+  <script src="{{ url_for('static',filename='js/onclick.js') }}"></script>
+  <main>
+    <div class="login-form">
+      <h1 class="status_message">{{ message | replace('\n', '<br>') | safe }}</h1>
+      <div class="login_icons">
+        <span class="material-symbols-outlined" style="font-size: 100px;">
+          {{ icon }}
+        </span>
+      </div>
+      <button type="button" onclick="location.href='/'"><span class="material-symbols-outlined">home</span>메인
+        화면으로</button>
+    </div>
 
 
 
-    </main>
+  </main>
 
-    <footer>
+  <footer>
 
-    </footer>
+  </footer>
 
 </body>
 
