@@ -148,7 +148,7 @@ h1 {
   font-size: 14px;
 }
 
-.success_message { margin: 30px; }
+.success_message { margin-bottom: 30px; }
 
 .openbutton { 
   display: flex;
@@ -158,3 +158,5 @@ h1 {
 .material-symbols-outlined { margin-right: 5px; }
 
 a .material-symbols-outlined { font-size: 14px; }
+
+.dooropen_icons { margin: 65px; }
