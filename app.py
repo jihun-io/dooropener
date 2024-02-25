@@ -30,12 +30,18 @@ def index():
     
 @app.route('/check_door_status')
 def check_door_status():
-    global door_open_status
-    if door_open_status:
-        door_open_status = False  # Reset the status
-        return jsonify({'status': 'done'})
+    if 'user_id' in session:
+        global door_open_status
+        if door_open_status:
+            door_open_status = False  # Reset the status
+            return jsonify({'status': 'done'})
+        else:
+            return jsonify({'status': 'pending'})
     else:
-        return jsonify({'status': 'pending'})
+        return redirect(url_for('index'))
+
+
+
     
 
 @app.route('/open')
