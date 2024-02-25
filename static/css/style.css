@@ -141,6 +141,8 @@ h1 {
 }
 
 .goto {
+  display: flex;
+  align-items: center;
   color:#9B9B9B;
   text-decoration-line : none;
   font-size: 14px;
@@ -154,3 +156,5 @@ h1 {
   align-items: center;
 }
 .material-symbols-outlined { margin-right: 5px; }
+
+a .material-symbols-outlined { font-size: 14px; }
