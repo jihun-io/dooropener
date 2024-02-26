@@ -31,7 +31,7 @@
   <script>
     window.onload = function () {
       if (window.self !== window.top) {
-        var tooltips = document.querySelectorAll('.tooltip');
+        var tooltips = document.querySelectorAll('.tooltip_header');
         for (var i = 0; i < tooltips.length; i++) {
           tooltips[i].style.visibility = 'hidden';
         }
@@ -41,7 +41,7 @@
 </head>
 
 <body>
-  <header>
+  <header class="tooltip_header">
     <span class="material-symbols-outlined">
       arrow_upward
     </span>
