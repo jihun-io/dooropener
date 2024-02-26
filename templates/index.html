@@ -3,7 +3,8 @@
 <head>
   <title>DoorOpener</title>
   <!-- <link rel="stylesheet" href="style.css"> -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
   <!-- iOS 웹 앱 생성 코드 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -24,20 +25,32 @@
         }
       }
     };
+    if (window.self !== window.top) {
+      // Add event listener to the document to blur input when clicked outside
+      document.addEventListener('click', function (event) {
+        var isClickInsideInput = event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
+        var isClickInsideLinkOrButton = event.target.tagName === 'A' || event.target.tagName === 'BUTTON';
+
+        if (!isClickInsideInput && !isClickInsideLinkOrButton) {
+          document.activeElement.blur();
+        }
+      });
+    }
+
   </script>
 </head>
 
 <body>
   <header>
-      <div class="header_wrapper">
-        <h1>DoorOpener</h1>
-        <button class="hamburger" onclick="location.href='/success'">
-          <span class="material-symbols-outlined">
-            menu
-          </span>
-        </button>
-      </div>
-    </header>
+    <div class="header_wrapper">
+      <h1>DoorOpener</h1>
+      <button class="hamburger" onclick="location.href='/success'">
+        <span class="material-symbols-outlined">
+          menu
+        </span>
+      </button>
+    </div>
+  </header>
 
   <main>
     {% if username %}
@@ -65,7 +78,7 @@
 
   <footer>
     <p><span class="material-symbols-outlined copyright">
-      copyright
+        copyright
       </span>copyright</p>
   </footer>
 
