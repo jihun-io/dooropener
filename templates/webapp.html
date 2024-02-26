@@ -44,23 +44,28 @@
             var iframe = document.getElementById('webapp');
             var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-            var style = document.createElement('style');
-            style.type = 'text/css';
-            style.innerHTML = `
-                * {
-                    -webkit-user-select: none;  /* Chrome, Safari, Opera */
-                    -moz-user-select: none;     /* Firefox */
-                    -ms-user-select: none;      /* IE 10+ */
-                    user-select: none;          /* Standard syntax */
-                }
-                input {
-                    -webkit-user-select: auto;  /* Chrome, Safari, Opera */
-                    -moz-user-select: auto;     /* Firefox */
-                    -ms-user-select: auto;      /* IE 10+ */
-                    user-select: auto;          /* Standard syntax */
-                }`;
-            iframeDocument.head.appendChild(style);
+            var observer = new MutationObserver(function (mutations) {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = `
+                    * {
+                        -webkit-user-select: none;  /* Chrome, Safari, Opera */
+                        -moz-user-select: none;     /* Firefox */
+                        -ms-user-select: none;      /* IE 10+ */
+                        user-select: none;          /* Standard syntax */
+                    }
+                    .textbox, input, textarea {
+                        -webkit-user-select: auto;  /* Chrome, Safari, Opera */
+                        -moz-user-select: auto;     /* Firefox */
+                        -ms-user-select: auto;      /* IE 10+ */
+                        user-select: auto;          /* Standard syntax */
+                    }`;
+                iframeDocument.head.appendChild(style);
+            });
+
+            observer.observe(iframeDocument, { childList: true, subtree: true });
         };
+
 
     </script>
 </head>
