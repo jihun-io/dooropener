@@ -12,14 +12,15 @@
         }
         iframe {
             width: 100%; 
-            height: calc(100% - env(safe-area-inset-top));
+            height: 100%;
             border: none;
             display: flex;
         }
 
         body {
+            height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
             padding-top: env(safe-area-inset-top);
-            /* padding-bottom: env(safe-area-inset-bottom); */
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
     </style>
