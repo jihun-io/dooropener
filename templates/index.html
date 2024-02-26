@@ -56,7 +56,7 @@
     </div>
 
     {% else %}
-    
+
     <div class="login-form">
       <form action="login" method="post">
         <input type="text" name="username" class="text-field" placeholder="아이디">
@@ -73,9 +73,15 @@
   <footer>
     {% if username %}
     <div class="homebtn">
+      <span class="material-symbols-outlined">
+        home
+      </span>
       <p>홈</p>
     </div>
     <div class="settingbtn">
+      <span class="material-symbols-outlined">
+        settings
+      </span>
       <p>설정</p>
     </div>
     {% else %}
