@@ -81,13 +81,17 @@ footer {
   padding-bottom: 15px;
 }
 
-footer p {
+footer div {
+  display: flex;
+}
+
+/* footer p {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
-}
+} */
 
 .login-form {
   display: flex;
