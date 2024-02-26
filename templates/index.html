@@ -24,18 +24,19 @@
           footer.style.visibility = 'hidden';
         }
       }
-    };
-    if (window.self !== window.top) {
-      // Add event listener to the document to blur input when clicked outside
-      document.addEventListener('click', function (event) {
-        var isClickInsideInput = event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
-        var isClickInsideLinkOrButton = event.target.tagName === 'A' || event.target.tagName === 'BUTTON';
+      if (window.self !== window.top) {
+        // Add event listener to the document to blur input when clicked outside
+        document.addEventListener('click', function (event) {
+          var isClickInsideInput = event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
+          var isClickInsideLinkOrButton = event.target.tagName === 'A' || event.target.tagName === 'BUTTON';
 
-        if (!isClickInsideInput && !isClickInsideLinkOrButton) {
-          document.activeElement.blur();
-        }
-      });
-    }
+          if (!isClickInsideInput && !isClickInsideLinkOrButton) {
+            document.activeElement.blur();
+          }
+        });
+      }
+    };
+
 
   </script>
 </head>
