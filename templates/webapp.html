@@ -14,6 +14,10 @@
             margin: 0px;
             -webkit-overflow-scrolling: touch;
         }
+
+        html {
+            overscroll-behavior: none;
+        }
         
         iframe {
             width: 100%;
@@ -27,7 +31,6 @@
 
         body {
             overflow: hidden;
-            overscroll-behavior: none;
             width: 100%;
             height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
             padding-top: env(safe-area-inset-top);
