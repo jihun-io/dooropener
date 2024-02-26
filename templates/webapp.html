@@ -51,43 +51,44 @@
         }
     </style>
     <script>
-        window.onload = function () {
-            var iframe = document.getElementById('webapp');
-            var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+window.onload = function() {
+    var iframe = document.getElementById('webapp');
 
-            var observer = new MutationObserver(function (mutations) {
-                var style = document.createElement('style');
-                style.type = 'text/css';
-                style.innerHTML = `
-                    * {
-                        -webkit-user-select: none;  /* Chrome, Safari, Opera */
-                        -moz-user-select: none;     /* Firefox */
-                        -ms-user-select: none;      /* IE 10+ */
-                        user-select: none;          /* Standard syntax */
-                    }
-                    input, textarea {
-                        -webkit-user-select: auto;  /* Chrome, Safari, Opera */
-                        -moz-user-select: auto;     /* Firefox */
-                        -ms-user-select: auto;      /* IE 10+ */
-                        user-select: auto;          /* Standard syntax */
-                    }`;
-                iframeDocument.head.appendChild(style);
-            });
+    iframe.addEventListener('load', function() {
+        var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-            observer.observe(iframeDocument, { childList: true, subtree: true });
+        var observer = new MutationObserver(function(mutations) {
+            var style = document.createElement('style');
+            style.type = 'text/css';
+            style.innerHTML = `
+            * {
+                -webkit-user-select: none;  /* Chrome, Safari, Opera */
+                -moz-user-select: none;     /* Firefox */
+                -ms-user-select: none;      /* IE 10+ */
+                user-select: none;          /* Standard syntax */
+            }
+            input, textarea {
+                -webkit-user-select: auto;  /* Chrome, Safari, Opera */
+                -moz-user-select: auto;     /* Firefox */
+                -ms-user-select: auto;      /* IE 10+ */
+                user-select: auto;          /* Standard syntax */
+            }`;
+            iframeDocument.head.appendChild(style);
+        });
 
-            // Add event listener to the document to blur input when clicked outside
-            document.addEventListener('click', function (event) {
-                var isClickInsideInput = event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
-                var isClickInsideLinkOrButton = event.target.tagName === 'A' || event.target.tagName === 'BUTTON';
+        observer.observe(iframeDocument, { childList: true, subtree: true });
+    });
 
-                if (!isClickInsideInput && !isClickInsideLinkOrButton) {
-                    document.activeElement.blur();
-                }
-            });
-        };
+    // Add event listener to the document to blur input when clicked outside
+    document.addEventListener('click', function(event) {
+        var isClickInsideInput = event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
+        var isClickInsideLinkOrButton = event.target.tagName === 'A' || event.target.tagName === 'BUTTON';
 
-
+        if (!isClickInsideInput && !isClickInsideLinkOrButton) {
+            document.activeElement.blur();
+        }
+    });
+};
 
     </script>
 </head>
