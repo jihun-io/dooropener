@@ -170,6 +170,13 @@ h1 {
 
 }
 
+.tooltip_header {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: flex-start;
+}
+
 .tooltip {
   background-color: rgb(244, 245, 246);
   height: 30px;
