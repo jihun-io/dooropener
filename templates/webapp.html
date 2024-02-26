@@ -52,33 +52,35 @@
     </style>
     <script>
 window.onload = function() {
-    alert("asdf");
     var iframe = document.getElementById('webapp');
 
     iframe.addEventListener('load', function() {
         var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-        var observer = new MutationObserver(function(mutations) {
-            var style = document.createElement('style');
-            style.type = 'text/css';
-            style.innerHTML = `
-            * {
-                -webkit-user-select: none;  /* Chrome, Safari, Opera */
-                -moz-user-select: none;     /* Firefox */
-                -ms-user-select: none;      /* IE 10+ */
-                user-select: none;          /* Standard syntax */
-            }
-            input, textarea {
-                -webkit-user-select: auto;  /* Chrome, Safari, Opera */
-                -moz-user-select: auto;     /* Firefox */
-                -ms-user-select: auto;      /* IE 10+ */
-                user-select: auto;          /* Standard syntax */
-            }`;
-            iframeDocument.head.appendChild(style);
-            console.log("실행 완료");
-        });
+        // Wait for the iframe's window 'load' event
+        iframe.contentWindow.onload = function() {
+            var observer = new MutationObserver(function(mutations) {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = `
+                * {
+                    -webkit-user-select: none;  /* Chrome, Safari, Opera */
+                    -moz-user-select: none;     /* Firefox */
+                    -ms-user-select: none;      /* IE 10+ */
+                    user-select: none;          /* Standard syntax */
+                }
+                input, textarea {
+                    -webkit-user-select: auto;  /* Chrome, Safari, Opera */
+                    -moz-user-select: auto;     /* Firefox */
+                    -ms-user-select: auto;      /* IE 10+ */
+                    user-select: auto;          /* Standard syntax */
+                }`;
+                iframeDocument.head.appendChild(style);
+                console.log("실행 완료");
+            });
 
-        observer.observe(iframeDocument, { childList: true, subtree: true });
+            observer.observe(iframeDocument, { childList: true, subtree: true });
+        };
     });
 
     // Add event listener to the document to blur input when clicked outside
