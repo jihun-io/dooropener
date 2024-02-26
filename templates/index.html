@@ -18,9 +18,9 @@
   <script>
     window.onload = function () {
       if (window.self !== window.top) {
-        var footer = document.querySelectorAll('footer');
-        for (var i = 0; i < tooltips.length; i++) {
-          footer[i].style.visibility = 'hidden';
+        var footer = document.querySelector('footer');
+        if (footer) {
+          footer.style.visibility = 'hidden';
         }
       }
     };
