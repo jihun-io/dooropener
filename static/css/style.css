@@ -87,6 +87,14 @@ footer div {
   flex-direction: column;
 }
 
+footer div span {
+  margin: 0!important;
+}
+
+.homebtn, settingbtn {
+  text-align: center;
+}
+
 /* footer p {
   width: 100%;
   display: flex;
