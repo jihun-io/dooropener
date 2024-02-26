@@ -180,6 +180,9 @@ h1 {
 .material-symbols-outlined { margin-right: 5px; }
 
 a .material-symbols-outlined { font-size: 14px; }
+
+.hamburger .material-symbols-outlined { margin: 0px; }
+
 .tooltip .material-symbols-outlined { font-size: 24px; color: #000000; }
 
 
