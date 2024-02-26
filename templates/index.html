@@ -45,13 +45,18 @@
     {% if username %}
     <div class="login-form">
       <h1 class="main_message">{{ username }} 님,<br>안녕하세요?</h1>
-      <button class="openbutton" type="button" onclick="location.href='/open'"><span class="material-symbols-outlined">
-          key
-        </span>문 열기</button>
-      <a href='/logout'" class=" goto"><span class="material-symbols-outlined">logout</span>로그아웃</a>
+      <button class="openbutton" type="button" onclick="location.href='/open'">
+        <span class="material-symbols-outlined">key</span>
+        문 열기
+      </button>
+      <a href='/logout'" class=" goto">
+        <span class="material-symbols-outlined">logout</span>
+        로그아웃
+      </a>
     </div>
 
     {% else %}
+    
     <div class="login-form">
       <form action="login" method="post">
         <input type="text" name="username" class="text-field" placeholder="아이디">
