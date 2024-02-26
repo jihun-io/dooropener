@@ -12,7 +12,7 @@
         }
         iframe {
             width: 100%; 
-            height: calc(100% - safe-area-inset-top - safe-area-inset-bottom);
+            height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom));
             border: none;
             display: flex;
         }
