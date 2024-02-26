@@ -20,6 +20,10 @@
   box-sizing: border-box;
 }
 
+a {
+  text-decoration-line: none;
+}
+
 
 
 html, body {
@@ -31,9 +35,10 @@ html, body {
 } */
 
 header {
-
   height: 200px;
-
+  display: flex;
+  flex-wrap: nowrap;  
+  align-items: flex-end;
 }
 
 main {
@@ -158,7 +163,26 @@ h1 {
 .material-symbols-outlined { margin-right: 5px; }
 
 a .material-symbols-outlined { font-size: 14px; }
-.tooltip .material-symbols-outlined { font-size: 18px; color: #000000; }
+.tooltip .material-symbols-outlined { font-size: 24px; color: #000000; }
 
 
 .dooropen_icons, .login_icons { margin: 40px; color:rgb(95, 99, 104); }
+
+.tooltip_wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.tooltip_wrapper a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #9B9B9B;
+  margin-top:5px;
+}
+
+.tooltip_wrapper a span {
+  color: #9b9b9b;
+
+}
