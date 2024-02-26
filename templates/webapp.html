@@ -9,8 +9,8 @@
 
     <style>
         * {
-           margin: 0px;
-           -webkit-overflow-scrolling: touch;
+            margin: 0px;
+            -webkit-overflow-scrolling: touch;
         }
         iframe {
             width: 100%; 
@@ -32,6 +32,14 @@
         html, body {
             position: fixed;
             overflow: hidden;
+        }
+
+        iframe > html {
+            user-select: none;
+        }
+
+        iframe > input {
+            user-select: auto;          /* Standard syntax */
         }
     </style>
 </head>
