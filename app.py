@@ -53,22 +53,25 @@ def open():
     else:
         return redirect(url_for('index'))
 
-@app.route('/success')
+@app.route('/success', methods=['GET', 'POST'])
 def success():    
     if 'user_id' in session:
+        # if request.method == 'GET':
+        #     tooltip = request.form['tooltip']
+
         return render_template('success.html', username=session['user_id'])
     else:
         return redirect(url_for('index'))
     
 
 
-@app.route('/openjs')
-def openjs():    
-    if 'user_id' in session:
-        dooropener.dooropen()
-        return render_template('result.html', username=session['user_id'], message="님, 환영합니다!")
-    else:
-        return redirect(url_for('index'))
+# @app.route('/openjs')
+# def openjs():    
+#     if 'user_id' in session:
+#         dooropener.dooropen()
+#         return render_template('result.html', username=session['user_id'], message="님, 환영합니다!")
+#     else:
+#         return redirect(url_for('index'))
 
 
 
