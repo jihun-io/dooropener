@@ -28,6 +28,16 @@
       color: rgb(95, 99, 104);
     }
   </style>
+  <script>
+    window.onload = function () {
+      if (window.self !== window.top) {
+        var tooltips = document.querySelectorAll('.tooltip');
+        for (var i = 0; i < tooltips.length; i++) {
+          tooltips[i].style.visibility = 'hidden';
+        }
+      }
+    };
+  </script>
 </head>
 
 <body>
