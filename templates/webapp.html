@@ -74,6 +74,7 @@ window.onload = function() {
                 user-select: auto;          /* Standard syntax */
             }`;
             iframeDocument.head.appendChild(style);
+            console.log("실행 완료");
         });
 
         observer.observe(iframeDocument, { childList: true, subtree: true });
