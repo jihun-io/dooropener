@@ -267,3 +267,4 @@ pyrightconfig.json
 *.pem
 *.key
 *.db
+app_test.py
