@@ -103,6 +103,11 @@ footer div p {
 
 .homebtn, .settingbtn {
   text-align: center;
+  color: #898989;
+}
+
+.nav_selected {
+  color: #000000;
 }
 
 /* footer p {
