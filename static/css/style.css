@@ -301,8 +301,8 @@ a .material-symbols-outlined { font-size: 14px; }
 }
 
 .separation {
-  width: calc(100% + 40px);
-  border:1px solid #f4f5f6;
+  width: 100%;
+  border: 1px solid #f4f5f6;
 }
 
 .general_wrapper {
