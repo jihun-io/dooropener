@@ -412,10 +412,6 @@ a .material-symbols-outlined { font-size: 14px; }
     color: #ffffff;
   }
 
-  .material-symbols-outlined {
-    color: #ffffff;
-  }
-
   .text-field {
     border: 1px solid #000000;
     background-color: #202020;
@@ -438,6 +434,10 @@ a .material-symbols-outlined { font-size: 14px; }
   }
 
   .tooltip_header .material-symbols-outlined {
+    color: #ffffff;
+  }
+
+  .header_back .material-symbols-outlined {
     color: #ffffff;
   }
 
