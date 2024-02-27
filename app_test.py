@@ -4,6 +4,7 @@ import sqlite3
 from threading import Thread
 import hashlib
 import base64
+from time import time
 from datetime import datetime
 from datetime import timedelta
 import os
@@ -19,6 +20,17 @@ def dooropen_wrapper():
     global door_open_status
     # subprocess.run(['python3', 'controller.py'])
     door_open_status = True
+
+# 새로고침할 때마다 CSS를 새로 불러오는 코드
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        values['_'] = int(time())
+    return url_for(endpoint,**values)
+
 
 @app.route('/')
 def index():
@@ -165,6 +177,14 @@ def settings():
         return render_template('settings.html', username=session['user_id'])
     else:
         return redirect(url_for('index'))
+    
+
+@app.route('/settings/dev')
+def dev():
+    if 'user_id' in session:
+        return render_template('dev.html', username=session['user_id'])
+    else:
+        return redirect(url_for('index'))
 
 
 
@@ -173,4 +193,4 @@ port_num = "4062"
 
 if __name__ == "__main__":
 
-    app.run(host=host_addr, port=port_num)
+    app.run(host=host_addr, port=port_num, debug=True)
