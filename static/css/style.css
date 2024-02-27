@@ -14,7 +14,7 @@
 
 * {
   font-family: 'Pretendard-Regular';
-  border-radius: 20px;
+  border-radius: 12px;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -28,7 +28,7 @@ a {
 
 html, body {
   height: 100%;
-  background-color: f4f5f6;
+  background-color: #f4f5f6;
 }
 
 body {
@@ -282,6 +282,8 @@ a .material-symbols-outlined { font-size: 14px; }
 }
 
 .account_wrapper {
+  background-color: #ffffff;
+  padding: 20px;
   margin-bottom: 20px;
 }
 
@@ -296,6 +298,18 @@ a .material-symbols-outlined { font-size: 14px; }
 
 .user_modify {
   font-size: 16px;
+}
+
+.separation {
+  width: calc(100% + 40px);
+  border:1px solid #f4f5f6;
+}
+
+.general_wrapper {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 5px 20px 5px 20px;
+  margin-bottom: 20px;
 }
 
 .settings_wrapper span {
