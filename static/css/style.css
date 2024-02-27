@@ -67,6 +67,10 @@ header {
   text-align: left;
 }
 
+header, main, footer {
+  border-radius: 0px;
+}
+
 main {
   display: flex;
   justify-content: center;
