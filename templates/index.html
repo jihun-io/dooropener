@@ -31,64 +31,66 @@
 </head>
 
 <body>
-  <header>
-    <div class="header_wrapper">
-      <h1>DoorOpener</h1>
-      <button class="hamburger" onclick="location.href='/success'">
-        <span class="material-symbols-outlined">
-          menu
-        </span>
-      </button>
-    </div>
-  </header>
+  <div class="index_wrapper">
+    <header>
+      <div class="header_wrapper">
+        <h1>DoorOpener</h1>
+        <!-- <button class="hamburger" onclick="location.href='/success'">
+          <span class="material-symbols-outlined">
+            menu
+          </span>
+        </button> -->
+      </div>
+    </header>
 
-  <main>
+    <main class="single_box">
+      {% if username %}
+      <div class="login-form">
+        <h1 class="main_message">{{ username }} 님,<br>안녕하세요?</h1>
+        <button class="openbutton" type="button" onclick="location.href='/open'">
+          <span class="material-symbols-outlined">key</span>
+          문 열기
+        </button>
+        <a href='/logout' class="goto">
+          <span class="material-symbols-outlined">logout</span>
+          로그아웃
+        </a>
+      </div>
+
+      {% else %}
+
+      <div class="login-form">
+        <form action="login" method="post">
+          <input type="text" name="username" class="text-field" placeholder="아이디">
+          <input type="password" name="password" class="text-field" placeholder="비밀번호">
+          <input type="submit" value="로그인" class="submit-btn">
+        </form>
+      </div>
+      {% endif %}
+
+
+
+    </main>
+
     {% if username %}
-    <div class="login-form">
-      <h1 class="main_message">{{ username }} 님,<br>안녕하세요?</h1>
-      <button class="openbutton" type="button" onclick="location.href='/open'">
-        <span class="material-symbols-outlined">key</span>
-        문 열기
-      </button>
-      <a href='/logout' class="goto">
-        <span class="material-symbols-outlined">logout</span>
-        로그아웃
-      </a>
-    </div>
-
+    <footer>
+      <div class="homebtn nav_selected" onclick="location.href='/'">
+        <span class="material-symbols-outlined">
+          home 
+        </span>
+        <p>홈</p>
+      </div>
+      <div class="settingbtn" onclick="location.href='/settings'">
+        <span class="material-symbols-outlined">
+          settings
+        </span> 
+        <p>설정</p>
+      </div>
+    </footer>
     {% else %}
-
-    <div class="login-form">
-      <form action="login" method="post">
-        <input type="text" name="username" class="text-field" placeholder="아이디">
-        <input type="password" name="password" class="text-field" placeholder="비밀번호">
-        <input type="submit" value="로그인" class="submit-btn">
-      </form>
-    </div>
+    <footer style="visibility: hidden;"></footer>
     {% endif %}
-
-
-
-  </main>
-
-  {% if username %}
-  <footer>
-    <div class="homebtn nav_selected" onclick="location.href='/'">
-      <span class="material-symbols-outlined">
-        home 
-      </span>
-      <p>홈</p>
-    </div>
-    <div class="settingbtn" onclick="location.href='/settings'">
-      <span class="material-symbols-outlined">
-        settings
-      </span> 
-      <p>설정</p>
-    </div>
-  </footer>
-  {% else %}
-  <footer style="visibility: hidden;"></footer>
-  {% endif %}
+  </div>
 
 
 

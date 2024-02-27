@@ -29,6 +29,7 @@ a {
 html, body {
   height: 100%;
   background-color: #f4f5f6;
+  overscroll-behavior: none;
 }
 
 body {
@@ -45,7 +46,8 @@ body {
 
 header {
   width: 100%;
-  height: 100px;
+  height: 62px;
+  margin-bottom: 15px;
   display: flex;
   justify-content: center;
 }
@@ -53,7 +55,7 @@ header {
 
 .header_wrapper {
   width: 100%;
-  height: 100px;
+  height: 100%;
   padding: 15px;
   display: flex;
   flex-wrap: nowrap;  
@@ -71,6 +73,7 @@ main {
   justify-content: center;
   align-items: center;
   padding-bottom: 62px;
+  
 }
 
 main div {
@@ -90,6 +93,10 @@ footer {
   justify-content: space-around;
   border-radius: 0px!important;
   background-color: #FFFFFF;
+}
+
+.footer_settings {
+  position: fixed;
 }
 
 footer div {
@@ -125,6 +132,8 @@ footer div p {
   font-size: 12px;
 } */
 
+
+
 .login-form {
   display: flex;
   justify-content: center;
@@ -136,6 +145,14 @@ footer div p {
   padding: 20px;
   text-align: center;
   border: none;
+}
+
+.single_box {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 
 .text-field {
@@ -270,13 +287,14 @@ a .material-symbols-outlined { font-size: 14px; }
 
 .settings_wrapper {
   width: 100%;
-  height: auto;
-  /* height: calc(100% - 62px - 100px); */
+  height: calc(100% - 62px - 62px - 15px);
   justify-content: start!important;
   align-items: start!important;
   padding: 20px 20px 62px 20px;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 .settings_items {
