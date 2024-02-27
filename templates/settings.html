@@ -1,0 +1,98 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <!-- iOS 웹 앱 생성 코드 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- <link rel="manifest" href="/manifest.json"> -->
+
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="../static/css/style.css">
+
+
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<body>
+  <header>
+    <div class="header_wrapper">
+      <h1>설정</h1>
+      <button class="hamburger" onclick="location.href='/success'">
+        <span class="material-symbols-outlined">
+          menu
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <main class="settings_wrapper">
+      <div class="settings_row account_wrapper">
+        <div class="account_info">
+          <p class="username">{{ username }}</p>
+          <p class="user_modify">사용자 정보 변경</p>
+        </div>
+        <span class="material-symbols-outlined">chevron_right</span>
+      </div>
+
+      <div class="settings_items">
+        <div class="settings_row tempkey">
+          <p class="settings_items_text">임시 키 발급</p>
+          <span class="material-symbols-outlined">chevron_right</span>
+        </div>
+      </div>
+
+      <div class="settings_items">
+        <div class="settings_row openlog">
+          <p class="settings_items_text">잠금 해제 기록</p>
+          <span class="material-symbols-outlined">chevron_right</span>
+        </div>
+      </div>
+
+      <div class="settings_items">
+        <div class="settings_row devmod">
+          <p class="settings_items_text">개발자 모드</p>
+          <span class="material-symbols-outlined">chevron_right</span>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+  </main>
+
+
+
+  <footer>
+    <div class="homebtn" onclick="location.href='/'">
+      <span class="material-symbols-outlined">
+        home 
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn" onclick="location.href='/settings'">
+      <span class="material-symbols-outlined">
+        settings
+      </span> 
+      <p>설정</p>
+    </div>
+  </footer>
+
+
+
+
+
+</body>
+
+
+
+</html>

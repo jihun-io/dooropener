@@ -254,6 +254,53 @@ a .material-symbols-outlined { font-size: 14px; }
 
 }
 
+.settings_wrapper {
+  width: 100%;
+  height: calc(100% - 62px - 100px);
+  justify-content: start!important;
+  align-items: start!important;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.settings_items {
+  width: 100%;
+}
+
+.settings_row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0px 8px 0px;
+}
+
+.account_wrapper {
+  margin-bottom: 20px;
+}
+
+.account_info {
+  display: block;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.user_modify {
+  font-size: 14px;
+}
+
+.settings_wrapper span {
+
+  margin: 0px;
+
+}
+
 .copyright {
   font-size: 12px!important;
 }

@@ -33,7 +33,7 @@ def check_door_status():
         global door_open_status
         if door_open_status:
             door_open_status = False  # Reset the status
-            
+
             # 문이 열린 후 DB에 기록을 남깁니다.
             conn = sqlite3.connect('database.db')  # DB에 연결합니다.
             c = conn.cursor()
@@ -159,6 +159,12 @@ def logout():
 def webapp():
     return render_template('webapp.html')
 
+@app.route('/settings')
+def settings():
+    if 'user_id' in session:
+        return render_template('settings.html', username=session['user_id'])
+    else:
+        return redirect(url_for('index'))
 
 
 
