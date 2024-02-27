@@ -389,7 +389,11 @@ a .material-symbols-outlined { font-size: 14px; }
     background-color: #202020;
   }
 
-  .nav_selected{
+  .nav_unselected, .nav_unselected p {
+    color: #898989;
+  }
+
+  .nav_selected, .nav_selected p{
     color: #ffffff;
   }
 
