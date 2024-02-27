@@ -28,12 +28,12 @@ a {
 
 html, body {
   height: 100%;
-  background-color: #f4f5f6;
   overscroll-behavior: none;
 }
 
 body {
   /* background-color: rgb(254, 226, 116); */
+  background-color: #f4f5f6;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
