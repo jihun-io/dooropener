@@ -350,3 +350,76 @@ a .material-symbols-outlined { font-size: 14px; }
 .copyright {
   font-size: 12px!important;
 }
+
+
+
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #000000;
+  }
+
+  h1, p {
+    color:#FFFFFF;
+  }
+  
+  .login-form {
+    background-color: #202020;
+  }
+
+  input {
+    color: #ffffff;
+  }
+
+  .text-field {
+    border: 1px solid #000000;
+    background-color: #202020;
+  }
+
+  .dooropen_icons .material-symbols-outlined, .login_icons .material-symbols-outlined {
+    color: #fefefe;
+  }
+
+  footer {
+    background-color: #202020;
+  }
+
+  .nav_selected{
+    color: #ffffff;
+  }
+
+  .tooltip_header .material-symbols-outlined {
+    color: #ffffff;
+  }
+
+  .tooltip_wrapper a .material-symbols-outlined {
+    color: #9b9b9b;
+  }
+
+  .tooltip {
+    background-color: #202020;
+  }
+
+  .tooltip .material-symbols-outlined {
+    color: #ffffff;
+  }
+
+  .account_wrapper, .general_wrapper {
+    background-color: #202020;
+  }
+
+  .separation {
+    border: 0.5px solid #404040;
+  }
+
+  .account_info .material-symbols-outlined, .settings_row .material-symbols-outlined {
+    color:#898989;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #ffffff;
+  }
+
+
+}
