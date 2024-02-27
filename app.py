@@ -11,8 +11,11 @@ import os
 import subprocess
 
 app = Flask(__name__)
+
 app.secret_key = 'bing-chat-is-god'
 app.permanent_session_lifetime = timedelta(days=365)
+
+startup_time = int(time()) #앱이 시작될 때 시간을 기록
 
 door_open_status = False
 
@@ -28,8 +31,8 @@ def override_url_for():
 
 def dated_url_for(endpoint, **values):
     if endpoint == 'static':
-        values['_'] = int(time())
-    return url_for(endpoint, **values)
+        values['_'] = startup_time
+    return url_for(endpoint,**values)
 
 @app.route('/')
 def index():
