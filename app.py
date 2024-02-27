@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, flash, abort, redire
 import dooropener
 import sqlite3
 from threading import Thread
+from dotenv import load_dotenv
 import hashlib
 import base64
 from time import time
@@ -12,7 +13,8 @@ import subprocess
 
 app = Flask(__name__)
 
-app.secret_key = 'bing-chat-is-god'
+load_dotenv()
+app.secret_key = os.getenv('SECRET_KEY')
 app.permanent_session_lifetime = timedelta(days=365)
 
 startup_time = int(time()) #앱이 시작될 때 시간을 기록
