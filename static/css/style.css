@@ -72,6 +72,10 @@ header {
   align-items: center;
 }
 
+.header_back span {
+  margin-left: 10px;
+}
+
 .header_back {
   position: absolute;
   left: 0;
@@ -405,6 +409,10 @@ a .material-symbols-outlined { font-size: 14px; }
   }
 
   input {
+    color: #ffffff;
+  }
+
+  .material-symbols-outlined {
     color: #ffffff;
   }
 
