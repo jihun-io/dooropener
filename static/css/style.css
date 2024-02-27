@@ -267,6 +267,7 @@ a .material-symbols-outlined { font-size: 14px; }
 
 .settings_items {
   width: 100%;
+  font-size: 22px;
 }
 
 .settings_row {
@@ -275,7 +276,7 @@ a .material-symbols-outlined { font-size: 14px; }
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 8px 0px 8px 0px;
+  margin: 12px 0px 12px 0px;
 }
 
 .account_wrapper {
@@ -287,12 +288,12 @@ a .material-symbols-outlined { font-size: 14px; }
 }
 
 .username {
-  font-weight: bold;
-  font-size: 18px;
+  font-family: 'Pretendard-Bold';
+  font-size: 24px;
 }
 
 .user_modify {
-  font-size: 14px;
+  font-size: 20px;
 }
 
 .settings_wrapper span {
