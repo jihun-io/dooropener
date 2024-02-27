@@ -302,7 +302,7 @@ a .material-symbols-outlined { font-size: 14px; }
 
 .separation {
   width: 100%;
-  border: 1px solid #f4f5f6;
+  border: 0.5px solid #f4f5f6;
 }
 
 .general_wrapper {
