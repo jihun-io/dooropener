@@ -21,6 +21,7 @@ def dooropen_wrapper():
     subprocess.run(['python3', 'controller.py'])
     door_open_status = True
 
+# 플라스크를 재실행할 때마다 CSS를 새로 불러오는 로직
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)
