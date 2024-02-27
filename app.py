@@ -4,6 +4,7 @@ import sqlite3
 from threading import Thread
 import hashlib
 import base64
+from time import time
 from datetime import datetime
 from datetime import timedelta
 import os
@@ -19,6 +20,15 @@ def dooropen_wrapper():
     global door_open_status
     subprocess.run(['python3', 'controller.py'])
     door_open_status = True
+
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        values['_'] = int(time())
+    return url_for(endpoint, **values)
 
 @app.route('/')
 def index():
