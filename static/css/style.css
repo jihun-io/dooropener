@@ -706,8 +706,16 @@ a .material-symbols-rounded { font-size: 14px; }
     color: #ffffff;
   }
 
-  table {
+  .table_wrapper {
+  
+    background-color: #202020!important;
+  }
+
+
+  table, tr, th {
     color: #ffffff;
+    background-color: #202020!important;
+
   }
 
 
