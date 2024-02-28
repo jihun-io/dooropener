@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, flash, abort, redirect, url_for, jsonify
-import dooropener
+# import dooropener
 import sqlite3
 from threading import Thread
 from dotenv import load_dotenv
