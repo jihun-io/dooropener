@@ -2,21 +2,10 @@
 
 <head>
     <title>DoorOpener</title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
+    
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
-    <!-- iOS 웹 앱 생성 코드 -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- <link rel="manifest" href="/manifest.json"> -->
-
     <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
-
-
-    
-
-
     <script>
         function confirmDelete() {
             var result = confirm("토큰을 정말로 파기하시겠습니까?\n이 작업은 되돌릴 수 없습니다.");
