@@ -300,6 +300,19 @@ def openwithapi():
             return render_template('openwithapi.html', message="오류가 발생했습니다.")
     else:
         return render_template('openwithapi.html', message="토큰이 제공되지 않았습니다.")
+    
+@app.route('/settings/logs')
+def logs():
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM unlockLogs ORDER BY time DESC")
+        logs = c.fetchall()
+        conn.close()
+
+        return render_template('logs.html', logs=logs)
+    else:
+        return redirect(url_for('index'))
 
 
 
