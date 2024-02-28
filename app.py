@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, flash, abort, redirect, url_for, jsonify
-# import dooropener
+# import dooropener # 웬만하면 불러오지 마시오
 import sqlite3
 from threading import Thread
 from dotenv import load_dotenv
@@ -227,7 +227,7 @@ def generate_token():
                 conn.commit()
                 conn.close()
 
-                domain = request.host
+                domain = request.host_url
                 scLink = domain + "/sc?t=" + token
                 return render_template('generate_result.html', token=token, scLink=scLink)
             else:
