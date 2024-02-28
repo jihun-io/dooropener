@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, flash, abort, redirect, url_for, jsonify
+import dooropener
 import sqlite3
 from threading import Thread
 from dotenv import load_dotenv
@@ -272,6 +273,25 @@ def addshortcuts():
         return render_template('add.html', username=session['user_id'])
     else:
         return redirect(url_for('index'))
+    
+@app.route('/sc', methods=['GET'])
+def openwithapi():
+    usertoken = request.args.get('t')
+
+    if usertoken is not None:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM users WHERE token=?", (usertoken,))
+        data = c.fetchone()
+
+        if data is not None:
+            username = data[0]  # 'username' 필드의 위치에 따라 이 값이 달라질 수 있습니다.
+            dooropener()
+            return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
+        else:
+            return render_template('openwithapi.html', message="오류가 발생했습니다.")
+    else:
+        return render_template('openwithapi.html', message="토큰이 제공되지 않았습니다.")
 
 
 
