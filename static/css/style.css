@@ -1,16 +1,49 @@
 @font-face {
   font-family: 'Pretendard-Regular';
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  src: url('../fonts/Pretendard-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pretendard-Bold';
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+  src: url('../fonts/Pretendard-Bold.woff') format('woff');
   font-weight: 700;
   font-style: bold;
 }
+
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 100 700;
+  src: url('../fonts/MaterialSymbolsOutlined.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Material Symbols Rounded';
+  font-style: normal;
+  font-weight: 100 700;
+  src: url('../fonts/MaterialSymbolsRounded.woff2') format('woff2');
+}
+
+.material-symbols-outlined, .material-symbols-rounded {
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+
 
 * {
   font-family: 'Pretendard-Regular';
@@ -20,6 +53,8 @@
   box-sizing: border-box;
   word-break: keep-all;
 }
+
+
 
 a {
   text-decoration-line: none;
@@ -298,13 +333,13 @@ h1 {
   justify-content: center;
   align-items: center;
 }
-.material-symbols-outlined { margin-right: 5px; }
+.material-symbols-rounded { margin-right: 5px; }
 
-a .material-symbols-outlined { font-size: 14px; }
+a .material-symbols-rounded { font-size: 14px; }
 
-.hamburger .material-symbols-outlined { margin: 0px; }
+.hamburger .material-symbols-rounded { margin: 0px; }
 
-.tooltip .material-symbols-outlined { font-size: 24px; color: #000000; }
+.tooltip .material-symbols-rounded { font-size: 24px; color: #000000; }
 
 
 .dooropen_icons, .login_icons { margin: 40px; color:rgb(95, 99, 104); }
@@ -567,7 +602,7 @@ a .material-symbols-outlined { font-size: 14px; }
     background-color: #202020;
   }
 
-  .dooropen_icons .material-symbols-outlined, .login_icons .material-symbols-outlined {
+  .dooropen_icons .material-symbols-rounded, .login_icons .material-symbols-rounded {
     color: #fefefe;
   }
 
@@ -583,15 +618,15 @@ a .material-symbols-outlined { font-size: 14px; }
     color: #ffffff;
   }
 
-  .tooltip_header .material-symbols-outlined {
+  .tooltip_header .material-symbols-rounded {
     color: #ffffff;
   }
 
-  .header_back .material-symbols-outlined {
+  .header_back .material-symbols-rounded {
     color: #ffffff;
   }
 
-  .tooltip_wrapper a .material-symbols-outlined {
+  .tooltip_wrapper a .material-symbols-rounded {
     color: #9b9b9b;
   }
 
@@ -599,7 +634,7 @@ a .material-symbols-outlined { font-size: 14px; }
     background-color: #202020;
   }
 
-  .tooltip .material-symbols-outlined {
+  .tooltip .material-symbols-rounded {
     color: #ffffff;
   }
 
@@ -611,7 +646,7 @@ a .material-symbols-outlined { font-size: 14px; }
     border: 0.5px solid #404040;
   }
 
-  .account_info .material-symbols-outlined, .settings_row .material-symbols-outlined {
+  .account_info .material-symbols-rounded, .settings_row .material-symbols-rounded {
     color:#898989;
   }
 
