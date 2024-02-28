@@ -228,7 +228,7 @@ def generate_token():
                 conn.close()
 
                 domain = request.host_url
-                scLink = domain + "/sc?t=" + token
+                scLink = domain + "sc?t=" + token
                 return render_template('generate_result.html', token=token, scLink=scLink)
             else:
                 return redirect(url_for('index'))
