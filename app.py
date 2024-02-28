@@ -286,7 +286,7 @@ def openwithapi():
 
         if data is not None:
             username = data[0]  # 'username' 필드의 위치에 따라 이 값이 달라질 수 있습니다.
-            dooropener.dooropen()
+            subprocess.run(['python3', 'controller.py'])
             return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
         else:
             return render_template('openwithapi.html', message="오류가 발생했습니다.")
