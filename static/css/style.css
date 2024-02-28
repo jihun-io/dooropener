@@ -173,6 +173,8 @@ footer {
   justify-content: space-around;
   border-radius: 0px!important;
   background-color: #FFFFFF;
+  overflow: hidden;
+  touch-action: none;
 }
 
 .footer_settings {
