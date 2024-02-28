@@ -1,0 +1,52 @@
+<html>
+
+<head>
+    <title>DoorOpener</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <!-- iOS 웹 앱 생성 코드 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- <link rel="manifest" href="/manifest.json"> -->
+
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+    <!-- <link rel="stylesheet" href="../static/css/style.css"> -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="../static/js/noselect.js"></script>
+</head>
+
+<body>
+    <header></header>
+    <main class="single_box">
+        <div class="login-form revoke_form">
+            <h1 class="revoke_title">토큰 생성</h1>
+            <p>iOS의 단축어 앱을 통해 문을 열려면 토큰을 생성해야 합니다.</p>
+            <ul class="info_list">
+                <li>토큰은 처음 생성할 때만 조회할 수 있습니다.</li>
+                <li>사용자의 토큰은 절대 다른 사람에게 공유하면 안됩니다.</li>
+                <li>기존에 이미 생성한 토큰이 있을 경우, 새로 생성하면 기존 토큰은 사용할 수 없습니다.</li>
+            </ul>
+
+            <form action="/generate" method="post" class="iGen">
+                <input type="hidden" name="qGenerate" value="1">
+
+                <div class="buttons_row">
+                    <a href="/settings/shortcuts/token" class="cancel_btn">취소</a>
+                    <input type="submit" id="genSubmit" class="run_btn" value="생성">
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer style="visibility: hidden;"></footer>
+
+</body>
+
+
+
+</html>

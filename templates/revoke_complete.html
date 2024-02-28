@@ -1,0 +1,40 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <!-- iOS 웹 앱 생성 코드 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- <link rel="manifest" href="/manifest.json"> -->
+
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  <!-- <link rel="stylesheet" href="../static/css/style.css"> -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script src="../static/js/noselect.js"></script>
+</head>
+
+<body>
+  <header></header>
+  <main class="single_box">
+    <div class="login-form revoke_form">
+      <h1 class="revoke_title">{{ message | replace('\n', '<br>') | safe }}</h1>
+      <div class="buttons_row">
+        <button class="cancel_btn" onclick="location.href='/settings/shortcuts/token'">닫기</button>
+      </div>
+    </div>
+  </main>
+
+  <footer style="visibility: hidden;"></footer>
+
+</body>
+
+
+
+</html>

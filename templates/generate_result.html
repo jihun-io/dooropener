@@ -1,0 +1,63 @@
+<html>
+
+<head>
+    <title>DoorOpener</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <!-- iOS 웹 앱 생성 코드 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- <link rel="manifest" href="/manifest.json"> -->
+
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+    <!-- <link rel="stylesheet" href="../static/css/style.css"> -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="../static/js/noselect.js"></script>
+</head>
+
+<body>
+    <header></header>
+    <main class="single_box">
+        <div class="login-form revoke_form">
+            <h1 class="revoke_title">토큰 생성 완료</h1>
+            <p>다음은 생성된 토큰 값입니다.</p>
+            <p class="genText" id="token">{{ token }}</p>
+            <p>단축어 앱에 추가하려면, 아래 링크를 복사하고 단축어 앱에서 붙여넣으십시오.</p>
+            <p class="genText" id="scLink">{{ scLink }}</p>
+            <p>경고: 위 텍스트를 다른 사람에게 절대 공개하지 마십시오. 허가되지 않은 사람이 잠금을 해제하고 들어올 수 있습니다.</p>
+            <div class="buttons_row">
+                <button class="cancel_btn" onclick="location.href='/settings/shortcuts/token'">닫기</button>
+            </div>
+        </div>
+        <script>
+            document.getElementById("token").addEventListener("click", function () {
+                var selection = window.getSelection();
+                var range = document.createRange();
+                range.selectNodeContents(this);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            });
+
+            document.getElementById("scLink").addEventListener("click", function () {
+                var selection = window.getSelection();
+                var range = document.createRange();
+                range.selectNodeContents(this);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            });
+        </script>
+
+    </main>
+
+    <footer style="visibility: hidden;"></footer>
+
+</body>
+
+
+
+</html>

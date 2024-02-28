@@ -5,11 +5,13 @@ from threading import Thread
 from dotenv import load_dotenv
 import hashlib
 import base64
+from itsdangerous import URLSafeTimedSerializer
 from time import time
 from datetime import datetime
 from datetime import timedelta
 import os
 import subprocess
+
 
 app = Flask(__name__)
 
@@ -186,6 +188,96 @@ def settings():
 def dev():
     if 'user_id' in session:
         return render_template('dev.html', username=session['user_id'])
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/dev')
+def dev():
+    if 'user_id' in session:
+        return render_template('dev.html', username=session['user_id'])
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/shortcuts')
+def shortcuts():
+    if 'user_id' in session:
+        return render_template('shortcuts.html', username=session['user_id'])
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/shortcuts/token')
+def token():
+    if 'user_id' in session:
+        return render_template('token.html', username=session['user_id'])
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/shortcuts/token/generate')
+def warn_generate_token():
+    if 'user_id' in session:
+        return render_template('generate.html')
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/generate', methods=['GET', 'POST'])
+def generate_token():
+    if 'user_id' in session:
+        if request.method == 'POST':
+            qGenerate = request.form['qGenerate']
+            if qGenerate == "1":
+                s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+                token = s.dumps(session['user_id'])  # 세션의 user_id를 이용해 토큰을 생성합니다.
+
+                conn = sqlite3.connect('database.db')  # 데이터베이스에 연결합니다.
+                c = conn.cursor()
+                c.execute("UPDATE users SET token = ? WHERE username = ?", (token, session['user_id']))  # users 테이블의 token 필드를 업데이트합니다.
+                conn.commit()
+                conn.close()
+
+                domain = request.host
+                scLink = domain + "/sc?" + token
+                return render_template('generate_result.html', token=token, scLink=scLink)
+            else:
+                return redirect(url_for('index'))
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/shortcuts/token/revoke')
+def warn_revoke_token():
+    if 'user_id' in session:
+        return render_template('revoke.html')
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/revoke', methods=['GET', 'POST'])
+def revoke_token():
+    if 'user_id' in session:
+        if request.method == 'POST':
+            qRevoke = request.form['qRevoke']
+            if qRevoke == "1":
+                conn = sqlite3.connect('database.db')  # 데이터베이스에 연결합니다.
+                c = conn.cursor()
+
+                c.execute("UPDATE users SET token = NULL WHERE username = ?", (session['user_id'],))
+
+                conn.commit()
+                conn.close()
+
+                message = '기존 토큰이 정상적으로\n파기되었습니다.'
+                return render_template('revoke_complete.html', message=message)
+            else:
+                return redirect(url_for('index'))
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/shortcuts/add')
+def addshortcuts():
+    if 'user_id' in session:
+        return render_template('add.html', username=session['user_id'])
     else:
         return redirect(url_for('index'))
 
