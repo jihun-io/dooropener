@@ -287,6 +287,14 @@ def openwithapi():
         if data is not None:
             username = data[0]  # 'username' 필드의 위치에 따라 이 값이 달라질 수 있습니다.
             subprocess.run(['python3', 'controller.py'])
+            # 문이 열린 후 DB에 기록을 남깁니다.
+            conn = sqlite3.connect('database.db')  # DB에 연결합니다.
+            c = conn.cursor()
+            time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
+            c.execute("INSERT INTO unlockLogs (user, time, isToken) VALUES (?, ?, ?)", (session['user_id'], time, 1))  # DB에 기록을 남깁니다.
+            conn.commit()  # 변경 사항을 저장합니다.
+            conn.close()  # DB 연결을 종료합니다.
+
             return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
         else:
             return render_template('openwithapi.html', message="오류가 발생했습니다.")
