@@ -190,13 +190,6 @@ def dev():
     else:
         return redirect(url_for('index'))
     
-@app.route('/settings/dev')
-def dev():
-    if 'user_id' in session:
-        return render_template('dev.html', username=session['user_id'])
-    else:
-        return redirect(url_for('index'))
-    
 @app.route('/settings/shortcuts')
 def shortcuts():
     if 'user_id' in session:
