@@ -29,9 +29,8 @@
     </div>
     <div class="general_wrapper">
       <div class="settings_items">
-        <div class="settings_row goto_test" onclick="location.href='invite/link'">
+        <div class="settings_row executebtn" onclick="location.href='/invitecode'">
           <p class="settings_items_text">초대 링크 생성</p>
-          <span class="material-symbols-rounded">chevron_right</span>
         </div>
       </div>
     </div>
@@ -39,11 +38,17 @@
       <p>초대 링크 목록</p>
     </div>
     <div class="general_wrapper">
+      {% for i in invite_codes %}
       <div class="settings_items">
-        <div class="settings_row goto_test">
-          <p class="settings_items_text">https://dooropener.jihun.io/foo/bar/lorem/ipsum/dolor/sit/amet</p>
+        <div class="settings_row" onclick="location.href='invite/info?code={{ i[1] }}'">
+          <p class="settings_items_text">{{ request.host_url }}join?code={{ i[1] }}</p>
+          <span class="material-symbols-rounded">chevron_right</span>
         </div>
       </div>
+      {% if not loop.last %}
+      <hr class="separation">
+      {% endif %}
+      {% endfor %}
     </div>
 
 

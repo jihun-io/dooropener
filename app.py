@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, session, flash, abort, redire
 import sqlite3
 from threading import Thread
 from dotenv import load_dotenv
+import random
+import string
 import hashlib
 import secrets
 import base64
@@ -25,7 +27,7 @@ shortcut_address = "https://www.icloud.com/shortcuts/fe1e91c422474cfcbbd53c4c176
 dev_path = 'dev.txt'
 dev_mode = os.path.isfile(dev_path)
 
-
+# 문 열어주는 코드 실행하기
 door_open_status = False
 def dooropen_wrapper():
     global door_open_status
@@ -33,9 +35,15 @@ def dooropen_wrapper():
         subprocess.run(['python3', 'controller.py'])
     door_open_status = True
 
+# 초대 코드 생성기
+def invite_code(length):
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    return random_string
+
+
 # 플라스크를 재실행할 때마다 CSS를 새로 불러오는 로직
 startup_time = int(time()) #앱이 시작될 때 시간을 기록
-
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)
@@ -241,6 +249,7 @@ def generate_token():
             return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
+
     
 @app.route('/settings/shortcuts/token/revoke')
 def warn_revoke_token():
@@ -326,17 +335,78 @@ def logs():
 @app.route('/settings/invite')
 def invite_list():
     if 'user_id' in session:
-        return render_template('invite.html')
+        current_time = int(datetime.now().timestamp())
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM inviteCodes WHERE expDate < ?", (current_time,))
+        conn.commit()
+
+        c.execute("SELECT * FROM inviteCodes WHERE invitor = ?", (session['user_id'],))
+        
+        invite_codes = c.fetchall()
+        conn.close()
+
+        return render_template('invite.html', invite_codes=invite_codes)
     else:
         return redirect(url_for('index'))
     
-@app.route('/invite')
+@app.route('/invitecode')
 def invite_link_gen():
     if 'user_id' in session:
-        code = os.urandom(32)
-        return render_template('openwithapi.html', message=code)
+        code = invite_code(12)
+        expDate = int((datetime.now() + timedelta(minutes=15)).timestamp())
+
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO inviteCodes (invitor, code, expDate) VALUES (?, ?, ?)", (session['user_id'], code, expDate))
+        conn.commit()
+
+        return redirect(url_for('invite_list'))
     else:
         return redirect(url_for('index'))
+    
+@app.route('/settings/invite/info', methods=['GET'])
+def invite_link_info():
+    if 'user_id' in session:
+        code = request.args.get('code')
+
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM inviteCodes WHERE code=?", (code,))
+        data = c.fetchone()
+
+        timestamp = data[2]
+        dt_object = datetime.fromtimestamp(timestamp)
+        formatted_time = dt_object.strftime('%Y-%m-%d %H:%M:%S')
+
+        if data is not None:
+            return render_template('codeinfo.html', data=data, time_convert=formatted_time)
+        else:
+            return redirect(url_for('invite_list'))
+        
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/settings/invite/info/del', methods=['GET'])
+def invite_link_del():
+    if 'user_id' in session:
+        code = request.args.get('code')
+
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM inviteCodes WHERE code=?", (code,))
+        conn.commit()
+
+        return redirect(url_for('invite_list'))
+    else:
+        return redirect(url_for('index'))
+    
+# @app.route('/invitecode')
+# def invite_link_gen():
+#     if 'user_id' in session:
+#         return render_template('openwithapi.html', message=invite_code(12))
+#     else:
+#         return redirect(url_for('index'))
 
 
 

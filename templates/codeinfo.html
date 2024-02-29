@@ -1,0 +1,124 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  <script>
+    var code = "{{ data[1] }}";
+    function confirmDelete() {
+      var delLink = "/settings/invite/info/del?code=" + code;
+      var result = confirm("이 초대 링크를 정말로 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.");
+      if (result) {
+        // "확인"을 클릭했을 때 수행할 작업을 여기에 작성합니다.
+        location.href = delLink;
+      } else {
+      }
+    }
+
+    function share() {
+      var delLink = "/settings/invite/info/del?code=" + code;
+      if (navigator.share) {
+        navigator.share({
+          title: '제목',
+          text: '내용',
+          url: delLink,
+        })
+          .then(() => console.log('공유 완료'))
+          .catch((error) => console.log('공유 실패', error));
+      } else {
+        console.log('Web Share API가 작동하지 않는 브라우저입니다.');
+      }
+    }
+  </script>
+</head>
+
+<body class="noCenter">
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings/invite'">
+        <span class="material-symbols-rounded">arrow_back_ios_new</span>
+        <p>사용자 초대</p>
+      </div>
+      <div class="header_title">
+        <h1>{{ data[1] }}</h1>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+    <div class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">{{ request.host_url }}join?code={{ data[1] }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">초대한 사람</p>
+          <p>{{ data[0] }}</p>
+        </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">초대 코드</p>
+          <p>{{ data[1] }}</p>
+        </div>
+      </div>
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">유효 기간</p>
+          <p>{{ time_convert }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_row executebtn" onclick="share()">
+          <p class="settings_items_text">초대 링크 공유</p>
+        </div>
+      </div>
+    </div>
+    <div class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_row warnbtn token_revoke" onclick="confirmDelete()">
+          <p class="settings_items_text">초대 링크 삭제</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+
+
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="material-symbols-rounded">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="material-symbols-rounded">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
+
+
+
+
+
+</body>
+
+
+
+</html>
