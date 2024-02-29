@@ -19,6 +19,8 @@ load_dotenv()
 app.secret_key = os.getenv('SECRET_KEY')
 app.permanent_session_lifetime = timedelta(days=365)
 
+shortcut_address = "https://www.icloud.com/shortcuts/fe1e91c422474cfcbbd53c4c1769fc97"
+
 startup_time = int(time()) #앱이 시작될 때 시간을 기록
 
 door_open_status = False
@@ -194,7 +196,7 @@ def dev():
 @app.route('/settings/shortcuts')
 def shortcuts():
     if 'user_id' in session:
-        return render_template('shortcuts.html', username=session['user_id'])
+        return render_template('shortcuts.html', username=session['user_id'], shortcut_address=shortcut_address)    
     else:
         return redirect(url_for('index'))
     
@@ -229,7 +231,7 @@ def generate_token():
 
                 domain = request.host_url
                 scLink = domain + "sc?t=" + token
-                return render_template('generate_result.html', token=token, scLink=scLink)
+                return render_template('generate_result.html', token=token, scLink=scLink, shortcut_address=shortcut_address)
             else:
                 return redirect(url_for('index'))
         else:
