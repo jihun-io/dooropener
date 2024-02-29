@@ -375,11 +375,10 @@ def invite_link_info():
         c.execute("SELECT * FROM inviteCodes WHERE code=?", (code,))
         data = c.fetchone()
 
-        timestamp = data[2]
-        dt_object = datetime.fromtimestamp(timestamp)
-        formatted_time = dt_object.strftime('%Y-%m-%d %H:%M:%S')
-
         if data is not None:
+            timestamp = data[2]
+            dt_object = datetime.fromtimestamp(timestamp)
+            formatted_time = dt_object.strftime('%Y-%m-%d %H:%M:%S')
             return render_template('codeinfo.html', data=data, time_convert=formatted_time)
         else:
             return redirect(url_for('invite_list'))
