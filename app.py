@@ -4,6 +4,7 @@ import sqlite3
 from threading import Thread
 from dotenv import load_dotenv
 import hashlib
+import secrets
 import base64
 from itsdangerous import URLSafeTimedSerializer
 from time import time
@@ -11,7 +12,6 @@ from datetime import datetime
 from datetime import timedelta
 import os
 import subprocess
-
 
 app = Flask(__name__)
 
@@ -21,29 +21,43 @@ app.permanent_session_lifetime = timedelta(days=365)
 
 shortcut_address = "https://www.icloud.com/shortcuts/fe1e91c422474cfcbbd53c4c1769fc97"
 
-startup_time = int(time()) #앱이 시작될 때 시간을 기록
+# 개발자 모드 추가
+dev_path = 'dev.txt'
+dev_mode = os.path.isfile(dev_path)
+
 
 door_open_status = False
-
 def dooropen_wrapper():
     global door_open_status
-    subprocess.run(['python3', 'controller.py'])
+    if dev_mode == True:
+        subprocess.run(['python3', 'controller.py'])
     door_open_status = True
 
 # 플라스크를 재실행할 때마다 CSS를 새로 불러오는 로직
+startup_time = int(time()) #앱이 시작될 때 시간을 기록
+
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)
 
 def dated_url_for(endpoint, **values):
-    if endpoint == 'static':
-        values['_'] = startup_time
+    if dev_mode == True:
+        if endpoint == 'static':
+            values['_'] = int(time())
+    else:
+        if endpoint == 'static':
+            values['_'] = startup_time
     return url_for(endpoint,**values)
+
+
 
 @app.route('/')
 def index():
     if 'user_id' in session:
-        return render_template('index.html', username=session['user_id'])
+        if dev_mode == True:
+            return render_template('index.html', username=session['user_id'], devWarn="개발 - ")
+        else:
+            return render_template('index.html', username=session['user_id'])
     else:
         return render_template('index.html')
     
@@ -91,18 +105,6 @@ def success():
         return render_template('success.html', username=session['user_id'])
     else:
         return redirect(url_for('index'))
-    
-
-
-# @app.route('/openjs')
-# def openjs():    
-#     if 'user_id' in session:
-#         dooropener.dooropen()
-#         return render_template('result.html', username=session['user_id'], message="님, 환영합니다!")
-#     else:
-#         return redirect(url_for('index'))
-
-
 
 # @app.route('/sign')
 # def sign():
@@ -186,6 +188,7 @@ def settings():
     else:
         return redirect(url_for('index'))
     
+
 @app.route('/settings/dev')
 def dev():
     if 'user_id' in session:
@@ -196,7 +199,7 @@ def dev():
 @app.route('/settings/shortcuts')
 def shortcuts():
     if 'user_id' in session:
-        return render_template('shortcuts.html', username=session['user_id'], shortcut_address=shortcut_address)    
+        return render_template('shortcuts.html', username=session['user_id'], shortcut_address=shortcut_address)
     else:
         return redirect(url_for('index'))
     
@@ -289,7 +292,8 @@ def openwithapi():
 
             if data is not None:
                 username = data[0]  # 'username' 필드의 위치에 따라 이 값이 달라질 수 있습니다.
-                subprocess.run(['python3', 'controller.py'])
+                if dev_mode == True:
+                    subprocess.run(['python3', 'controller.py'])
                 # 문이 열린 후 DB에 기록을 남깁니다.
                 conn = sqlite3.connect('database.db')  # DB에 연결합니다.
                 c = conn.cursor()
@@ -305,7 +309,7 @@ def openwithapi():
             return render_template('openwithapi.html', message="토큰이 제공되지 않았습니다.")
     else:
         return redirect(url_for('index'))
-    
+
 @app.route('/settings/logs')
 def logs():
     if 'user_id' in session:
@@ -318,14 +322,36 @@ def logs():
         return render_template('logs.html', logs=logs)
     else:
         return redirect(url_for('index'))
+
+@app.route('/settings/invite')
+def invite_list():
+    if 'user_id' in session:
+        return render_template('invite.html')
+    else:
+        return redirect(url_for('index'))
     
+@app.route('/invite')
+def invite_link_gen():
+    if 'user_id' in session:
+        code = os.urandom(32)
+        return render_template('openwithapi.html', message=code)
+    else:
+        return redirect(url_for('index'))
 
 
+
+@app.route('/useragenttest', methods=['GET'])
+def useragent_test():
+    useragent = request.user_agent.string
+    return render_template('openwithapi.html', message=useragent)
 
 
 host_addr = "0.0.0.0"
 port_num = "4062"
 
 if __name__ == "__main__":
-
-    app.run(host=host_addr, port=port_num)
+    if dev_mode == True:
+        print("개발자 모드입니다.")
+        app.run(host=host_addr, port=port_num, debug=True)
+    else:
+        app.run(host=host_addr, port=port_num)
