@@ -1,69 +1,69 @@
 <html>
 
 <head>
-    <title>DoorOpener</title>
-    
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body class="noCenter">
-    <header>
-        <div class="header_wrapper_history">
-            <div class="header_back" onclick="location.href='/settings/shortcuts'">
-                <span class="material-symbols-rounded">arrow_back_ios_new</span>
-                <p>뒤로</p>
-            </div>
-            <div class="header_title">
-                <h1>단축어 생성</h1>
-            </div>
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings/shortcuts'">
+        <span class="material-symbols-rounded">arrow_back_ios_new</span>
+        <p>뒤로</p>
+      </div>
+      <div class="header_title">
+        <h1>단축어 생성</h1>
+      </div>
 
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+
+    <div class="description">
+      <p>iOS의 단축어 앱으로 문을 열기 위해서는 토큰을 발행해야 합니다. 토큰은 절대 다른 사람에게 공유하지 마십시오.</p>
+    </div>
+    <div class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_row goto_test" onclick="location.href='shortcuts/token'">
+          <p class="settings_items_text">토큰 생성 및 관리</p>
+          <span class="material-symbols-rounded">chevron_right</span>
         </div>
-    </header>
-
-    <main class="settings_wrapper" autofocus>
-
-        <div class="description">
-            <p>iOS의 단축어 앱으로 문을 열기 위해서는 토큰을 발행해야 합니다. 토큰은 절대 다른 사람에게 공유하지 마십시오.</p>
+      </div>
+      <hr class="separation">
+    </div>
+    <div class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_row goto_success" onclick="location.href='shortcuts/add'">
+          <p class="settings_items_text">단축어 생성</p>
+          <span class="material-symbols-rounded">chevron_right</span>
         </div>
-        <div class="general_wrapper">
-            <div class="settings_items">
-                <div class="settings_row goto_test" onclick="location.href='shortcuts/token'">
-                    <p class="settings_items_text">토큰 생성 및 관리</p>
-                    <span class="material-symbols-rounded">chevron_right</span>
-                </div>
-            </div>
-            <hr class="separation">
-        </div>
-        <div class="general_wrapper">
-            <div class="settings_items">
-                <div class="settings_row goto_success" onclick="location.href='shortcuts/add'">
-                    <p class="settings_items_text">단축어 생성</p>
-                    <span class="material-symbols-rounded">chevron_right</span>
-                </div>
-            </div>
-        </div>
+      </div>
+    </div>
 
 
-    </main>
+  </main>
 
 
 
-    <footer class="footer_settings">
-        <div class="homebtn nav_unselected" onclick="location.href='/'">
-            <span class="material-symbols-rounded">
-                home
-            </span>
-            <p>홈</p>
-        </div>
-        <div class="settingbtn nav_selected" onclick="location.href='/settings'">
-            <span class="material-symbols-rounded">
-                settings
-            </span>
-            <p>설정</p>
-        </div>
-    </footer>
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="material-symbols-rounded">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="material-symbols-rounded">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
 
 
 
