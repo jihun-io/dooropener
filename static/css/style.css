@@ -613,6 +613,10 @@ a .material-symbols-rounded { font-size: 14px; }
 
 }
 
+.settings_items_text_right {
+  color: #898989;
+}
+
 /* table, td, th{
   border: 1px solid black;
   border-collapse: collapse;
