@@ -269,3 +269,4 @@ pyrightconfig.json
 *.db
 app_test.py
 app_test.py
+dev.txt
