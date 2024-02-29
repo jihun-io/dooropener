@@ -22,8 +22,7 @@
       var delLink = "/settings/invite/info/del?code=" + code;
       if (navigator.share) {
         navigator.share({
-          title: '제목',
-          text: '내용',
+          title: 'DoorOpener 초대 링크',
           url: delLink,
         })
           .then(() => console.log('공유 완료'))
