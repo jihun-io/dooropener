@@ -12,18 +12,18 @@
   font-style: bold;
 }
 
-@font-face {
+/* @font-face {
   font-family: 'Material Symbols Outlined';
   font-style: normal;
   font-weight: 100 700;
   src: url('../fonts/MaterialSymbolsOutlined.woff2') format('woff2');
-}
+} */
 
 @font-face {
   font-family: 'Material Symbols Rounded';
   font-style: normal;
   font-weight: 100 700;
-  src: url('../fonts/MaterialSymbolsRounded.woff2') format('woff2');
+  src: url('https://fonts.gstatic.com/s/materialsymbolsoutlined/v164/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsLjBuVY.woff2') format('woff2');
 }
 
 .material-symbols-outlined, .material-symbols-rounded {
@@ -390,7 +390,7 @@ a .material-symbols-rounded { font-size: 14px; }
 
 .settings_items {
   width: 100%;
-  height: 49px;
+  min-height: 49px;
   font-size: 18px;
 }
 
@@ -401,6 +401,10 @@ a .material-symbols-rounded { font-size: 14px; }
   justify-content: space-between;
   align-items: center;
   margin: 12px 0px 12px 0px;
+}
+
+.settings_row p {
+  word-break: break-all;
 }
 
 .account_wrapper {
@@ -446,7 +450,7 @@ a .material-symbols-rounded { font-size: 14px; }
 .description p {
   font-size: 12px;
   color: #787878;
-  word-break: normal;
+  word-break: keep-all;
 }
 
 .executebtn {
