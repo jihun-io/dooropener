@@ -18,22 +18,37 @@
   <main class="single_box">
     <div class="login-form">
       <form action="signup?code={{ code }}" method="post">
+        <input id="username" type="text" name="username" class="text-field" placeholder="사용자 이름" required autocomplete="username" />
         {% if message %}
-        <input id="username" type="text" name="username" class="text-field" placeholder="아이디" value="{{ username }}" required autocomplete="username" />
+        <input id="email" type="text" name="email" class="text-field" placeholder="이메일" value="{{ email }}" required
+          oninput="validateEmail()" autocomplete="email" />
         {% else %}
-        <input id="username" type="text" name="username" class="text-field" placeholder="아이디" required autocomplete="username" />
+        <input id="email" type="text" name="email" class="text-field" placeholder="이메일" required oninput="validateEmail()" autocomplete="email" />
         {% endif %}
         {% if message %}
         <p>다른 아이디를 사용하십시오.</p>
         {% endif %}
-        <input id="pw1" type="password" name="password" class="text-field" placeholder="비밀번호" required minlength="8" autocomplete="new-password" />
-        <input id="pw2" type="password" name="password2" class="text-field" placeholder="비밀번호 재입력" required oninput="validatePassword()" autocomplete="new-password" />
+        <input id="pw1" type="password" name="password" class="text-field" placeholder="비밀번호" required minlength="8"
+          autocomplete="new-password" />
+        <input id="pw2" type="password" name="password2" class="text-field" placeholder="비밀번호 재입력" required
+          oninput="validatePassword()" autocomplete="new-password" />
         <input type="submit" value="계정 생성" class="submit-btn">
       </form>
       <script>
-        var pw1 = document.getElementById("pw1")
+        var pw1 = document.getElementById("pw1");
         var pw2 = document.getElementById("pw2");
-    
+
+        var email = document.getElementById("email");
+
+        function validateEmail() {
+          var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          if (!re.test(String(email.value).toLowerCase())) {
+            email.setCustomValidity("이메일 형식이 올바르지 않습니다.");
+          } else {
+            email.setCustomValidity(''); // 오류가 없으면 메시지를 빈 문자열로 설정해야한다. 오류 메시지가 비어 있지 않은 한 양식은 유효성 검사를 통과하지 않고 제출되지 않는다.
+          }
+        }
+
         function validatePassword() {
           if (pw1.value != pw2.value) {
             pw2.setCustomValidity("비밀번호가 일치하지 않습니다.");
@@ -41,6 +56,8 @@
             pw2.setCustomValidity(''); // 오류가 없으면 메시지를 빈 문자열로 설정해야한다. 오류 메시지가 비어 있지 않은 한 양식은 유효성 검사를 통과하지 않고 제출되지 않는다.
           }
         }
+
+
       </script>
   </main>
 

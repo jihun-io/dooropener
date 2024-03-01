@@ -115,13 +115,13 @@ def login():
     message = ''
     icon = ''
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
 
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
 
-        c.execute("SELECT username, password, salt FROM users WHERE username = ?", (username,))
+        c.execute("SELECT username, password, salt FROM users WHERE email = ?", (email,))
         result = c.fetchone()
 
         if result is None:
@@ -419,15 +419,16 @@ def signup():
 
             username = request.form['username']
             password = request.form['password']
+            email = request.form['email']
 
-            c.execute("SELECT username FROM users WHERE username = ?", (username,))
+            c.execute("SELECT email FROM users WHERE email = ?", (email,))
             result = c.fetchone()
 
             if result is None:
                 salt = os.urandom(32) # 32 bytes long salt
                 hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-                c.execute("INSERT INTO users (username, password, salt) VALUES (?, ?, ?)",
-                        (username, hashed_password, salt))
+                c.execute("INSERT INTO users (email, username, password, salt) VALUES (?, ?, ?, ?)",
+                        (email, username, hashed_password, salt))
 
                 c.execute("DELETE FROM inviteCodes WHERE code = ?", (invite_code,))
                 conn.commit()
@@ -437,7 +438,7 @@ def signup():
                 icon = "check_circle"
                 return render_template('login.html', message=message, icon=icon)
             else:
-                message = "다른 아이디를 사용해주세요."
+                message = "다른 이메일을 사용해주세요."
                 icon = "error"
                 return render_template('sign.html', message=message, username=username, code=invite_code)
 

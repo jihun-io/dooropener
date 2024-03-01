@@ -254,6 +254,10 @@ footer div p {
   margin-top: 15px;
 }
 
+#username {
+margin-bottom: 25px;
+}
+
 .submit-btn {
   font-size: 20px;
   border: none;
