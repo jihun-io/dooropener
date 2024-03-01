@@ -16,7 +16,7 @@
       <div class="header_wrapper">
         <h1>{{ devWarn }}DoorOpener</h1>
         <!-- <button class="hamburger" onclick="location.href='/success'">
-          <span class="material-symbols-rounded">
+          <span class="icon">
             menu
           </span>
         </button> -->
@@ -28,11 +28,11 @@
       <div class="login-form">
         <h1 class="main_message">{{ username }} 님,<br>안녕하세요?</h1>
         <button class="openbutton" type="button" onclick="location.href='/open'">
-          <span class="material-symbols-rounded">key</span>
+          <span class="icon">key</span>
           문 열기
         </button>
         <a href='/logout' class="goto">
-          <span class="material-symbols-rounded">logout</span>
+          <span class="icon">logout</span>
           로그아웃
         </a>
       </div>
@@ -55,13 +55,13 @@
     {% if username %}
     <footer>
       <div class="homebtn nav_selected" onclick="location.href='/'">
-        <span class="material-symbols-rounded">
+        <span class="icon">
           home
         </span>
         <p>홈</p>
       </div>
       <div class="settingbtn nav_unselected" onclick="location.href='/settings'">
-        <span class="material-symbols-rounded">
+        <span class="icon">
           settings
         </span>
         <p>설정</p>

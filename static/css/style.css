@@ -26,7 +26,7 @@
   src: url('https://fonts.gstatic.com/s/materialsymbolsrounded/v164/sykg-zNym6YjUruM-QrEh7-nyTnjDwKNJ_190FjzaqkNCeE.woff2') format('woff2');
 }
 
-.material-symbols-outlined, .material-symbols-rounded {
+.material-symbols-outlined, .icon {
   font-family: 'Material Symbols Rounded';
   font-weight: normal;
   font-style: normal;
@@ -46,7 +46,7 @@
   user-select: none;
 }
 
-.nav_selected .material-symbols-rounded {
+.nav_selected .icon {
   font-variation-settings:
   'FILL' 1,
   'wght' 400,
@@ -345,13 +345,13 @@ h1, strong {
   justify-content: center;
   align-items: center;
 }
-.material-symbols-rounded { margin-right: 5px; }
+.icon { margin-right: 5px; }
 
-a .material-symbols-rounded { font-size: 14px; }
+a .icon { font-size: 14px; }
 
-.hamburger .material-symbols-rounded { margin: 0px; }
+.hamburger .icon { margin: 0px; }
 
-.tooltip .material-symbols-rounded { font-size: 24px; color: #000000; }
+.tooltip .icon { font-size: 24px; color: #000000; }
 
 
 .dooropen_icons, .login_icons { margin: 40px; color:rgb(95, 99, 104); }
@@ -678,7 +678,7 @@ a .material-symbols-rounded { font-size: 14px; }
     background-color: #202020;
   }
 
-  .dooropen_icons .material-symbols-rounded, .login_icons .material-symbols-rounded {
+  .dooropen_icons .icon, .login_icons .icon {
     color: #fefefe;
   }
 
@@ -694,15 +694,15 @@ a .material-symbols-rounded { font-size: 14px; }
     color: #ffffff;
   }
 
-  .tooltip_header .material-symbols-rounded {
+  .tooltip_header .icon {
     color: #ffffff;
   }
 
-  .header_back .material-symbols-rounded {
+  .header_back .icon {
     color: #ffffff;
   }
 
-  .tooltip_wrapper a .material-symbols-rounded {
+  .tooltip_wrapper a .icon {
     color: #9b9b9b;
   }
 
@@ -710,7 +710,7 @@ a .material-symbols-rounded { font-size: 14px; }
     background-color: #202020;
   }
 
-  .tooltip .material-symbols-rounded {
+  .tooltip .icon {
     color: #ffffff;
   }
 
@@ -722,7 +722,7 @@ a .material-symbols-rounded { font-size: 14px; }
     border: 0.5px solid #404040;
   }
 
-  .account_info .material-symbols-rounded, .settings_row .material-symbols-rounded {
+  .account_info .icon, .settings_row .icon {
     color:#898989;
   }
 

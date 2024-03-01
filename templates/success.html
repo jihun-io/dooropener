@@ -8,7 +8,7 @@
   <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
 
   <style>
-    .material-symbols-rounded {
+    .icon {
       font-variation-settings:
         'FILL' 0,
         'wght' 400,
@@ -34,17 +34,17 @@
 
 <body>
   <header class="tooltip_header" style="visibility: hidden;">
-    <span class="material-symbols-rounded">
+    <span class="icon">
       arrow_upward
     </span>
     <div class="tooltip_wrapper">
       <div class="tooltip">
-        <span class="material-symbols-rounded">
+        <span class="icon">
           lightbulb_circle
         </span>
         <p style="font-size: 16px;">완료 버튼을 누르면 닫습니다.</p>
       </div>
-      <a href="success?tooltip=no"><span class="material-symbols-rounded">close</span>다시 보지 않기</a>
+      <a href="success?tooltip=no"><span class="icon">close</span>다시 보지 않기</a>
     </div>
   </header>
 
@@ -52,7 +52,7 @@
     <div class="login-form">
       <h1 class="welcome_message">{{ username }} 님,<br> 환영합니다!</h1>
       <div class="dooropen_icons">
-        <span class="material-symbols-rounded" style="font-size: 100px;">
+        <span class="icon" style="font-size: 100px;">
           door_open
         </span>
       </div>
