@@ -19,15 +19,15 @@
     <div class="login-form">
       <form action="signup?code={{ code }}" method="post">
         {% if message %}
-        <input id="username" type="text" name="username" class="text-field" placeholder="아이디" value="{{ username }}" required>
+        <input id="username" type="text" name="username" class="text-field" placeholder="아이디" value="{{ username }}" required autocomplete="username" />
         {% else %}
-        <input id="username" type="text" name="username" class="text-field" placeholder="아이디" required>
+        <input id="username" type="text" name="username" class="text-field" placeholder="아이디" required autocomplete="username" />
         {% endif %}
         {% if message %}
         <p>다른 아이디를 사용하십시오.</p>
         {% endif %}
-        <input id="pw1" type="password" name="password" class="text-field" placeholder="비밀번호" required minlength="8">
-        <input id="pw2" type="password" name="password2" class="text-field" placeholder="비밀번호 재입력" required oninput="validatePassword()">
+        <input id="pw1" type="password" name="password" class="text-field" placeholder="비밀번호" required minlength="8" autocomplete="new-password" />
+        <input id="pw2" type="password" name="password2" class="text-field" placeholder="비밀번호 재입력" required oninput="validatePassword()" autocomplete="new-password" />
         <input type="submit" value="계정 생성" class="submit-btn">
       </form>
       <script>
