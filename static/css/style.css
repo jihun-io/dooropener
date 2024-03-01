@@ -556,6 +556,11 @@ a .material-symbols-rounded { font-size: 14px; }
   color: white;
 }
 
+.submit-btn {
+  font-family: "Pretendard-Regular";
+  font-style: normal;
+}
+
 .info_list {
   width: 80%;
   text-align: left;
