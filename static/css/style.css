@@ -622,6 +622,10 @@ a .material-symbols-rounded { font-size: 14px; }
   color: #898989;
 }
 
+.header_back, .settings_items, .settings_row, button, submit, .homebtn, .settingbtn {
+  cursor: pointer;
+}
+
 /* table, td, th{
   border: 1px solid black;
   border-collapse: collapse;

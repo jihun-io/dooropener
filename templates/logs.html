@@ -1,72 +1,72 @@
 <html>
 
 <head>
-    <title>DoorOpener</title>
+  <title>DoorOpener</title>
 
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
 <body class="noCenter">
-    <header>
-        <div class="header_wrapper_history">
-            <div class="header_back" onclick="location.href='/settings'">
-                <span class="material-symbols-rounded">arrow_back_ios_new</span>
-                <p>설정</p>
-            </div>
-            <div class="header_title">
-                <h1>잠금 해제 기록</h1>
-            </div>
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings'">
+        <span class="material-symbols-rounded">arrow_back_ios_new</span>
+        <p>설정</p>
+      </div>
+      <div class="header_title">
+        <h1>잠금 해제 기록</h1>
+      </div>
 
-        </div>
-    </header>
+    </div>
+  </header>
 
-    <main class="settings_wrapper" autofocus>
-        <div class="table_wrapper">
-            <table class="logs_table">
-                <tr>
-                    <th>사용자</th>
-                    <th>시간</th>
-                    <th>접속 경로</th>
-                </tr>
-                {% for log in logs %}
-                <tr>
-                    <td>{{ log[0] }}</td>
-                    <td>{{ log[1] }}</td>
-                    <td>
-                        {% if log[2] is none %}
-                        웹
-                        {% elif log[2] == 1 %}
-                        토큰
-                        {% else %}
-                        {{ log[2] }}
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </main>
+  <main class="settings_wrapper" autofocus>
+    <div class="table_wrapper">
+      <table class="logs_table">
+        <tr>
+          <th>사용자</th>
+          <th>시간</th>
+          <th>접속 경로</th>
+        </tr>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log[0] }}</td>
+          <td>{{ log[1] }}</td>
+          <td>
+            {% if log[2] is none %}
+            웹
+            {% elif log[2] == 1 %}
+            토큰
+            {% else %}
+            {{ log[2] }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </main>
 
 
 
-    <footer class="footer_settings">
-        <div class="homebtn nav_unselected" onclick="location.href='/'">
-            <span class="material-symbols-rounded">
-                home
-            </span>
-            <p>홈</p>
-        </div>
-        <div class="settingbtn nav_selected" onclick="location.href='/settings'">
-            <span class="material-symbols-rounded">
-                settings
-            </span>
-            <p>설정</p>
-        </div>
-    </footer>
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="material-symbols-rounded">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="material-symbols-rounded">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
 
 
 

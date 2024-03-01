@@ -28,8 +28,8 @@
       <p>새로운 사용자를 초대하기 위해서는 초대 링크가 필요합니다. 초대 링크는 최대 15분 간 유효하며, 한 링크 당 한 명의 사용자만 가입 가능합니다.</p>
     </div>
     <div class="general_wrapper">
-      <div class="settings_items">
-        <div class="settings_row executebtn" onclick="location.href='/invitecode'">
+      <div class="settings_items" onclick="location.href='/invitecode'">
+        <div class="settings_row executebtn">
           <p class="settings_items_text">초대 링크 생성</p>
         </div>
       </div>
@@ -39,8 +39,8 @@
     </div>
     <div class="general_wrapper">
       {% for i in invite_codes %}
-      <div class="settings_items">
-        <div class="settings_row" onclick="location.href='invite/info?code={{ i[1] }}'">
+      <div class="settings_items" onclick="location.href='invite/info?code={{ i[1] }}'">
+        <div class="settings_row">
           <p class="settings_items_text">{{ request.host_url }}join?code={{ i[1] }}</p>
           <span class="material-symbols-rounded">chevron_right</span>
         </div>
