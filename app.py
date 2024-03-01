@@ -271,7 +271,7 @@ def openwithapi():
             data = c.fetchone()
 
             if data is not None:
-                username = data[0]  # 'username' 필드의 위치에 따라 이 값이 달라질 수 있습니다.
+                username = data[1]  # 'username' 필드의 위치에 따라 이 값이 달라질 수 있습니다.
                 if dev_mode == False:
                     subprocess.run(['python3', 'controller.py'])
                 else:
