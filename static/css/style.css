@@ -291,9 +291,8 @@ button {
   display: block !important;
 } */
 
-h1 {
+h1, strong {
   font-family: 'Pretendard-Bold';
-
 }
 
 .main_message {
