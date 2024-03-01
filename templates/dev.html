@@ -1,82 +1,82 @@
 <html>
 
 <head>
-    <title>DoorOpener</title>
-    
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
 
 
-    
+
 </head>
 
 <body class="noCenter">
-    <header>
-        <div class="header_wrapper_history">
-            <div class="header_back" onclick="location.href='/settings'">
-                <span class="icon">arrow_back_ios_new</span>
-                    <p>설정</p>
-            </div>
-            <div class="header_title">
-                <h1>개발자 모드</h1>
-            </div>
-            
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings'">
+        <span class="icon">arrow_back_ios_new</span>
+        <p>설정</p>
+      </div>
+      <div class="header_title">
+        <h1>개발자 모드</h1>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+    <div class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_column">
+          <p class="settings_items_text">user-agent</p>
+          <p class="settings_items text settings_info">{{ useragent }}</p>
         </div>
-    </header>
-
-    <main class="settings_wrapper" autofocus>
-        <div class="general_wrapper">
-            <div class="settings_items">
-                <div class="settings_column">
-                    <p class="settings_items_text">user-agent</p>
-                    <p class="settings_items text settings_info">{{ useragent }}</p>
-                </div>
-            </div>
+      </div>
+    </div>
+    <div class="general_wrapper">
+      <div class="settings_items" onclick="location.href='http://192.168.0.33:4062'">
+        <div class="settings_row">
+          <p class="settings_items_text">테스트 내부망 페이지로 이동</p>
+          <span class="icon">chevron_right</span>
         </div>
-        <div class="general_wrapper">
-            <div class="settings_items" onclick="location.href='http://192.168.0.33:4062'">
-              <div class="settings_row">
-                <p class="settings_items_text">테스트 내부망 페이지로 이동</p>
-                <span class="icon">chevron_right</span>
-              </div>
-            </div>
-            <hr class="separation">
-            <div class="settings_items" onclick="location.href='https://dooropener.jihun.io/'">
-                <div class="settings_row goto_service">
-                  <p class="settings_items_text">서비스 중인 페이지로 이동</p>
-                  <span class="icon">chevron_right</span>
-                </div>
-              </div>
-          </div>
-        <div class="general_wrapper">
-            <div class="settings_items" onclick="location.href='/success'">
-                <div class="settings_row goto_success">
-                    <p class="settings_items_text">문 열림 페이지로 이동</p>
-                    <span class="icon">chevron_right</span>
-                </div>
-            </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items" onclick="location.href='https://dooropener.jihun.io/'">
+        <div class="settings_row goto_service">
+          <p class="settings_items_text">서비스 중인 페이지로 이동</p>
+          <span class="icon">chevron_right</span>
         </div>
-
-
-    </main>
-
-
-
-    <footer class="footer_settings">
-        <div class="homebtn nav_unselected" onclick="location.href='/'">
-            <span class="icon">
-                home
-            </span>
-            <p>홈</p>
+      </div>
+    </div>
+    <div class="general_wrapper">
+      <div class="settings_items" onclick="location.href='/success'">
+        <div class="settings_row goto_success">
+          <p class="settings_items_text">문 열림 페이지로 이동</p>
+          <span class="icon">chevron_right</span>
         </div>
-        <div class="settingbtn nav_selected" onclick="location.href='/settings'">
-            <span class="icon">
-                settings
-            </span>
-            <p>설정</p>
-        </div>
-    </footer>
+      </div>
+    </div>
+
+
+  </main>
+
+
+
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="icon">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="icon">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
 
 
 
