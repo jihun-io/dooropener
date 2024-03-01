@@ -408,6 +408,8 @@ def signup():
     c.execute("SELECT * FROM inviteCodes WHERE code = ?", (invite_code,))
     result = c.fetchone()
 
+    invitorUsername = result[0]
+
     if result is None:
         message = "초대 링크가 만료되었거나 올바르지 않습니다."
         icon = "error"
@@ -425,10 +427,14 @@ def signup():
             result = c.fetchone()
 
             if result is None:
+                c.execute("SELECT email FROM users WHERE username = ?", (invitorUsername,))
+                result = c.fetchone()
+                invitorEmail = result[0]
+
                 salt = os.urandom(32) # 32 bytes long salt
                 hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-                c.execute("INSERT INTO users (email, username, password, salt) VALUES (?, ?, ?, ?)",
-                        (email, username, hashed_password, salt))
+                c.execute("INSERT INTO users (email, username, password, salt, invitorEmail, invitorUsername) VALUES (?, ?, ?, ?, ?, ?)",
+                        (email, username, hashed_password, salt, invitorEmail, invitorUsername))
 
                 c.execute("DELETE FROM inviteCodes WHERE code = ?", (invite_code,))
                 conn.commit()
