@@ -89,10 +89,6 @@ def check_door_status():
     else:
         return redirect(url_for('index'))
 
-
-
-    
-
 @app.route('/open')
 def open():    
     if 'user_id' in session:
@@ -113,32 +109,6 @@ def success():
         return render_template('success.html', username=session['user_id'])
     else:
         return redirect(url_for('index'))
-
-# @app.route('/sign')
-# def sign():
-#     return render_template('sign.html')
-
-# @app.route('/signup', methods=['GET', 'POST'])
-# def signup():
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-
-#         salt = os.urandom(32) # 32 bytes long salt
-
-#         hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-
-#         conn = sqlite3.connect('database.db')
-#         c = conn.cursor()
-
-#         c.execute("INSERT INTO users (username, password, salt) VALUES (?, ?, ?)",
-#                   (username, hashed_password, salt))
-
-#         conn.commit()
-#         conn.close()
-
-#         return '회원가입이 완료되었습니다!'
-#     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -400,12 +370,75 @@ def invite_link_del():
     else:
         return redirect(url_for('index'))
     
-# @app.route('/invitecode')
-# def invite_link_gen():
-#     if 'user_id' in session:
-#         return render_template('openwithapi.html', message=invite_code(12))
-#     else:
-#         return redirect(url_for('index'))
+@app.route('/join', methods=['GET'])
+def join_invite():
+    session.pop('user_id', None)
+
+    invite_code = request.args.get('code')
+    
+    current_time = int(datetime.now().timestamp())
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("DELETE FROM inviteCodes WHERE expDate < ?", (current_time,))
+    conn.commit()
+
+    c.execute("SELECT * FROM inviteCodes WHERE code = ?", (invite_code,))
+    result = c.fetchone()
+
+    if result is None:
+        message = "초대 링크가 만료되었거나 올바르지 않습니다."
+        icon = "error"
+        return render_template('login.html', message=message, icon=icon)
+    else:
+        return render_template('sign.html', code=invite_code)
+    
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    invite_code = request.args.get('code')
+
+    current_time = int(datetime.now().timestamp())
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("DELETE FROM inviteCodes WHERE expDate < ?", (current_time,))
+    conn.commit()
+
+    c.execute("SELECT * FROM inviteCodes WHERE code = ?", (invite_code,))
+    result = c.fetchone()
+
+    if result is None:
+        message = "초대 링크가 만료되었거나 올바르지 않습니다."
+        icon = "error"
+        return render_template('login.html', message=message, icon=icon)
+    else:
+        if request.method == 'POST':
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+
+            username = request.form['username']
+            password = request.form['password']
+
+            c.execute("SELECT username FROM users WHERE username = ?", (username,))
+            result = c.fetchone()
+
+            if result is None:
+                salt = os.urandom(32) # 32 bytes long salt
+                hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+                c.execute("INSERT INTO users (username, password, salt) VALUES (?, ?, ?)",
+                        (username, hashed_password, salt))
+
+                c.execute("DELETE FROM inviteCodes WHERE code = ?", (invite_code,))
+                conn.commit()
+                conn.close()
+
+                message = "회원가입이 완료되었습니다!"
+                icon = "check_circle"
+                return render_template('login.html', message=message, icon=icon)
+            else:
+                message = "다른 아이디를 사용해주세요."
+                icon = "error"
+                return render_template('sign.html', message=message, username=username, code=invite_code)
+
+
 
 
 
