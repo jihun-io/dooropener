@@ -415,11 +415,8 @@ a .material-symbols-rounded { font-size: 14px; }
   align-items: flex-start;
 }
 
-.settings_column p {
-  margin-bottom: 5px;
-}
-
 .settings_info {
+  margin-top: 5px;
   font-size: 14px;
   color: #787878;
 }
