@@ -214,6 +214,10 @@ footer div p {
   color: #000000;
 }
 
+form {
+  width: 100%;
+}
+
 /* footer p {
   width: 100%;
   display: flex;
@@ -254,8 +258,8 @@ footer div p {
   margin-top: 15px;
 }
 
-#username {
-margin-bottom: 25px;
+.username_margin {
+  margin-bottom: 25px;
 }
 
 .submit-btn {
@@ -651,6 +655,51 @@ a .icon { font-size: 14px; }
   border-collapse: collapse;
 } */
 
+.userinfo_wrapper {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.userinfo_wrapper h1, .userinfo_wrapper h2 {
+  font-family: "Pretendard-Regular";
+  font-weight: normal;
+}
+
+.userinfo_wrapper h1 {
+  font-size: 24px;
+}
+
+.userinfo_wrapper h2 {
+  font-size: 18px;
+}
+
+.modifyForm {
+  border: none;
+  border-radius: 0px;
+  font-size: 18px;
+  text-align: left;
+  width: 70%;
+}
+
+.noBtn {
+  border-radius: 0px;
+  border: none;
+  font-size: 18px;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  margin: 12px 0px 12px 0px;
+}
+
+.noMargin {
+  margin: 0px;
+}
+
 .copyright {
   font-size: 12px!important;
 }
@@ -767,6 +816,10 @@ a .icon { font-size: 14px; }
     color: #ffffff;
     background-color: #202020!important;
 
+  }
+
+  .modifyForm {
+    background-color: #202020;
   }
 
 

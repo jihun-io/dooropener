@@ -128,12 +128,12 @@ def login():
             message = '해당 사용자를\n찾을 수 없습니다.'
             icon = 'error'
         else:
-            user_id, db_password, salt = result
+            username, db_password, salt = result
             hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
 
             if db_password == hashed_password:
                 session.permanent = True
-                session['user_id'] = user_id  # 사용자 아이디를 세션에 저장
+                session['user_id'] = username  # 사용자 아이디를 세션에 저장
                 message = '로그인을\n완료했습니다.'
                 icon = 'done'
             else:
@@ -163,6 +163,84 @@ def webapp():
 def settings():
     if 'user_id' in session:
         return render_template('settings.html', username=session['user_id'])
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/user')
+def user():
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("SELECT email FROM users WHERE username = ?", (session['user_id'],))
+        result = c.fetchone()
+        email = result[0]
+
+        return render_template('user.html', username=session['user_id'], email=email)
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/user/modify')
+def modifyInfo():
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("SELECT email FROM users WHERE username = ?", (session['user_id'],))
+        result = c.fetchone()
+        email = result[0]
+
+        return render_template('modifyuserinfo.html', username=session['user_id'], email=email)
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/user/modify/request', methods=['GET', 'POST'])
+def modifyInfoRequest():
+    if 'user_id' in session:
+        if request.method == 'POST':
+            new_username = request.form['username']
+            new_email = request.form['email']
+            username = session['user_id']
+
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+
+            c.execute("UPDATE users SET username = ?, email = ? WHERE username = ?", (new_username, new_email, username))
+            conn.commit()
+            conn.close()
+
+            session['user_id'] = new_username
+
+            return redirect(url_for('user'))
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/user/password')
+def modifyPW():
+    if 'user_id' in session:
+        return render_template('modifyuserpw.html', username=session['user_id'])
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/user/password/request', methods=['GET', 'POST'])
+def modifyPWRequest():
+    if 'user_id' in session:
+        if request.method == 'POST':
+            new_password = request.form['password']
+            username = session['user_id']
+
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+
+            salt = os.urandom(32) # 32 bytes long salt
+            hashed_password = hashlib.pbkdf2_hmac('sha256', new_password.encode('utf-8'), salt, 100000)
+
+            c.execute("UPDATE users SET password = ?, salt = ? WHERE username = ?", (hashed_password, salt, username))
+            conn.commit()
+            conn.close()
+            session.pop('user_id', None)
+
+            return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
     
@@ -419,7 +497,7 @@ def signup():
             conn = sqlite3.connect('database.db')
             c = conn.cursor()
 
-            username = request.form['username']
+            username = request.form['realname']
             password = request.form['password']
             email = request.form['email']
 

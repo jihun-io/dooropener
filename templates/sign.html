@@ -18,7 +18,7 @@
   <main class="single_box">
     <div class="login-form">
       <form action="signup?code={{ code }}" method="post">
-        <input id="username" type="text" name="username" class="text-field" placeholder="사용자 이름" required autocomplete="username" />
+        <input id="realname" type="text" name="realname" class="text-field username_margin" placeholder="사용자 이름" required />
         {% if message %}
         <input id="email" type="text" name="email" class="text-field" placeholder="이메일" value="{{ email }}" required
           oninput="validateEmail()" autocomplete="email" />

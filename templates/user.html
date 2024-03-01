@@ -1,0 +1,87 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+
+
+</head>
+
+<body class="noCenter">
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings'">
+        <span class="icon">arrow_back_ios_new</span>
+        <p>설정</p>
+      </div>
+      <div class="header_title">
+        <h1>사용자 정보</h1>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+    <div class="userinfo_wrapper">
+      <h1>{{ username }}</h1>
+      <h2>{{ email }}</h2>
+    </div>
+
+    <div class="general_wrapper">
+      <div class="settings_items" onclick="location.href='user/modify'">
+        <div class="settings_row">
+          <p class="settings_items_text">개인정보 변경</p>
+          <span class="icon">chevron_right</span>
+        </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items" onclick="location.href='user/password'">
+        <div class="settings_row goto_success">
+          <p class="settings_items_text">비밀번호 변경</p>
+          <span class="icon">chevron_right</span>
+        </div>
+      </div>
+    </div>
+
+    </div>
+    <div class="general_wrapper" style="margin-top: 50px;">
+      <div class="settings_items" onclick="location.href='/success'">
+        <div class="settings_row goto_success">
+          <p class="settings_items_text warnbtn">사용자 삭제</p>
+        </div>
+      </div>
+    </div>
+
+
+  </main>
+
+
+
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="icon">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="icon">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
+
+
+
+
+
+</body>
+
+
+
+</html>
