@@ -422,6 +422,7 @@ a .icon { font-size: 14px; }
   margin-top: 5px;
   font-size: 14px;
   color: #787878;
+  min-height: 0px!important;
 }
 
 .account_wrapper {
