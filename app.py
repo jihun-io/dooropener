@@ -31,7 +31,7 @@ dev_mode = os.path.isfile(dev_path)
 door_open_status = False
 def dooropen_wrapper():
     global door_open_status
-    if dev_mode == True:
+    if dev_mode == False:
         subprocess.run(['python3', 'controller.py'])
     door_open_status = True
 
@@ -271,7 +271,7 @@ def openwithapi():
 
             if data is not None:
                 username = data[0]  # 'username' 필드의 위치에 따라 이 값이 달라질 수 있습니다.
-                if dev_mode == True:
+                if dev_mode == False:
                     subprocess.run(['python3', 'controller.py'])
                 # 문이 열린 후 DB에 기록을 남깁니다.
                 conn = sqlite3.connect('database.db')  # DB에 연결합니다.
