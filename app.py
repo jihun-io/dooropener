@@ -170,7 +170,8 @@ def settings():
 @app.route('/settings/dev')
 def dev():
     if 'user_id' in session:
-        return render_template('dev.html', username=session['user_id'])
+        useragent = request.user_agent.string
+        return render_template('dev.html', username=session['user_id'], useragent=useragent)
     else:
         return redirect(url_for('index'))
     

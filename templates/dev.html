@@ -27,6 +27,14 @@
 
     <main class="settings_wrapper" autofocus>
         <div class="general_wrapper">
+            <div class="settings_items">
+                <div class="settings_column">
+                    <p class="settings_items_text">user-agent</p>
+                    <p class="settings_items text settings_info">{{ useragent }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="general_wrapper">
             <div class="settings_items" onclick="location.href='http://192.168.0.33:4062'">
               <div class="settings_row">
                 <p class="settings_items_text">테스트 내부망 페이지로 이동</p>
@@ -45,14 +53,6 @@
             <div class="settings_items" onclick="location.href='/success'">
                 <div class="settings_row goto_success">
                     <p class="settings_items_text">문 열림 페이지로 이동</p>
-                    <span class="material-symbols-rounded">chevron_right</span>
-                </div>
-            </div>
-        </div>
-        <div class="general_wrapper">
-            <div class="settings_items" onclick="location.href='/useragenttest'">
-                <div class="settings_row goto_success">
-                    <p class="settings_items_text">user-agent 확인</p>
                     <span class="material-symbols-rounded">chevron_right</span>
                 </div>
             </div>
