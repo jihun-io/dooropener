@@ -17,11 +17,14 @@
     <main class="single_box">
         <div class="login-form revoke_form">
             <h1 class="revoke_title">토큰 생성 완료</h1>
-            <p>다음은 생성된 토큰 값입니다.</p>
-            <p class="genText" id="token">{{ token }}</p>
+            <!-- <p>다음은 생성된 토큰 값입니다.</p>
+            <p class="genText" id="token">{{ token }}</p> -->
             <p>단축어 앱에 추가하려면, 아래 링크를 복사하고 단축어 앱에서 붙여넣으십시오.</p>
             <p class="genText" id="scLink">{{ scLink }}</p>
-            <p>경고: 위 텍스트를 다른 사람에게 절대 공개하지 마십시오. 허가되지 않은 사람이 잠금을 해제하고 들어올 수 있습니다.</p>
+            <div class="warning_wrapper">
+                <span class="icon icon_on_paragraph">warning</span>
+                <p>위 텍스트를 <strong>절대 다른 사람에게 공개하지 마십시오.</strong> 허가되지 않은 사람이 잠금을 해제하고 들어올 수 있습니다.</p>
+            </div>
             <div class="buttons_column">
                 <button class="run_btn btn_wide" onclick="location.href='{{ shortcut_address }}'">단축어에 추가</button>
                 <button class="cancel_btn btn_wide" onclick="location.href='/settings/shortcuts/token'">닫기</button>

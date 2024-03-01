@@ -353,6 +353,8 @@ h1, strong {
 
 a .icon { font-size: 14px; }
 
+.icon_on_paragraph { font-size: 18px; margin-bottom: 5px; }
+
 .hamburger .icon { margin: 0px; }
 
 .tooltip .icon { font-size: 24px; color: #000000; }
@@ -729,6 +731,10 @@ a .icon { font-size: 14px; }
 
   .account_info .icon, .settings_row .icon {
     color:#898989;
+  }
+
+  .icon_on_paragraph {
+    color: #FFFFFF;
   }
 
   .executebtn p {
