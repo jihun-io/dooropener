@@ -15,7 +15,7 @@
     let scrollPosition = 0;
 
     // 페이지를 벗어날 때 스크롤 위치를 저장
-    window.addEventListener('beforeunload', function () {
+    window.addEventListener('pagehide', function () {
       let mainElement = document.querySelector('main');
       if (mainElement) {
         scrollPosition = mainElement.scrollTop;
@@ -36,8 +36,6 @@
         }
       }
     });
-
-
 
 
   </script>
