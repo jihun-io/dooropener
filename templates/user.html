@@ -60,7 +60,6 @@
         var username = document.getElementById("name");
         var email = document.getElementById("email");
         var yn = confirm("정말로 사용자를 삭제하시겠습니까?\n해당 작업은 취소할 수 없습니다.\n\n사용자 이름: " + username.innerText + "\n이메일: " + email.innerText);
-        console.log(yn);
         if (yn == true) {
           location.href="user/del?id=" + email.innerText;
         }
