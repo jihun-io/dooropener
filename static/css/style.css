@@ -758,6 +758,7 @@ a .icon { font-size: 14px; }
 
   input {
     color: #ffffff;
+    font-weight: normal;
   }
 
   .submit-btn, button {
