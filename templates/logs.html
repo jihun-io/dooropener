@@ -25,6 +25,32 @@
   </header>
 
   <main class="settings_wrapper" autofocus>
+    {% if logs == [] %}
+    <div class="general_wrapper">
+      <div class="settings_items" onclick="reset()">
+        <div class="settings_row invite">
+          <p class="settings_items_text">기록이 없습니다.</p>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    {% if isAdmin %}
+    <div class="general_wrapper">
+      <div class="settings_items" onclick="reset()">
+        <div class="settings_row invite">
+          <p class="settings_items_text executebtn">기록 초기화</p>
+        </div>
+        <script>
+          function reset() {
+            var resetYN = confirm("정말로 모든 기록을 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다.")
+            if (resetYN == true) {
+              location.href = "logs/reset"
+            }
+          }
+        </script>
+      </div>
+    </div>
+    {% endif %}
     <div class="table_wrapper">
       <table class="logs_table">
         <tr>
@@ -49,6 +75,7 @@
         {% endfor %}
       </table>
     </div>
+    {% endif %}
   </main>
 
 

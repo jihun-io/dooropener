@@ -363,11 +363,38 @@ def logs():
         c = conn.cursor()
         c.execute("SELECT * FROM unlockLogs ORDER BY time DESC")
         logs = c.fetchall()
+
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (session['user_id'],))
+        result = c.fetchone()
+        isAdmin = result[0]
+
         conn.close()
 
-        return render_template('logs.html', logs=logs)
+        return render_template('logs.html',isAdmin=isAdmin, logs=logs)
     else:
         return redirect(url_for('index'))
+    
+@app.route('/settings/logs/reset')
+def logs_reset():
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (session['user_id'],))
+        result = c.fetchone()
+        isAdmin = result[0]
+
+        if isAdmin == 1:
+            c.execute("DELETE FROM unlockLogs")
+            conn.commit()
+
+            c.execute("SELECT * FROM unlockLogs ORDER BY time DESC")
+            conn.close()
+            return redirect(url_for('logs'))
+        else:
+            return redirect(url_for('logs'))
+    else:
+        return redirect(url_for('index'))
+
 
 @app.route('/settings/invite')
 def invite_list():
