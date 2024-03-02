@@ -540,6 +540,23 @@ def users_lists_delete():
             return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
+    
+@app.route('/settings/user/del', methods=['GET'])
+def users_delete():
+    if 'user_id' in session:
+        email = request.args.get('id')
+        if session['user_id'] == email:
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+            c.execute("DELETE FROM users WHERE email = ?", (email,))
+            conn.commit()
+            conn.close()
+            session.pop('user_id', None)
+            return redirect(url_for('index'))
+        else: 
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
 
     
 @app.route('/join', methods=['GET'])
