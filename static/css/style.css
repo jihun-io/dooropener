@@ -701,11 +701,12 @@ a .icon { font-size: 14px; }
 .toggleWrapper {
   display: flex;
   flex-direction: row;
+  max-height: 49px;
 }
 
 .toggleBtn {
   margin: 0px!important;
-  font-size: 49px!important;
+  font-size: 60px!important;
   font-variation-settings:
   'FILL' 0,
   'wght' 100,
@@ -716,7 +717,7 @@ a .icon { font-size: 14px; }
 
 .toggleBtn_on {
   margin: 0px!important;
-  font-size: 49px!important;
+  font-size: 60px!important;
   font-variation-settings:
   'FILL' 1,
   'wght' 100,
