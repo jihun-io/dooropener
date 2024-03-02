@@ -488,23 +488,54 @@ def users_lists_permission():
         
         if isAdmin == 1:
             email = request.args.get('id')
-            c.execute("SELECT isAdmin FROM users WHERE email = ?", (email,))
-            result = c.fetchone()
-            theyAdmin = result[0]
 
-            c.execute("SELECT serial FROM users WHERE email = ?", (email,))
-            result = c.fetchone()
-            theySerial = result[0]
-
-            if theyAdmin == 1:
-                c.execute("UPDATE users SET isAdmin = Null WHERE email = ?", (email,))
-                conn.commit()
-                conn.close()
+            if session['user_id'] == email:
+                return redirect(url_for('users_list'))
             else:
-                c.execute("UPDATE users SET isAdmin = 1 WHERE email = ?", (email,))
+                c.execute("SELECT isAdmin FROM users WHERE email = ?", (email,))
+                result = c.fetchone()
+                theyAdmin = result[0]
+
+                c.execute("SELECT serial FROM users WHERE email = ?", (email,))
+                result = c.fetchone()
+                theySerial = result[0]
+
+                if theyAdmin == 1:
+                    c.execute("UPDATE users SET isAdmin = Null WHERE email = ?", (email,))
+                    conn.commit()
+                    conn.close()
+                else:
+                    c.execute("UPDATE users SET isAdmin = 1 WHERE email = ?", (email,))
+                    conn.commit()
+                    conn.close()
+                return redirect('{}#{}'.format(url_for('users_list'), theySerial))
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/admin/userlist/del', methods=['GET'])
+def users_lists_delete():
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (session['user_id'],))
+        result = c.fetchone()
+        isAdmin = result[0]
+        
+        if isAdmin == 1:
+            email = request.args.get('id')
+            if session['user_id'] == email:
+                return redirect(url_for('users_list'))
+            else:
+                c.execute("SELECT serial FROM users WHERE email = ?", (email,))
+                result = c.fetchone()
+                theySerial = result[0]
+                c.execute("DELETE FROM users WHERE email = ?", (email,))
                 conn.commit()
                 conn.close()
-            return redirect('{}#{}'.format(url_for('users_list'), theySerial))
+                return redirect('{}#{}'.format(url_for('users_list'), theySerial))
         else:
             return redirect(url_for('index'))
     else:

@@ -35,14 +35,14 @@
       <div class="settings_items">
         <div class="settings_row">
           <p class="settings_items_text">이름</p>
-          <p class="settings_items_text_right">{{ i[0] }}</p>
+          <p id="name_{{ i[5] }}" class="settings_items_text_right">{{ i[0] }}</p>
         </div>
       </div>
       <hr class="separation">
       <div class="settings_items">
         <div class="settings_row">
           <p class="settings_items_text">이메일</p>
-          <p class="settings_items_text_right">{{ i[1] }}</p>
+          <p id="email_{{ i[5] }}" class="settings_items_text_right">{{ i[1] }}</p>
         </div>
         <hr class="separation">
         <div class="settings_items">
@@ -73,14 +73,31 @@
           </div>
         </div>
         <hr class="separation">
-        <div class="settings_items" onclick="location.href='userslist/del?id={{ i[1] }}'">
+        {% if username == i[1] %}
+        {% else %}
+        <div class="settings_items" onclick="userDel({{ i[5] }})">
           <div class="settings_row goto_success">
             <p class="settings_items_text warnbtn">사용자 삭제</p>
           </div>
         </div>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
+
+    <script>
+      function userDel(serialnumber) {
+        var serialnumber;
+        var username = document.getElementById("name_" + serialnumber);
+        var email = document.getElementById("email_" + serialnumber);
+        var yn = confirm("정말로 이 사용자를 삭제하시겠습니까?\n해당 작업은 취소할 수 없습니다.\n\n사용자 이름: " + username.innerText + "\n이메일: " + email.innerText);
+        console.log(yn);
+        if (yn == true) {
+          location.href="userlist/del?id=" + email.innerText;
+        }
+      }
+
+    </script>
 
 
   </main>
