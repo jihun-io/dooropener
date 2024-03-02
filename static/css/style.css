@@ -698,8 +698,40 @@ a .icon { font-size: 14px; }
   font-weight: normal;
 }
 
+.toggleWrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.toggleBtn {
+  margin: 0px!important;
+  font-size: 49px!important;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 100,
+  'GRAD' 200,
+  'opsz' 20;
+  color: #898989
+}
+
+.toggleBtn_on {
+  margin: 0px!important;
+  font-size: 49px!important;
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 100,
+  'GRAD' 200,
+  'opsz' 20;
+  color: rgb(52,199,89)
+}
+
 .noMargin {
   margin: 0px;
+}
+
+.settings_row_two {
+  display: flex;
+  flex-direction: row;
 }
 
 .copyright {
@@ -827,6 +859,11 @@ a .icon { font-size: 14px; }
   .userinfo_wrapper h2 {
     color: #fff;
   }
+
+  .toggleBtn_on {
+    color: rgb(48,209,88)
+  }
+  
 
 
 

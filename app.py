@@ -437,6 +437,80 @@ def invite_link_del():
     else:
         return redirect(url_for('index'))
     
+@app.route('/settings/admin')
+def admin():
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (session['user_id'],))
+        result = c.fetchone()
+        isAdmin = result[0]
+        
+        if isAdmin == 1:
+            return render_template('admin.html')
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/admin/userslist', methods=['GET'])
+def users_list():
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (session['user_id'],))
+        result = c.fetchone()
+        isAdmin = result[0]
+        
+        if isAdmin == 1:
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+            c.execute("SELECT username, email, invitorUsername, invitorEmail, isAdmin, serial FROM users ORDER BY serial")
+            lists = c.fetchall()
+            conn.close()
+            return render_template('userslist.html', username=session['user_id'], lists=lists)
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/settings/admin/userslist/permission', methods=['GET'])
+def users_lists_permission():
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (session['user_id'],))
+        result = c.fetchone()
+        isAdmin = result[0]
+        
+        if isAdmin == 1:
+            email = request.args.get('id')
+            c.execute("SELECT isAdmin FROM users WHERE email = ?", (email,))
+            result = c.fetchone()
+            theyAdmin = result[0]
+
+            c.execute("SELECT serial FROM users WHERE email = ?", (email,))
+            result = c.fetchone()
+            theySerial = result[0]
+
+            if theyAdmin == 1:
+                c.execute("UPDATE users SET isAdmin = Null WHERE email = ?", (email,))
+                conn.commit()
+                conn.close()
+            else:
+                c.execute("UPDATE users SET isAdmin = 1 WHERE email = ?", (email,))
+                conn.commit()
+                conn.close()
+            return redirect('{}#{}'.format(url_for('users_list'), theySerial))
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+
+    
 @app.route('/join', methods=['GET'])
 def join_invite():
     session.pop('user_id', None)
