@@ -535,7 +535,7 @@ def users_lists_permission():
                     c.execute("UPDATE users SET isAdmin = 1 WHERE email = ?", (email,))
                     conn.commit()
                     conn.close()
-                return redirect('{}#{}'.format(url_for('users_list'), theySerial))
+                return redirect(url_for('users_list'))
         else:
             return redirect(url_for('index'))
     else:
@@ -562,7 +562,8 @@ def users_lists_delete():
                 c.execute("DELETE FROM users WHERE email = ?", (email,))
                 conn.commit()
                 conn.close()
-                return redirect('{}#{}'.format(url_for('users_list'), theySerial))
+                return redirect(url_for('users_list'))
+            
         else:
             return redirect(url_for('index'))
     else:

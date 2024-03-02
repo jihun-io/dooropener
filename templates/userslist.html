@@ -10,6 +10,36 @@
     function warn() {
       alert("자기 자신은 관리자 권한을 해제할 수 없습니다.");
     }
+
+    // 스크롤 위치를 저장할 변수
+    let scrollPosition = 0;
+
+    // 페이지를 벗어날 때 스크롤 위치를 저장
+    window.addEventListener('beforeunload', function () {
+      let mainElement = document.querySelector('main');
+      if (mainElement) {
+        scrollPosition = mainElement.scrollTop;
+        localStorage.setItem('scrollPosition', scrollPosition);
+        console.log('Scroll position saved:', scrollPosition);  // 저장된 스크롤 위치를 콘솔에 출력
+      }
+    });
+
+    // 페이지를 로드할 때 이전 스크롤 위치로 이동
+    document.addEventListener('DOMContentLoaded', function () {
+      if (localStorage.getItem('scrollPosition') !== null) {
+        scrollPosition = localStorage.getItem('scrollPosition');
+        let mainElement = document.querySelector('main');
+        if (mainElement) {
+          setTimeout(function () {
+            mainElement.scrollTop = scrollPosition;
+          }, 0);
+        }
+      }
+    });
+
+
+
+
   </script>
 
 
@@ -65,7 +95,8 @@
             {% if username == i[1] %}
             <span class="icon toggleBtn_on" onclick="warn()">toggle_on</span>
             {% else %}
-            <span class="icon toggleBtn_on" onclick="location.href='userslist/permission?id={{ i[1] }}'">toggle_on</span>
+            <span class="icon toggleBtn_on"
+              onclick="location.href='userslist/permission?id={{ i[1] }}'">toggle_on</span>
             {% endif %}
             {% else %}
             <span class="icon toggleBtn" onclick="location.href='userslist/permission?id={{ i[1] }}'">toggle_off</span>
@@ -93,7 +124,7 @@
         var yn = confirm("정말로 이 사용자를 삭제하시겠습니까?\n해당 작업은 취소할 수 없습니다.\n\n사용자 이름: " + username.innerText + "\n이메일: " + email.innerText);
         console.log(yn);
         if (yn == true) {
-          location.href="userlist/del?id=" + email.innerText;
+          location.href = "userlist/del?id=" + email.innerText;
         }
       }
 
@@ -118,8 +149,6 @@
       <p>설정</p>
     </div>
   </footer>
-
-
 
 
 
