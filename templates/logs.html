@@ -53,11 +53,13 @@
     {% endif %}
     <div class="table_wrapper">
       <table class="logs_table">
-        <tr>
-          <th>사용자</th>
-          <th>시간</th>
-          <th>접속 경로</th>
-        </tr>
+        <thead>
+          <tr>
+            <th><span class="tableHeader">사용자</span></th>
+            <th><span class="tableHeader">시간</span></th>
+            <th><span class="tableHeader">접속 경로</span></th>
+          </tr>
+        </thead>
         {% for log in logs %}
         <tr>
           <td>{{ log[0] }}</td>
