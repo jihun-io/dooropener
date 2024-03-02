@@ -63,9 +63,9 @@ def dated_url_for(endpoint, **values):
 def index():
     if 'user_id' in session:
         if dev_mode == True:
-            return render_template('index.html', username=session['user_id'], devWarn="개발 - ")
+            return render_template('index.html', username=session['user_username'], devWarn="개발 - ")
         else:
-            return render_template('index.html', username=session['user_id'])
+            return render_template('index.html', username=session['user_username'])
     else:
         return render_template('index.html')
     
@@ -80,7 +80,7 @@ def check_door_status():
             conn = sqlite3.connect('database.db')  # DB에 연결합니다.
             c = conn.cursor()
             time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
-            c.execute("INSERT INTO unlockLogs (user, time) VALUES (?, ?)", (session['user_id'], time))  # DB에 기록을 남깁니다.
+            c.execute("INSERT INTO unlockLogs (user, time) VALUES (?, ?)", (session['user_username'], time))  # DB에 기록을 남깁니다.
             conn.commit()  # 변경 사항을 저장합니다.
             conn.close()  # DB 연결을 종료합니다.
             return jsonify({'status': 'done'})
@@ -96,7 +96,7 @@ def open():
         thread = Thread(target=dooropen_wrapper)
         thread.start()
         # While the door is opening, render the open.html template with a message
-        return render_template('open.html', username=session['user_id'], message="문을 여는 중...")
+        return render_template('open.html', username=session['user_username'], message="문을 여는 중...")
     else:
         return redirect(url_for('index'))
 
@@ -106,7 +106,7 @@ def success():
         # if request.method == 'GET':
         #     tooltip = request.form['tooltip']
 
-        return render_template('success.html', username=session['user_id'])
+        return render_template('success.html', username=session['user_username'])
     else:
         return redirect(url_for('index'))
 
@@ -133,7 +133,8 @@ def login():
 
             if db_password == hashed_password:
                 session.permanent = True
-                session['user_id'] = username  # 사용자 아이디를 세션에 저장
+                session['user_username'] = username  
+                session['user_id'] = email # 사용자 아이디를 세션에 저장
                 message = '로그인을\n완료했습니다.'
                 icon = 'done'
             else:
@@ -147,14 +148,6 @@ def logout():
     session.pop('user_id', None)  # 세션에서 사용자 아이디 제거
     return redirect(url_for('index'))
 
-# @app.route('/test')
-# def test():
-#     if 'user_id' in session:
-#         return render_template('success.html', username=session['user_id'])
-
-#     else:
-#         return redirect(url_for('index'))
-
 @app.route('/webapp')
 def webapp():
     return render_template('webapp.html')
@@ -162,35 +155,27 @@ def webapp():
 @app.route('/settings')
 def settings():
     if 'user_id' in session:
-        return render_template('settings.html', username=session['user_id'])
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (session['user_id'],))
+        result = c.fetchone()
+        isAdmin = result[0]
+        return render_template('settings.html', username=session['user_username'], isAdmin=isAdmin)
     else:
         return redirect(url_for('index'))
     
 @app.route('/settings/user')
 def user():
     if 'user_id' in session:
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-
-        c.execute("SELECT email FROM users WHERE username = ?", (session['user_id'],))
-        result = c.fetchone()
-        email = result[0]
-
-        return render_template('user.html', username=session['user_id'], email=email)
+        return render_template('user.html', username=session['user_username'], email=session['user_id'])
     else:
         return redirect(url_for('index'))
     
 @app.route('/settings/user/modify')
 def modifyInfo():
     if 'user_id' in session:
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-
-        c.execute("SELECT email FROM users WHERE username = ?", (session['user_id'],))
-        result = c.fetchone()
-        email = result[0]
-
-        return render_template('modifyuserinfo.html', username=session['user_id'], email=email)
+        return render_template('modifyuserinfo.html', username=session['user_username'], email=session['user_id'])
     else:
         return redirect(url_for('index'))
     
@@ -200,16 +185,17 @@ def modifyInfoRequest():
         if request.method == 'POST':
             new_username = request.form['username']
             new_email = request.form['email']
-            username = session['user_id']
+            user_id = session['user_id']
 
             conn = sqlite3.connect('database.db')
             c = conn.cursor()
 
-            c.execute("UPDATE users SET username = ?, email = ? WHERE username = ?", (new_username, new_email, username))
+            c.execute("UPDATE users SET username = ?, email = ? WHERE email = ?", (new_username, new_email, user_id))
             conn.commit()
             conn.close()
 
-            session['user_id'] = new_username
+            session['user_username'] = new_username
+            session['user_id'] = new_email
 
             return redirect(url_for('user'))
     else:
@@ -218,7 +204,7 @@ def modifyInfoRequest():
 @app.route('/settings/user/password')
 def modifyPW():
     if 'user_id' in session:
-        return render_template('modifyuserpw.html', username=session['user_id'])
+        return render_template('modifyuserpw.html', username=session['user_username'])
     else:
         return redirect(url_for('index'))
     
@@ -227,7 +213,7 @@ def modifyPWRequest():
     if 'user_id' in session:
         if request.method == 'POST':
             new_password = request.form['password']
-            username = session['user_id']
+            user_id = session['user_id']
 
             conn = sqlite3.connect('database.db')
             c = conn.cursor()
@@ -235,7 +221,7 @@ def modifyPWRequest():
             salt = os.urandom(32) # 32 bytes long salt
             hashed_password = hashlib.pbkdf2_hmac('sha256', new_password.encode('utf-8'), salt, 100000)
 
-            c.execute("UPDATE users SET password = ?, salt = ? WHERE username = ?", (hashed_password, salt, username))
+            c.execute("UPDATE users SET password = ?, salt = ? WHERE email = ?", (hashed_password, salt, user_id))
             conn.commit()
             conn.close()
             session.pop('user_id', None)
@@ -249,21 +235,21 @@ def modifyPWRequest():
 def dev():
     if 'user_id' in session:
         useragent = request.user_agent.string
-        return render_template('dev.html', username=session['user_id'], useragent=useragent)
+        return render_template('dev.html', username=session['user_username'], useragent=useragent)
     else:
         return redirect(url_for('index'))
     
 @app.route('/settings/shortcuts')
 def shortcuts():
     if 'user_id' in session:
-        return render_template('shortcuts.html', username=session['user_id'], shortcut_address=shortcut_address)
+        return render_template('shortcuts.html', username=session['user_username'], shortcut_address=shortcut_address)
     else:
         return redirect(url_for('index'))
     
 @app.route('/settings/shortcuts/token')
 def token():
     if 'user_id' in session:
-        return render_template('token.html', username=session['user_id'])
+        return render_template('token.html', username=session['user_username'])
     else:
         return redirect(url_for('index'))
     
@@ -285,7 +271,7 @@ def generate_token():
 
                 conn = sqlite3.connect('database.db')  # 데이터베이스에 연결합니다.
                 c = conn.cursor()
-                c.execute("UPDATE users SET token = ? WHERE username = ?", (token, session['user_id']))  # users 테이블의 token 필드를 업데이트합니다.
+                c.execute("UPDATE users SET token = ? WHERE email = ?", (token, session['user_id']))  # users 테이블의 token 필드를 업데이트합니다.
                 conn.commit()
                 conn.close()
 
@@ -316,7 +302,7 @@ def revoke_token():
                 conn = sqlite3.connect('database.db')  # 데이터베이스에 연결합니다.
                 c = conn.cursor()
 
-                c.execute("UPDATE users SET token = NULL WHERE username = ?", (session['user_id'],))
+                c.execute("UPDATE users SET token = NULL WHERE email = ?", (session['user_id'],))
 
                 conn.commit()
                 conn.close()
@@ -333,7 +319,7 @@ def revoke_token():
 @app.route('/settings/shortcuts/add')
 def addshortcuts():
     if 'user_id' in session:
-        return render_template('add.html', username=session['user_id'])
+        return render_template('add.html', username=session['user_username'])
     else:
         return redirect(url_for('index'))
     
@@ -486,7 +472,7 @@ def signup():
     c.execute("SELECT * FROM inviteCodes WHERE code = ?", (invite_code,))
     result = c.fetchone()
 
-    invitorUsername = result[0]
+    invitorEmail = result[0]
 
     if result is None:
         message = "초대 링크가 만료되었거나 올바르지 않습니다."
@@ -505,9 +491,9 @@ def signup():
             result = c.fetchone()
 
             if result is None:
-                c.execute("SELECT email FROM users WHERE username = ?", (invitorUsername,))
+                c.execute("SELECT username FROM users WHERE email = ?", (invitorEmail,))
                 result = c.fetchone()
-                invitorEmail = result[0]
+                invitorUsername = result[0]
 
                 salt = os.urandom(32) # 32 bytes long salt
                 hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
