@@ -107,6 +107,14 @@ def openwithapp():
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
         return redirect(url_for('index'))
+    
+@app.route('/openwithapptest')
+def openwithapptest():    
+    if 'user_id' in session:
+        # subprocess.run(['python3', 'controller.py'])
+        return render_template('openwithapp.html', message="문을 열었습니다.")
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/useragenttest')
 def useragenttest():    
