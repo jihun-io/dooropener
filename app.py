@@ -104,6 +104,13 @@ def open():
 def openwithapp():    
     if 'user_id' in session:
         subprocess.run(['python3', 'controller.py'])
+        # 문이 열린 후 DB에 기록을 남깁니다.
+        conn = sqlite3.connect('database.db')  # DB에 연결합니다.
+        c = conn.cursor()
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
+        c.execute("INSERT INTO unlockLogs (user, time) VALUES (?, ?)", (session['user_username'], time))  # DB에 기록을 남깁니다.
+        conn.commit()  # 변경 사항을 저장합니다.
+        conn.close()  # DB 연결을 종료합니다.
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
         return redirect(url_for('index'))
@@ -112,6 +119,13 @@ def openwithapp():
 def openwithapptest():    
     if 'user_id' in session:
         # subprocess.run(['python3', 'controller.py'])
+        # 문이 열린 후 DB에 기록을 남깁니다.
+        conn = sqlite3.connect('database.db')  # DB에 연결합니다.
+        c = conn.cursor()
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
+        c.execute("INSERT INTO unlockLogs (user, time) VALUES (?, ?)", (session['user_username'], time))  # DB에 기록을 남깁니다.
+        conn.commit()  # 변경 사항을 저장합니다.
+        conn.close()  # DB 연결을 종료합니다.
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
         return redirect(url_for('index'))
