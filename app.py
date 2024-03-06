@@ -697,6 +697,77 @@ def signup():
                 return render_template('sign.html', message=message, username=username, code=invite_code)
 
 
+@app.route('/applewatch/generate')
+def generate_applewatch_token():
+    if 'user_id' in session:
+        current_time = int(datetime.now().timestamp())
+
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("DELETE FROM awtokens WHERE expdate < ?", (current_time,))
+        conn.commit()
+
+        email = session['user_id']
+        username = session['user_username']
+
+        s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        token = s.dumps(session['user_id'])  # 세션의 user_id를 이용해 토큰을 생성합니다.
+        salt = app.secret_key
+        salt = salt.encode("utf-8")
+        hashed_token = hashlib.pbkdf2_hmac('sha256', token.encode('utf-8'), salt, 100000)
+
+        expDate = int((datetime.now() + timedelta(minutes=15)).timestamp())
+
+        c.execute("INSERT INTO awtokens (email, username, token, salt, expDate) VALUES(?, ?, ?, ?, ?)", (email, username, hashed_token, salt, expDate))
+
+        conn.commit()
+        conn.close()
+
+        domain = request.host_url
+        scLink = domain + "applewatch/login?t=" + token
+        return render_template('openwithapp.html', message=scLink)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/applewatch/login', methods=['GET'])
+def login_applewatch_token():
+    current_time = int(datetime.now().timestamp())
+
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+
+    c.execute("DELETE FROM awtokens WHERE expdate < ?", (current_time,))
+    conn.commit()
+
+    token = request.args.get('t')
+    salt = app.secret_key
+    salt = salt.encode("utf-8")
+    if token is not None:
+        hashed_token = hashlib.pbkdf2_hmac('sha256', token.encode('utf-8'), salt, 100000)
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT email, username FROM awtokens WHERE token = ?", (hashed_token,))
+        result = c.fetchone()
+        c.execute("DELETE FROM awtokens WHERE token = ?", (hashed_token,))
+        conn.commit()
+
+        if result is None:
+            message = '유효하지 않은 토큰입니다.'
+        else:
+            email, username = result
+
+            session.permanent = True
+            session['user_username'] = username  
+            session['user_id'] = email # 사용자 아이디를 세션에 저장
+            message = result
+        return render_template('openwithapp.html', message=message)
+    else:
+        return redirect(url_for('index'))
+
+            
+
+
 
 
 
