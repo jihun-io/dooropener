@@ -851,8 +851,8 @@ def apns_token_get():
             if count >= 4:
                 c.execute("DELETE FROM apnstokens WHERE email = ? ORDER BY timestamp_column LIMIT 1", (email,))
             
-            # Insert the new token
-            c.execute("INSERT INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
+            # Insert the new token, ignore if it already exists
+            c.execute("INSERT OR IGNORE INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
             
             conn.commit()
             conn.close()
@@ -861,6 +861,7 @@ def apns_token_get():
             return 'No token provided!', 400
     else:
         return 'Invalid request method!', 405
+
 
 
 
@@ -877,11 +878,6 @@ def pushtest():
         return results
     else:
         return redirect(url_for('index'))
-            
-
-
-
-
 
 @app.route('/useragenttest', methods=['GET'])
 def useragent_test():
