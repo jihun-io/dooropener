@@ -784,7 +784,7 @@ def apns_token_get():
             c.execute("INSERT INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
             conn.commit()
             conn.close()
-            return 'Token Registration Completed', 200
+            return email, 200
         else:
             return 'Error!', 200
 
