@@ -67,7 +67,8 @@ def push(ptitle, psubtitle, pbody, sender, dev):
     results = c.fetchall()
     device_tokens = [row[0] for row in results]  # Extract the token from each row
 
-    alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
+    # alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
+    alert = IOSPayloadAlert(title=psubtitle, body=pbody)
     payload = IOSPayload(alert=alert, sound='default')
     notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
     
