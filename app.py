@@ -773,7 +773,7 @@ def login_applewatch_token():
         return redirect(url_for('index'))
     
 
-@app.route('/apnstokenget', methods=['GET, POST'])
+@app.route('/apnstokenget', methods=['GET', 'POST'])
 def apns_token_get():
     if request.method == 'POST':
         email = request.form['email']
