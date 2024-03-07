@@ -62,8 +62,8 @@ def push(ptitle, psubtitle, pbody, sender):
     # alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody, sound="default")
     alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
 
-    payload = IOSPayload(alert=alert)
-    notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener', sound='default')
+    payload = IOSPayload(alert=alert, sound='default')
+    notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
 
     with APNSClient(
         mode=APNSClient.MODE_DEV,
