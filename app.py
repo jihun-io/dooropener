@@ -14,15 +14,12 @@ from datetime import datetime
 from datetime import timedelta
 import os
 import subprocess
+from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayload, IOSNotification, APNSDeviceException, APNSServerException, APNSProgrammingException, UnregisteredException
 # from pyapns import configure, provision, notify
 
 
 
 app = Flask(__name__)
-
-# Configure and provision the APNs service when the server starts
-# configure({'HOST': 'https://dooropener.jihun.io'})
-# provision('io.jihun.dooropener', open('AuthKey_2MJ22ADUDL.p8').read(), 'sandbox')
 
 load_dotenv()
 app.secret_key = os.getenv('SECRET_KEY')
@@ -787,6 +784,47 @@ def apns_token_get():
             return 'Token Registration Completed', 200
         else:
             return 'Error!', 200
+        
+@app.route('/pushtest')
+def pushtest():
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT token FROM apnstokens")
+    result = c.fetchone()
+
+
+    device_tokens = result
+    alert = IOSPayloadAlert(title='Title', subtitle='Subtitle', body='Some message.')
+    payload = IOSPayload(alert=alert)
+    notification = IOSNotification(payload=payload, topic='io.jihun.dooropener.app')
+
+    # `root_cert_path` is for the AAACertificateServices root cert (https://apple.co/3mZ5rB6)
+    # with token-based auth you don't need to create / renew your APNS SSL certificates anymore
+    # you can pass `None` to `root_cert_path` if you have the cert included in your trust store
+    # httpx uses 'SSL_CERT_FILE' and 'SSL_CERT_DIR' from `os.environ` to find your trust store
+    with APNSClient(
+        mode=APNSClient.MODE_DEV,
+        authentificator=TokenBasedAuth(
+            auth_key_path='AuthKey_2MJ22ADUDL.p8',
+            auth_key_id='2MJ22ADUDL',
+            team_id='62494T7ZTJ'
+        ),
+        root_cert_path = None,
+    ) as client:
+        for device_token in device_tokens:
+            try:
+                client.push(notification=notification, device_token=device_token)
+            except UnregisteredException as e:
+                print(f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db')
+            except APNSDeviceException:
+                print('flag the device as potentially invalid and remove from db after a few tries')
+            except APNSServerException:
+                print('try again later')
+            except APNSProgrammingException:
+                print('check your code and try again later')
+            else:
+                print('everything is ok')
+    return "push sended"
 
 
             
