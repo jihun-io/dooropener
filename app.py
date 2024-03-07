@@ -853,7 +853,7 @@ def pushtest():
 
         device_tokens = [row[0] for row in results]  # Extract the token from each row
 
-        push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", device_tokens)
+        push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", "")
 
         return device_tokens
     else:
