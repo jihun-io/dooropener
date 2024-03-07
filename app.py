@@ -821,7 +821,7 @@ def pushtest():
             except APNSServerException:
                 return 'try again later'
             except APNSProgrammingException:
-                return 'check your code and try again later'
+                return result
             else:
                 return 'everything is ok'
     # return "push sended"
