@@ -858,7 +858,9 @@ def apns_token_get():
             conn.close()
             return 'Token Registration Completed', 200
         else:
-            return 'Error!', 200
+            return 'No token provided!', 400
+    else:
+        return 'Invalid request method!', 405
 
 
 
