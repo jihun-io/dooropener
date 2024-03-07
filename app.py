@@ -14,8 +14,15 @@ from datetime import datetime
 from datetime import timedelta
 import os
 import subprocess
+from pyapns import configure, provision, notify
+
+
 
 app = Flask(__name__)
+
+# Configure and provision the APNs service when the server starts
+configure({'HOST': 'https://dooropener.jihun.io'})
+provision('io.jihun.dooropener', open('AuthKey_2MJ22ADUDL.p8').read(), 'sandbox')
 
 load_dotenv()
 app.secret_key = os.getenv('SECRET_KEY')
@@ -764,6 +771,23 @@ def login_applewatch_token():
         return render_template('openwithapp.html', message=message)
     else:
         return redirect(url_for('index'))
+    
+
+@app.route('/apnstokenget', methods=['GET, POST'])
+def apns_token_get():
+    if request.method == 'POST':
+        email = request.form['email']
+        token = request.form['token']
+        if token is not None:
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+            c.execute("INSERT INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
+            conn.commit()
+            conn.close()
+            return 'Token Registration Completed', 200
+        else:
+            return 'Error!', 200
+
 
             
 
