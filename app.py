@@ -141,7 +141,7 @@ def check_door_status():
             conn.close()  # DB 연결을 종료합니다.
 
             push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-            push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'], False)
+            push("DoorOpener", "잠금 해제됨", push_message, session['user_id'], False)
 
             return jsonify({'status': 'done'})
         else:
@@ -173,7 +173,7 @@ def openwithapp():
         conn.close()  # DB 연결을 종료합니다.
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-        push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'], False)
+        push("DoorOpener", "잠금 해제", push_message, session['user_id'], False)
 
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
@@ -451,7 +451,7 @@ def openwithapi():
 
                 push_message = username + " 님이 잠금을 해제했습니다."
 
-                push("DoorOpener", "잠금 해제 알림", push_message, "", False)
+                push("DoorOpener", "잠금 해제", push_message, "", False)
 
                 return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
             else:
