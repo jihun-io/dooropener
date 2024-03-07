@@ -14,15 +14,15 @@ from datetime import datetime
 from datetime import timedelta
 import os
 import subprocess
-# from pyapns import configure, provision, notify
+from pyapns import configure, provision, notify
 
 
 
 app = Flask(__name__)
 
 # Configure and provision the APNs service when the server starts
-# configure({'HOST': 'https://dooropener.jihun.io'})
-# provision('io.jihun.dooropener', open('AuthKey_2MJ22ADUDL.p8').read(), 'sandbox')
+configure({'HOST': 'https://dooropener.jihun.io'})
+provision('io.jihun.dooropener', open('AuthKey_2MJ22ADUDL.p8').read(), 'sandbox')
 
 load_dotenv()
 app.secret_key = os.getenv('SECRET_KEY')
@@ -784,7 +784,7 @@ def apns_token_get():
             c.execute("INSERT INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
             conn.commit()
             conn.close()
-            return email, 200
+            return 'Token Registration Completed', 200
         else:
             return 'Error!', 200
 
