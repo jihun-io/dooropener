@@ -871,16 +871,16 @@ def pushtest():
             try:
                 client.push(notification=notification, device_token=device_token)
             except UnregisteredException as e:
-                return f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db'
+                pusherr1 = f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db'
             except APNSDeviceException:
-                return 'flag the device as potentially invalid and remove from db after a few tries'
+                pusherr2 = 'flag the device as potentially invalid and remove from db after a few tries'
             except APNSServerException:
-                return 'try again later'
+                pusherr3 = 'try again later'
             except APNSProgrammingException:
-                return 'check your code and try again later'
+                pusherr4 = 'check your code and try again later'
             else:
-                return 'everything is ok'
-    # return "push sended"
+                pushmessage = 'everything is ok'
+    return pusherr1 + "\n" + pusherr2 + "\n" + pusherr3 + "\n" + pusherr4 + "\n" + pushmessage
 
             
 
