@@ -270,3 +270,4 @@ pyrightconfig.json
 app_test.py
 app_test.py
 dev.txt
+*.p8
