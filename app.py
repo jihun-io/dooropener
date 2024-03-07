@@ -129,9 +129,9 @@ def check_door_status():
             conn.commit()  # 변경 사항을 저장합니다.
             conn.close()  # DB 연결을 종료합니다.
 
-            push_message = session['user_username'] + "님이 잠금을 해제했습니다."
+            push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
             push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'])
-            
+
             return jsonify({'status': 'done'})
         else:
             return jsonify({'status': 'pending'})
@@ -161,7 +161,7 @@ def openwithapp():
         conn.commit()  # 변경 사항을 저장합니다.
         conn.close()  # DB 연결을 종료합니다.
 
-        push_message = session['user_username'] + "님이 잠금을 해제했습니다."
+        push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
         push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'])
 
         return render_template('openwithapp.html', message="문을 열었습니다.")
@@ -179,6 +179,9 @@ def openwithapptest():
         # c.execute("INSERT INTO unlockLogs (user, time) VALUES (?, ?)", (session['user_username'], time))  # DB에 기록을 남깁니다.
         # conn.commit()  # 변경 사항을 저장합니다.
         # conn.close()  # DB 연결을 종료합니다.
+        push_message = "테스트: " + session['user_username'] + " 님이 잠금을 해제했습니다."
+        push("DoorOpener", "테스트 메시지", push_message, session['user_id'])
+
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
         return redirect(url_for('index'))
@@ -435,7 +438,7 @@ def openwithapi():
                 conn.commit()  # 변경 사항을 저장합니다.
                 conn.close()  # DB 연결을 종료합니다.
 
-                push_message = username + "님이 잠금을 해제했습니다."
+                push_message = username + " 님이 잠금을 해제했습니다."
 
                 push("DoorOpener", "잠금 해제 알림", push_message, "")
 
@@ -831,53 +834,14 @@ def apns_token_get():
         if token is not None:
             conn = sqlite3.connect('database.db')
             c = conn.cursor()
+            c.execute("DELETE FROM apnstokens WHERE email = ?", (email,))
             c.execute("INSERT INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
             conn.commit()
             conn.close()
             return 'Token Registration Completed', 200
         else:
             return 'Error!', 200
-        
-# @app.route('/pushtest')
-# def pushtest():
-#     conn = sqlite3.connect('database.db')
-#     c = conn.cursor()
-#     c.execute("SELECT token FROM apnstokens")
-#     results = c.fetchall()
 
-#     device_tokens = [row[0] for row in results]  # Extract the token from each row
-
-#     alert = IOSPayloadAlert(title='Title', subtitle='Subtitle', body='Some message.')
-#     payload = IOSPayload(alert=alert)
-#     notification = IOSNotification(payload=payload, topic='io.jihun.dooropener.app')
-
-#     # `root_cert_path` is for the AAACertificateServices root cert (https://apple.co/3mZ5rB6)
-#     # with token-based auth you don't need to create / renew your APNS SSL certificates anymore
-#     # you can pass `None` to `root_cert_path` if you have the cert included in your trust store
-#     # httpx uses 'SSL_CERT_FILE' and 'SSL_CERT_DIR' from `os.environ` to find your trust store
-#     with APNSClient(
-#         mode=APNSClient.MODE_DEV,
-#         authentificator=TokenBasedAuth(
-#             auth_key_path='AuthKey_2MJ22ADUDL.p8',
-#             auth_key_id='2MJ22ADUDL',
-#             team_id='62494T7ZTJ'
-#         ),
-#         root_cert_path = None,
-#     ) as client:
-#         for device_token in device_tokens:
-#             try:
-#                 client.push(notification=notification, device_token=device_token)
-#             except UnregisteredException as e:
-#                 return f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db'
-#             except APNSDeviceException:
-#                 return 'flag the device as potentially invalid and remove from db after a few tries'
-#             except APNSServerException:
-#                 return 'try again later'
-#             except APNSProgrammingException:
-#                 return render_template('openwithapp.html', message=device_tokens)
-#             else:
-#                 return 'everything is ok'
-#     # return "push sended"
 
 @app.route('/pushtest')
 def pushtest():
