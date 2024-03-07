@@ -842,7 +842,7 @@ def apns_token_get():
         if token is not None:
             conn = sqlite3.connect('database.db')
             c = conn.cursor()
-            c.execute("DELETE FROM apnstokens WHERE email = ?", (email,))
+            # c.execute("DELETE FROM apnstokens WHERE email = ?", (email,))
             c.execute("INSERT INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
             conn.commit()
             conn.close()
