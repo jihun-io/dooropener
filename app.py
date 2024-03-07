@@ -55,7 +55,7 @@ def push(ptitle, psubtitle, pbody, sender):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
 
-    if sender == "":
+    if sender == 0:
         c.execute("SELECT token FROM apnstokens")
         results = c.fetchall()
     else:
@@ -856,7 +856,7 @@ def pushtest():
         c.execute("SELECT token FROM apnstokens")
         results = c.fetchall()
 
-        push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", "")
+        push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", 0)
 
         return results
     else:
