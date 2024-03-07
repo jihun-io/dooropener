@@ -842,13 +842,24 @@ def apns_token_get():
         if token is not None:
             conn = sqlite3.connect('database.db')
             c = conn.cursor()
-            # c.execute("DELETE FROM apnstokens WHERE email = ?", (email,))
+            
+            # Check the number of tokens for the user
+            c.execute("SELECT COUNT(*) FROM apnstokens WHERE email = ?", (email,))
+            count = c.fetchone()[0]
+            
+            # If the user already has 4 tokens, delete the oldest one
+            if count >= 4:
+                c.execute("DELETE FROM apnstokens WHERE email = ? ORDER BY timestamp_column LIMIT 1", (email,))
+            
+            # Insert the new token
             c.execute("INSERT INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
+            
             conn.commit()
             conn.close()
             return 'Token Registration Completed', 200
         else:
             return 'Error!', 200
+
 
 
 @app.route('/pushtest')
