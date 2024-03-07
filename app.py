@@ -51,17 +51,18 @@ def invite_code(length):
     return random_string
 
 # 푸시 알림 전송 함수
-def push(ptitle, psubtitle, pbody, sender):
+def push(ptitle, psubtitle, pbody, sender, dev):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
 
-    if sender == 0:
+    if dev:
+        c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
+    elif sender == 0:
         c.execute("SELECT token FROM apnstokens")
-        results = c.fetchall()
     else:
         c.execute("SELECT token FROM apnstokens WHERE email != ?", (sender,))
-        results = c.fetchall()
 
+    results = c.fetchall()
     device_tokens = [row[0] for row in results]  # Extract the token from each row
 
     alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
@@ -137,7 +138,7 @@ def check_door_status():
             conn.close()  # DB 연결을 종료합니다.
 
             push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-            push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'])
+            push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'], False)
 
             return jsonify({'status': 'done'})
         else:
@@ -169,7 +170,7 @@ def openwithapp():
         conn.close()  # DB 연결을 종료합니다.
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-        push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'])
+        push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'], False)
 
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
@@ -187,7 +188,7 @@ def openwithapptest():
         # conn.commit()  # 변경 사항을 저장합니다.
         # conn.close()  # DB 연결을 종료합니다.
         push_message = "테스트: " + session['user_username'] + " 님이 잠금을 해제했습니다."
-        push("DoorOpener", "테스트 메시지", push_message, session['user_id'])
+        push("DoorOpener", "테스트 메시지", push_message, session['user_id'], True)
 
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
@@ -447,7 +448,7 @@ def openwithapi():
 
                 push_message = username + " 님이 잠금을 해제했습니다."
 
-                push("DoorOpener", "잠금 해제 알림", push_message, "")
+                push("DoorOpener", "잠금 해제 알림", push_message, "", False)
 
                 return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
             else:
@@ -858,7 +859,7 @@ def pushtest():
         c.execute("SELECT token FROM apnstokens")
         results = c.fetchall()
 
-        push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", 0)
+        push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", 0, True)
 
         return results
     else:
