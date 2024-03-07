@@ -31,6 +31,11 @@ shortcut_address = "https://www.icloud.com/shortcuts/fe1e91c422474cfcbbd53c4c176
 dev_path = 'dev.txt'
 dev_mode = os.path.isfile(dev_path)
 
+# 푸시 알림 키 설정
+app_auth_key_path = os.getenv('auth_key_path')
+app_auth_key_id = os.getenv('auth_key_id')
+app_team_id= os.getenv('team_id')
+
 # 문 열어주는 코드 실행하기
 door_open_status = False
 def dooropen_wrapper():
@@ -44,6 +49,42 @@ def invite_code(length):
     characters = string.ascii_letters + string.digits
     random_string = ''.join(random.choice(characters) for _ in range(length))
     return random_string
+
+# 푸시 알림 전송 함수
+def push(ptitle, psubtitle, pbody, sender):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT token FROM apnstokens WHERE email != ?", (sender,))
+    results = c.fetchall()
+
+    device_tokens = [row[0] for row in results]  # Extract the token from each row
+
+    alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
+    payload = IOSPayload(alert=alert)
+    notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
+
+    with APNSClient(
+        mode=APNSClient.MODE_DEV,
+        authentificator=TokenBasedAuth(
+            auth_key_path=app_auth_key_path,
+            auth_key_id=app_auth_key_id,
+            team_id=app_team_id
+        ),
+        root_cert_path = None,
+    ) as client:
+        for device_token in device_tokens:
+            try:
+                client.push(notification=notification, device_token=device_token)
+            except UnregisteredException as e:
+                return f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db'
+            except APNSDeviceException:
+                return 'flag the device as potentially invalid and remove from db after a few tries'
+            except APNSServerException:
+                return 'try again later'
+            except APNSProgrammingException:
+                return 'check your code and try again later'
+            else:
+                return 'everything is ok'
 
 
 # 플라스크를 재실행할 때마다 CSS를 새로 불러오는 로직
@@ -87,6 +128,10 @@ def check_door_status():
             c.execute("INSERT INTO unlockLogs (user, time) VALUES (?, ?)", (session['user_username'], time))  # DB에 기록을 남깁니다.
             conn.commit()  # 변경 사항을 저장합니다.
             conn.close()  # DB 연결을 종료합니다.
+
+            push_message = session['user_username'] + "님이 잠금을 해제했습니다."
+            push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'])
+            
             return jsonify({'status': 'done'})
         else:
             return jsonify({'status': 'pending'})
@@ -115,6 +160,10 @@ def openwithapp():
         c.execute("INSERT INTO unlockLogs (user, time, istoken) VALUES (?, ?, ?)", (session['user_username'], time, 2))  # DB에 기록을 남깁니다.
         conn.commit()  # 변경 사항을 저장합니다.
         conn.close()  # DB 연결을 종료합니다.
+
+        push_message = session['user_username'] + "님이 잠금을 해제했습니다."
+        push("DoorOpener", "잠금 해제 알림", push_message, session['user_id'])
+
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
         return redirect(url_for('index'))
@@ -385,6 +434,10 @@ def openwithapi():
                 c.execute("INSERT INTO unlockLogs (user, time, isToken) VALUES (?, ?, ?)", (username, time, 1))  # DB에 기록을 남깁니다.
                 conn.commit()  # 변경 사항을 저장합니다.
                 conn.close()  # DB 연결을 종료합니다.
+
+                push_message = username + "님이 잠금을 해제했습니다."
+
+                push("DoorOpener", "잠금 해제 알림", push_message, "")
 
                 return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
             else:
@@ -785,29 +838,66 @@ def apns_token_get():
         else:
             return 'Error!', 200
         
+# @app.route('/pushtest')
+# def pushtest():
+#     conn = sqlite3.connect('database.db')
+#     c = conn.cursor()
+#     c.execute("SELECT token FROM apnstokens")
+#     results = c.fetchall()
+
+#     device_tokens = [row[0] for row in results]  # Extract the token from each row
+
+#     alert = IOSPayloadAlert(title='Title', subtitle='Subtitle', body='Some message.')
+#     payload = IOSPayload(alert=alert)
+#     notification = IOSNotification(payload=payload, topic='io.jihun.dooropener.app')
+
+#     # `root_cert_path` is for the AAACertificateServices root cert (https://apple.co/3mZ5rB6)
+#     # with token-based auth you don't need to create / renew your APNS SSL certificates anymore
+#     # you can pass `None` to `root_cert_path` if you have the cert included in your trust store
+#     # httpx uses 'SSL_CERT_FILE' and 'SSL_CERT_DIR' from `os.environ` to find your trust store
+#     with APNSClient(
+#         mode=APNSClient.MODE_DEV,
+#         authentificator=TokenBasedAuth(
+#             auth_key_path='AuthKey_2MJ22ADUDL.p8',
+#             auth_key_id='2MJ22ADUDL',
+#             team_id='62494T7ZTJ'
+#         ),
+#         root_cert_path = None,
+#     ) as client:
+#         for device_token in device_tokens:
+#             try:
+#                 client.push(notification=notification, device_token=device_token)
+#             except UnregisteredException as e:
+#                 return f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db'
+#             except APNSDeviceException:
+#                 return 'flag the device as potentially invalid and remove from db after a few tries'
+#             except APNSServerException:
+#                 return 'try again later'
+#             except APNSProgrammingException:
+#                 return render_template('openwithapp.html', message=device_tokens)
+#             else:
+#                 return 'everything is ok'
+#     # return "push sended"
+
 @app.route('/pushtest')
 def pushtest():
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("SELECT token FROM apnstokens")
-    result = c.fetchone()
+    results = c.fetchall()
 
+    device_tokens = [row[0] for row in results]  # Extract the token from each row
 
-    device_tokens = result
     alert = IOSPayloadAlert(title='Title', subtitle='Subtitle', body='Some message.')
     payload = IOSPayload(alert=alert)
-    notification = IOSNotification(payload=payload, topic='io.jihun.dooropener.app')
+    notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
 
-    # `root_cert_path` is for the AAACertificateServices root cert (https://apple.co/3mZ5rB6)
-    # with token-based auth you don't need to create / renew your APNS SSL certificates anymore
-    # you can pass `None` to `root_cert_path` if you have the cert included in your trust store
-    # httpx uses 'SSL_CERT_FILE' and 'SSL_CERT_DIR' from `os.environ` to find your trust store
     with APNSClient(
         mode=APNSClient.MODE_DEV,
         authentificator=TokenBasedAuth(
-            auth_key_path='AuthKey_2MJ22ADUDL.p8',
-            auth_key_id='2MJ22ADUDL',
-            team_id='62494T7ZTJ'
+            auth_key_path=app_auth_key_path,
+            auth_key_id=app_auth_key_id,
+            team_id=app_team_id
         ),
         root_cert_path = None,
     ) as client:
@@ -821,11 +911,10 @@ def pushtest():
             except APNSServerException:
                 return 'try again later'
             except APNSProgrammingException:
-                return result
+                return 'check your code and try again later'
             else:
                 return 'everything is ok'
     # return "push sended"
-
 
             
 
