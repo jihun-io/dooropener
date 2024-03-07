@@ -67,7 +67,8 @@ def push(ptitle, psubtitle, pbody, sender):
     alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
     payload = IOSPayload(alert=alert, sound='default')
     notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
-
+    
+    messages = []
     with APNSClient(
         mode=APNSClient.MODE_PROD,
         authentificator=TokenBasedAuth(
@@ -81,15 +82,16 @@ def push(ptitle, psubtitle, pbody, sender):
             try:
                 client.push(notification=notification, device_token=device_token)
             except UnregisteredException as e:
-                return f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db'
+                messages.append(f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db')
             except APNSDeviceException:
-                return 'flag the device as potentially invalid and remove from db after a few tries'
+                messages.append('flag the device as potentially invalid and remove from db after a few tries')
             except APNSServerException:
-                return 'try again later'
+                messages.append('try again later')
             except APNSProgrammingException:
-                return 'check your code and try again later'
+                messages.append('check your code and try again later')
             else:
-                return 'everything is ok'
+                messages.append('everything is ok')
+    return messages
 
 
 # 플라스크를 재실행할 때마다 CSS를 새로 불러오는 로직
