@@ -55,11 +55,13 @@ def push(ptitle, psubtitle, pbody, sender, dev):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
 
-    if dev:
+    if dev and sender == 0:
         c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
-    elif sender == 0:
+    elif dev and sender != 0:
+        c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1 AND apnstokens.email != ?", (sender,))
+    elif not dev and sender == 0:
         c.execute("SELECT token FROM apnstokens")
-    else:
+    else:  # not dev and sender != 0
         c.execute("SELECT token FROM apnstokens WHERE email != ?", (sender,))
 
     results = c.fetchall()
