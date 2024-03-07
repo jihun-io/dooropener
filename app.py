@@ -59,9 +59,7 @@ def push(ptitle, psubtitle, pbody, sender):
 
     device_tokens = [row[0] for row in results]  # Extract the token from each row
 
-    # alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody, sound="default")
     alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
-
     payload = IOSPayload(alert=alert, sound='default')
     notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
 
@@ -847,41 +845,19 @@ def apns_token_get():
 
 @app.route('/pushtest')
 def pushtest():
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute("SELECT token FROM apnstokens")
-    results = c.fetchall()
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT token FROM apnstokens")
+        results = c.fetchall()
 
-    device_tokens = [row[0] for row in results]  # Extract the token from each row
+        device_tokens = [row[0] for row in results]  # Extract the token from each row
 
-    alert = IOSPayloadAlert(title='Title', subtitle='Subtitle', body='Some message.')
-    payload = IOSPayload(alert=alert)
-    notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
+        push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", device_tokens)
 
-    with APNSClient(
-        mode=APNSClient.MODE_PROD,
-        authentificator=TokenBasedAuth(
-            auth_key_path=app_auth_key_path,
-            auth_key_id=app_auth_key_id,
-            team_id=app_team_id
-        ),
-        root_cert_path = None,
-    ) as client:
-        for device_token in device_tokens:
-            try:
-                client.push(notification=notification, device_token=device_token)
-            except UnregisteredException as e:
-                return f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db'
-            except APNSDeviceException:
-                return 'flag the device as potentially invalid and remove from db after a few tries'
-            except APNSServerException:
-                return 'try again later'
-            except APNSProgrammingException:
-                return 'check your code and try again later'
-            else:
-                return 'everything is ok'
-    # return "push sended"
-
+        return device_tokens
+    else:
+        return redirect(url_for('index'))
             
 
 
