@@ -54,8 +54,13 @@ def invite_code(length):
 def push(ptitle, psubtitle, pbody, sender):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    c.execute("SELECT token FROM apnstokens WHERE email != ?", (sender,))
-    results = c.fetchall()
+
+    if sender == "":
+        c.execute("SELECT token FROM apnstokens")
+        results = c.fetchall()
+    else:
+        c.execute("SELECT token FROM apnstokens WHERE email != ?", (sender,))
+        results = c.fetchall()
 
     device_tokens = [row[0] for row in results]  # Extract the token from each row
 
