@@ -893,7 +893,7 @@ def pushtest():
 
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("SELECT users, token FROM apnstokens")
+        c.execute("SELECT email, token FROM apnstokens")
         results = c.fetchall()
         return results
     else:
