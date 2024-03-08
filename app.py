@@ -864,6 +864,24 @@ def apns_token_get():
             return 'No token provided!', 400
     else:
         return 'Invalid request method!', 405
+    
+@app.route('/apnstokenremove', methods=['GET', 'POST'])
+def apns_token_get():
+    if request.method == 'POST':
+        token = request.form['token']
+        if token is not None:
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+            
+            # Check the number of tokens for the user
+            c.execute("DELETE FROM apnstokens WHERE token = ?", (token,))            
+            conn.commit()
+            conn.close()
+            return 'Token Remove Completed', 200
+        else:
+            return 'No token provided!', 400
+    else:
+        return 'Invalid request method!', 405
 
 
 
