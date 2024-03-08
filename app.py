@@ -866,7 +866,7 @@ def apns_token_get():
         return 'Invalid request method!', 405
     
 @app.route('/apnstokenremove', methods=['GET', 'POST'])
-def apns_token_get():
+def apns_token_remove():
     if request.method == 'POST':
         token = request.form['token']
         if token is not None:
