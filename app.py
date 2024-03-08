@@ -889,13 +889,12 @@ def apns_token_remove():
 @app.route('/pushtest')
 def pushtest():
     if 'user_id' in session:
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-        c.execute("SELECT token FROM apnstokens")
-        results = c.fetchall()
-
         push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", 0, True)
 
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT users, token FROM apnstokens")
+        results = c.fetchall()
         return results
     else:
         return redirect(url_for('index'))
