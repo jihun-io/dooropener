@@ -179,6 +179,28 @@ def openwithapp():
     else:
         return redirect(url_for('index'))
     
+@app.route('/openwithappjson')
+def openwithappjson():    
+    if 'user_id' in session:
+        subprocess.run(['python3', 'controller.py'])
+        # 문이 열린 후 DB에 기록을 남깁니다.
+        conn = sqlite3.connect('database.db')  # DB에 연결합니다.
+        c = conn.cursor()
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
+        c.execute("INSERT INTO unlockLogs (user, time, istoken) VALUES (?, ?, ?)", (session['user_username'], time, 2))  # DB에 기록을 남깁니다.
+        conn.commit()  # 변경 사항을 저장합니다.
+        conn.close()  # DB 연결을 종료합니다.
+
+        push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
+        push("DoorOpener", "잠금 해제", push_message, session['user_id'], False)
+
+        result = "Success"
+
+        return jsonify(result=result)
+    else:
+        return redirect(url_for('index'))
+
+
 @app.route('/openwithapptest')
 def openwithapptest():    
     if 'user_id' in session:
@@ -196,10 +218,32 @@ def openwithapptest():
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
         return redirect(url_for('index'))
+    
+@app.route('/openwithapptestjson')
+def openwithapptestjson():    
+    if 'user_id' in session:
+        # subprocess.run(['python3', 'controller.py'])
+        # 문이 열린 후 DB에 기록을 남깁니다.
+        # conn = sqlite3.connect('database.db')  # DB에 연결합니다.
+        # c = conn.cursor()
+        # time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
+        # c.execute("INSERT INTO unlockLogs (user, time, istoken) VALUES (?, ?, ?)", (session['user_username'], time, 2))  # DB에 기록을 남깁니다.
+        # conn.commit()  # 변경 사항을 저장합니다.
+        # conn.close()  # DB 연결을 종료합니다.
+
+        push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
+        push("DoorOpener", "잠금 해제", push_message, session['user_id'], False)
+
+        result = "Success"
+
+        return jsonify(result=result)
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/useragenttest')
-def useragenttest():    
-    return render_template('openwithapp.html', message=request.user_agent.string)
+def useragenttest():   
+    return jsonify(message=request.user_agent.string)
+
 
 @app.route('/success', methods=['GET', 'POST'])
 def success():    
@@ -243,6 +287,36 @@ def login():
                 icon = 'error'
 
     return render_template('login.html', message=message, icon=icon)
+
+@app.route('/loginwithapp', methods=['POST'])
+def loginwithapp():
+    data = request.get_json()
+
+    email = data.get('email')
+    password = data.get('password')
+
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+
+    c.execute("SELECT username, password, salt FROM users WHERE email = ?", (email,))
+    result = c.fetchone()
+
+    if result is None:
+        return jsonify(result = 'Failed')
+    else:
+        username, db_password, salt = result
+        hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+
+        if db_password == hashed_password:
+            session.permanent = True
+            session['user_username'] = username  
+            session['user_id'] = email # 사용자 아이디를 세션에 저장
+            c.execute("SELECT isAdmin FROM users WHERE email = ?", (session['user_id'],))
+            result = c.fetchone()
+            isAdmin = result[0]
+            return jsonify(result='Success', username=username, email=email, isAdmin=isAdmin)
+        else:
+            return jsonify(result = 'Failed')
 
 @app.route('/logout')
 def logout():
