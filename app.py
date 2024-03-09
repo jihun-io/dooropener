@@ -871,7 +871,7 @@ def generate_applewatch_token():
 
         domain = request.host_url
         scLink = domain + "applewatch/login?t=" + token
-        return render_template('openwithapp.html', message=scLink)
+        return jsonify(link=scLink)
     else:
         return redirect(url_for('index'))
 
@@ -978,6 +978,17 @@ def useragent_test():
     useragent = request.user_agent.string
     return render_template('openwithapi.html', message=useragent)
 
+@app.route('/settings/user/info')
+def user_info_json():
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (session['user_id'],))
+        result = c.fetchone()
+        isAdmin = result[0]
+        return jsonify(email=session['user_id'], username=session['user_username'], isAdmin=isAdmin)
+    else:
+        return jsonify(message="Failed")
 
 host_addr = "0.0.0.0"
 port_num = "4062"
