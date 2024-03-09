@@ -899,6 +899,7 @@ def login_applewatch_token():
 
         if result is None:
             message = 'Token Not Available'
+            return jsonify(message=message)
         else:
             email, username = result
 
