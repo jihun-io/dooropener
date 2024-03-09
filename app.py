@@ -906,7 +906,7 @@ def login_applewatch_token():
             session['user_username'] = username  
             session['user_id'] = email # 사용자 아이디를 세션에 저장
             message = "Success"
-        return jsonify(message=message, email=email, username=username)
+            return jsonify(message=message, email=email, username=username)
     else:
         return redirect(url_for('index'))
     
