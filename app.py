@@ -898,15 +898,15 @@ def login_applewatch_token():
         conn.commit()
 
         if result is None:
-            message = '유효하지 않은 토큰입니다.'
+            message = 'Token Not Available'
         else:
             email, username = result
 
             session.permanent = True
             session['user_username'] = username  
             session['user_id'] = email # 사용자 아이디를 세션에 저장
-            message = result
-        return render_template('openwithapp.html', message=message)
+            message = "Success"
+        return jsonify(message=message, email=email, username=username)
     else:
         return redirect(url_for('index'))
     
