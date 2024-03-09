@@ -974,11 +974,6 @@ def pushtest():
     else:
         return redirect(url_for('index'))
 
-@app.route('/useragenttest', methods=['GET'])
-def useragent_test():
-    useragent = request.user_agent.string
-    return render_template('openwithapi.html', message=useragent)
-
 @app.route('/settings/user/info')
 def user_info_json():
     if 'user_id' in session:
