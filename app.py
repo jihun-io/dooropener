@@ -200,7 +200,7 @@ def openwithappjson():
         subprocess.run(['python3', 'controller.py'])
         # 문이 열린 후 DB에 기록을 남깁니다.
 
-        thread_log_write = Thread(taget=log_write, target=(session['user_username'], 2))
+        thread_log_write = Thread(target=log_write, target=(session['user_username'], 2))
         thread_log_write.start()
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
