@@ -206,7 +206,7 @@ def openwithappjson():
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
 
         thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
-        thread_push.strat()
+        thread_push.start()
         result = "Success"
 
         return jsonify(result=result)
