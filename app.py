@@ -1,4 +1,7 @@
 from flask import Flask, render_template, request, session, flash, abort, redirect, url_for, jsonify
+import asyncio
+# from celery import Celery
+# import redis
 # import dooropener # 웬만하면 불러오지 마시오
 import sqlite3
 from threading import Thread
@@ -18,8 +21,8 @@ from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayloa
 # from pyapns import configure, provision, notify
 
 
-
 app = Flask(__name__)
+
 
 load_dotenv()
 app.secret_key = os.getenv('SECRET_KEY')
@@ -51,51 +54,69 @@ def invite_code(length):
     return random_string
 
 # 푸시 알림 전송 함수
-def push(ptitle, psubtitle, pbody, sender, dev):
-    conn = sqlite3.connect('database.db')
+async def push(ptitle, psubtitle, pbody, sender, dev):
+    if dev_mode == False:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        if dev and sender == 0:
+            c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
+        elif dev and sender != 0:
+            c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1 AND apnstokens.email != ?", (sender,))
+        elif not dev and sender == 0:
+            c.execute("SELECT token FROM apnstokens")
+        else:  # not dev and sender != 0
+            c.execute("SELECT token FROM apnstokens WHERE email != ?", (sender,))
+
+        results = c.fetchall()
+        device_tokens = [row[0] for row in results]  # Extract the token from each row
+
+        # alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
+        alert = IOSPayloadAlert(title=psubtitle, body=pbody)
+        payload = IOSPayload(alert=alert, sound='default')
+        notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
+        
+        messages = []
+        with APNSClient(
+            mode=APNSClient.MODE_PROD,
+            authentificator=TokenBasedAuth(
+                auth_key_path=app_auth_key_path,
+                auth_key_id=app_auth_key_id,
+                team_id=app_team_id
+            ),
+            root_cert_path = None,
+        ) as client:
+            for device_token in device_tokens:
+                try:
+                    client.push(notification=notification, device_token=device_token)
+                except UnregisteredException as e:
+                    messages.append(f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db')
+                except APNSDeviceException:
+                    messages.append('flag the device as potentially invalid and remove from db after a few tries')
+                except APNSServerException:
+                    messages.append('try again later')
+                except APNSProgrammingException:
+                    messages.append('check your code and try again later')
+                else:
+                    messages.append('everything is ok')
+        return messages
+    else:
+        messages = 'everything is ok'
+        return messages
+
+async def dooropen_logwrite(username, path):
+    # 문이 열린 후 DB에 기록을 남깁니다.
+    conn = sqlite3.connect('database.db')  # DB에 연결합니다.
     c = conn.cursor()
+    time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
+    if path != None:
+        c.execute("INSERT INTO unlockLogs (user, time, isToken) VALUES (?, ?, ?)", (username, time, path))  # DB에 기록을 남깁니다.
+    else:
+        c.execute("INSERT INTO unlockLogs (user, time) VALUES (?, ?)", (username, time))  # DB에 기록을 남깁니다.
 
-    if dev and sender == 0:
-        c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
-    elif dev and sender != 0:
-        c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1 AND apnstokens.email != ?", (sender,))
-    elif not dev and sender == 0:
-        c.execute("SELECT token FROM apnstokens")
-    else:  # not dev and sender != 0
-        c.execute("SELECT token FROM apnstokens WHERE email != ?", (sender,))
-
-    results = c.fetchall()
-    device_tokens = [row[0] for row in results]  # Extract the token from each row
-
-    # alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
-    alert = IOSPayloadAlert(title=psubtitle, body=pbody)
-    payload = IOSPayload(alert=alert, sound='default')
-    notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
-    
-    messages = []
-    with APNSClient(
-        mode=APNSClient.MODE_PROD,
-        authentificator=TokenBasedAuth(
-            auth_key_path=app_auth_key_path,
-            auth_key_id=app_auth_key_id,
-            team_id=app_team_id
-        ),
-        root_cert_path = None,
-    ) as client:
-        for device_token in device_tokens:
-            try:
-                client.push(notification=notification, device_token=device_token)
-            except UnregisteredException as e:
-                messages.append(f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db')
-            except APNSDeviceException:
-                messages.append('flag the device as potentially invalid and remove from db after a few tries')
-            except APNSServerException:
-                messages.append('try again later')
-            except APNSProgrammingException:
-                messages.append('check your code and try again later')
-            else:
-                messages.append('everything is ok')
-    return messages
+    conn.commit()  # 변경 사항을 저장합니다.
+    conn.close()  # DB 연결을 종료합니다.
+    pass
 
 
 # 플라스크를 재실행할 때마다 CSS를 새로 불러오는 로직
@@ -132,16 +153,10 @@ def check_door_status():
         if door_open_status:
             door_open_status = False  # Reset the status
 
-            # 문이 열린 후 DB에 기록을 남깁니다.
-            conn = sqlite3.connect('database.db')  # DB에 연결합니다.
-            c = conn.cursor()
-            time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
-            c.execute("INSERT INTO unlockLogs (user, time) VALUES (?, ?)", (session['user_username'], time))  # DB에 기록을 남깁니다.
-            conn.commit()  # 변경 사항을 저장합니다.
-            conn.close()  # DB 연결을 종료합니다.
+            asyncio.run(dooropen_logwrite(session['user_username'], None))
 
             push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-            push("DoorOpener", "잠금 해제됨", push_message, session['user_id'], False)
+            asyncio.run(push("DoorOpener", "잠금 해제됨", push_message, session['user_id'], False))
 
             return jsonify({'status': 'done'})
         else:
@@ -164,16 +179,11 @@ def open():
 def openwithapp():    
     if 'user_id' in session:
         subprocess.run(['python3', 'controller.py'])
-        # 문이 열린 후 DB에 기록을 남깁니다.
-        conn = sqlite3.connect('database.db')  # DB에 연결합니다.
-        c = conn.cursor()
-        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
-        c.execute("INSERT INTO unlockLogs (user, time, istoken) VALUES (?, ?, ?)", (session['user_username'], time, 2))  # DB에 기록을 남깁니다.
-        conn.commit()  # 변경 사항을 저장합니다.
-        conn.close()  # DB 연결을 종료합니다.
+
+        asyncio.run(dooropen_logwrite(session['user_username'], 2))
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-        push("DoorOpener", "잠금 해제", push_message, session['user_id'], False)
+        asyncio.run(push("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
 
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
@@ -184,15 +194,11 @@ def openwithappjson():
     if 'user_id' in session:
         subprocess.run(['python3', 'controller.py'])
         # 문이 열린 후 DB에 기록을 남깁니다.
-        conn = sqlite3.connect('database.db')  # DB에 연결합니다.
-        c = conn.cursor()
-        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
-        c.execute("INSERT INTO unlockLogs (user, time, istoken) VALUES (?, ?, ?)", (session['user_username'], time, 2))  # DB에 기록을 남깁니다.
-        conn.commit()  # 변경 사항을 저장합니다.
-        conn.close()  # DB 연결을 종료합니다.
+
+        asyncio.run(dooropen_logwrite(session['user_username'], 2))
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-        push("DoorOpener", "잠금 해제", push_message, session['user_id'], False)
+        asyncio.run(push("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
 
         result = "Success"
 
@@ -213,7 +219,7 @@ def openwithapptest():
         # conn.commit()  # 변경 사항을 저장합니다.
         # conn.close()  # DB 연결을 종료합니다.
         push_message = "테스트: " + session['user_username'] + " 님이 잠금을 해제했습니다."
-        push("DoorOpener", "테스트 메시지", push_message, session['user_id'], True)
+        asyncio.run(push("DoorOpener", "테스트 메시지", push_message, session['user_id'], True))
 
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
@@ -232,7 +238,7 @@ def openwithapptestjson():
         # conn.close()  # DB 연결을 종료합니다.
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-        push("DoorOpener", "테스트 메시지", push_message, session['user_id'], True)
+        asyncio.run(push("DoorOpener", "테스트 메시지", push_message, session['user_id'], True))
 
         result = "Success"
 
@@ -525,7 +531,7 @@ def openwithapi():
 
                 push_message = username + " 님이 잠금을 해제했습니다."
 
-                push("DoorOpener", "잠금 해제", push_message, "", False)
+                asyncio.run(push("DoorOpener", "잠금 해제", push_message, "", False))
 
                 return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
             else:
@@ -964,7 +970,7 @@ def apns_token_remove():
 @app.route('/pushtest')
 def pushtest():
     if 'user_id' in session:
-        push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", 0, True)
+        asyncio.run(push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", 0, True))
 
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
