@@ -925,9 +925,9 @@ def apns_token_get():
             c.execute("SELECT COUNT(*) FROM apnstokens WHERE email = ?", (email,))
             count = c.fetchone()[0]
             
-            # If the user already has 4 tokens, delete the oldest one
-            if count >= 4:
-                c.execute("DELETE FROM apnstokens WHERE email = ? ORDER BY timestamp_column LIMIT 1", (email,))
+            # # If the user already has 4 tokens, delete the oldest one
+            # if count >= 4:
+            #     c.execute("DELETE FROM apnstokens WHERE email = ? ORDER BY timestamp_column LIMIT 1", (email,))
             
             # Insert the new token, ignore if it already exists
             c.execute("INSERT OR IGNORE INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
