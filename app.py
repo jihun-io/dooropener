@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, flash, abort, redirect, url_for, jsonify
 # import asyncio
-from celery import Celery
+# from celery import Celery
 # import redis
 # import dooropener # 웬만하면 불러오지 마시오
 import sqlite3
