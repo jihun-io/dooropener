@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, flash, abort, redirect, url_for, jsonify
-import asyncio
-# from celery import Celery
+# import asyncio
+from celery import Celery
 # import redis
 # import dooropener # 웬만하면 불러오지 마시오
 import sqlite3
@@ -54,7 +54,7 @@ def invite_code(length):
     return random_string
 
 # 푸시 알림 전송 함수
-async def push(ptitle, psubtitle, pbody, sender, dev):
+def push(ptitle, psubtitle, pbody, sender, dev):
     if dev_mode == False:
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
@@ -104,7 +104,7 @@ async def push(ptitle, psubtitle, pbody, sender, dev):
         messages = 'everything is ok'
         return messages
 
-async def dooropen_logwrite(username, path):
+def log_write(username, path):
     # 문이 열린 후 DB에 기록을 남깁니다.
     conn = sqlite3.connect('database.db')  # DB에 연결합니다.
     c = conn.cursor()
@@ -153,10 +153,12 @@ def check_door_status():
         if door_open_status:
             door_open_status = False  # Reset the status
 
-            asyncio.run(dooropen_logwrite(session['user_username'], None))
+            thread_log_write = Thread(target=log_write, args=(session['user_username'], None))
+            thread_log_write.start()
 
             push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-            asyncio.run(push("DoorOpener", "잠금 해제됨", push_message, session['user_id'], False))
+            thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, session['user_id'], False))
+            thread_push.start()
 
             return jsonify({'status': 'done'})
         else:
@@ -180,10 +182,13 @@ def openwithapp():
     if 'user_id' in session:
         subprocess.run(['python3', 'controller.py'])
 
-        asyncio.run(dooropen_logwrite(session['user_username'], 2))
+        thread_log_write = Thread(target=log_write, args=(session['user_username'], 2))
+        thread_log_write.start()
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-        asyncio.run(push("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
+
+        thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
+        thread_push.start()
 
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
@@ -195,11 +200,13 @@ def openwithappjson():
         subprocess.run(['python3', 'controller.py'])
         # 문이 열린 후 DB에 기록을 남깁니다.
 
-        asyncio.run(dooropen_logwrite(session['user_username'], 2))
+        thread_log_write = Thread(taget=log_write, target=(session['user_username'], 2))
+        thread_log_write.start()
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-        asyncio.run(push("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
 
+        thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
+        thread_push.strat()
         result = "Success"
 
         return jsonify(result=result)
@@ -219,7 +226,8 @@ def openwithapptest():
         # conn.commit()  # 변경 사항을 저장합니다.
         # conn.close()  # DB 연결을 종료합니다.
         push_message = "테스트: " + session['user_username'] + " 님이 잠금을 해제했습니다."
-        asyncio.run(push("DoorOpener", "테스트 메시지", push_message, session['user_id'], True))
+        thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
+        thread_push.strat()
 
         return render_template('openwithapp.html', message="문을 열었습니다.")
     else:
@@ -238,7 +246,8 @@ def openwithapptestjson():
         # conn.close()  # DB 연결을 종료합니다.
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-        asyncio.run(push("DoorOpener", "테스트 메시지", push_message, session['user_id'], True))
+        thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
+        thread_push.strat()
 
         result = "Success"
 
@@ -522,16 +531,11 @@ def openwithapi():
                 else:
                     pass
                 # 문이 열린 후 DB에 기록을 남깁니다.
-                conn = sqlite3.connect('database.db')  # DB에 연결합니다.
-                c = conn.cursor()
-                time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 현재 시간을 가져옵니다.
-                c.execute("INSERT INTO unlockLogs (user, time, isToken) VALUES (?, ?, ?)", (username, time, 1))  # DB에 기록을 남깁니다.
-                conn.commit()  # 변경 사항을 저장합니다.
-                conn.close()  # DB 연결을 종료합니다.
+                log_write(session['user_username'], 1)
 
                 push_message = username + " 님이 잠금을 해제했습니다."
-
-                asyncio.run(push("DoorOpener", "잠금 해제", push_message, "", False))
+                thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, "", False))
+                thread_push.start()
 
                 return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
             else:
@@ -970,7 +974,8 @@ def apns_token_remove():
 @app.route('/pushtest')
 def pushtest():
     if 'user_id' in session:
-        asyncio.run(push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", 0, True))
+        thread_push = Thread(target=push, args=push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", 0, True))
+        thread_push.start()
 
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
