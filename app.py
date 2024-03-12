@@ -245,7 +245,7 @@ def openwithapptest():
         # conn.commit()  # 변경 사항을 저장합니다.
         # conn.close()  # DB 연결을 종료합니다.
         push_message = "테스트: " + session['user_username'] + " 님이 잠금을 해제했습니다."
-        thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
+        thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제 테스트", push_message, session['user_id'], True))
         thread_push.start()
 
         return render_template('openwithapp.html', message="문을 열었습니다.")
@@ -265,7 +265,7 @@ def openwithapptestjson():
         # conn.close()  # DB 연결을 종료합니다.
 
         push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-        thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
+        thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제 테스트", push_message, session['user_id'], True))
         thread_push.start()
 
         result = "Success"
