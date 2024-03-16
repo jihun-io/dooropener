@@ -22,9 +22,9 @@ def dooropen_wrapper():
 
 
 # 푸시 알림 키 설정
-auth_key_path = os.getenv('auth_key_path')
-auth_key_id = os.getenv('auth_key_id')
-team_id= os.getenv('team_id')
+opener_auth_key_path = os.getenv('auth_key_path')
+opener_auth_key_id = os.getenv('auth_key_id')
+opener_team_id= os.getenv('team_id')
 
 
 # 푸시 알림 전송 함수
@@ -53,9 +53,9 @@ def push(ptitle, psubtitle, pbody, sender, dev):
         with APNSClient(
             mode=APNSClient.MODE_PROD,
             authentificator=TokenBasedAuth(
-                auth_key_path=auth_key_path,
-                auth_key_id=auth_key_id,
-                team_id=team_id
+                auth_key_path=opener_auth_key_path,
+                auth_key_id=opener_auth_key_id,
+                team_id=opener_team_id
             ),
             root_cert_path = None,
         ) as client:
@@ -181,6 +181,8 @@ def openwithapp():
 
         result = "Success"
 
+        print(auth_key_path)
+        print(auth_key_id)
         return jsonify(result=result)
     else:
         return redirect(url_for('index'))
