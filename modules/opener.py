@@ -170,6 +170,10 @@ def openwithapp():
         
         if isNoPush == '1':
             pass
+        elif isTest == '1':
+            push_message = "(테스트) " + session['user_username'] + " 님이 잠금을 해제했습니다."
+            thread_push = Thread(target=push, args=("DoorOpener", "테스트 메시지", push_message, session['user_id'], True))
+            thread_push.start()
         else:
             push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
             thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
@@ -192,9 +196,6 @@ def success():
         return render_template('success.html', username=session['user_username'])
     else:
         return redirect(url_for('index'))
-
-
-
 
 
 @opener.route('/pushtest')
