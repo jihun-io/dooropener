@@ -181,8 +181,8 @@ def openwithapp():
 
         result = "Success"
 
-        print(auth_key_path)
-        print(auth_key_id)
+        print(opener_auth_key_path)
+        print(opener_auth_key_id)
         return jsonify(result=result)
     else:
         return redirect(url_for('index'))
