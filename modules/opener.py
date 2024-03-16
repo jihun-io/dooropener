@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
 import sqlite3
+from dotenv import load_dotenv
 from threading import Thread
 from datetime import datetime
 import os
@@ -8,9 +9,15 @@ from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayloa
 
 opener = Blueprint("opener", __name__, template_folder="templates")
 
+load_dotenv(dotenv_path='./env')
 dev_path = 'dev.txt'
 dev_mode = os.path.isfile(dev_path)
 opener.secret_key = os.getenv('SECRET_KEY')
+
+# 푸시 알림 키 설정
+opener_auth_key_path = os.getenv('auth_key_path')
+opener_auth_key_id = os.getenv('auth_key_id')
+opener_team_id= os.getenv('team_id')
 
 # 문 열어주는 코드 실행하기
 door_open_status = False
@@ -19,13 +26,6 @@ def dooropen_wrapper():
     if dev_mode == False:
         subprocess.run(['python3', 'controller.py'])
     door_open_status = True
-
-
-# 푸시 알림 키 설정
-opener_auth_key_path = os.getenv('auth_key_path')
-opener_auth_key_id = os.getenv('auth_key_id')
-opener_team_id= os.getenv('team_id')
-
 
 # 푸시 알림 전송 함수
 def push(ptitle, psubtitle, pbody, sender, dev):
