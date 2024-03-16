@@ -50,6 +50,11 @@ def push(ptitle, psubtitle, pbody, sender, dev):
         notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
         
         messages = []
+
+        print(opener_auth_key_id)
+        print(opener_auth_key_path)
+        print(opener_team_id)
+
         with APNSClient(
             mode=APNSClient.MODE_PROD,
             authentificator=TokenBasedAuth(
