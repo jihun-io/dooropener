@@ -9,7 +9,7 @@ from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayloa
 
 opener = Blueprint("opener", __name__, template_folder="templates")
 
-load_dotenv(dotenv_path='./env')
+load_dotenv(dotenv_path='../.env')
 dev_path = 'dev.txt'
 dev_mode = os.path.isfile(dev_path)
 opener.secret_key = os.getenv('SECRET_KEY')
