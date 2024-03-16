@@ -9,12 +9,17 @@ from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayloa
 
 opener = Blueprint("opener", __name__, template_folder="templates")
 
-load_dotenv(dotenv_path='../.env')
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(dotenv_path=os.path.join(script_dir, '../.env'))
+
 dev_path = 'dev.txt'
 dev_mode = os.path.isfile(dev_path)
 opener.secret_key = os.getenv('SECRET_KEY')
 
 # 푸시 알림 키 설정
+
+
 opener_auth_key_path = os.getenv('auth_key_path')
 opener_auth_key_id = os.getenv('auth_key_id')
 opener_team_id= os.getenv('team_id')
