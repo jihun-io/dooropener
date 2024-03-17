@@ -17,7 +17,6 @@ dev_mode = os.path.isfile(dev_path)
 opener.secret_key = os.getenv('SECRET_KEY')
 
 
-
 # 푸시 알림 키 설정
 opener_auth_key_path = os.getenv('auth_key_path')
 opener_auth_key_id = os.getenv('auth_key_id')
