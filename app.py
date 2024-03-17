@@ -1,21 +1,9 @@
 from flask import Flask, render_template, request, session, flash, abort, redirect, url_for, jsonify
 
-import sqlite3
-from threading import Thread
 from dotenv import load_dotenv
-import random
-import string
-import hashlib
-import secrets
-import base64
-from itsdangerous import URLSafeTimedSerializer
 from time import time
-from datetime import datetime
 from datetime import timedelta
 import os
-import subprocess
-from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayload, IOSNotification, APNSDeviceException, APNSServerException, APNSProgrammingException, UnregisteredException
-
 from modules import opener, settings, account
 
 
@@ -37,7 +25,7 @@ dev_mode = os.path.isfile(dev_path)
 
 
 # 플라스크를 재실행할 때마다 CSS를 새로 불러오는 로직
-startup_time = int(time()) #앱이 시작될 때 시간을 기록
+startup_time = int(time())
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)
@@ -52,7 +40,6 @@ def dated_url_for(endpoint, **values):
     return url_for(endpoint,**values)
 
 
-
 @app.route('/')
 def index():
     if 'user_id' in session:
@@ -62,11 +49,6 @@ def index():
             return render_template('index.html', username=session['user_username'])
     else:
         return render_template('index.html')
-
-# @app.route('/webapp')
-# def webapp():
-#     return render_template('webapp.html')
-
 
 host_addr = "0.0.0.0"
 port_num = "4062"
