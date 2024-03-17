@@ -1,0 +1,110 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body class="noCenter">
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings'">
+        <span class="icon">arrow_back_ios_new</span>
+        <p>설정</p>
+      </div>
+      <div class="header_title">
+        <h1>잠금 해제 기록</h1>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+    {% if logs == [] %}
+    <div class="general_wrapper">
+      <div class="settings_items" onclick="reset()">
+        <div class="settings_row invite">
+          <p class="settings_items_text">기록이 없습니다.</p>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    {% if isAdmin %}
+    <div class="general_wrapper">
+      <div class="settings_items" onclick="reset()">
+        <div class="settings_row invite">
+          <p class="settings_items_text executebtn">기록 초기화</p>
+        </div>
+        <script>
+          function reset() {
+            var resetYN = confirm("정말로 모든 기록을 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다.")
+            if (resetYN == true) {
+              location.href = "logs/reset"
+            }
+          }
+        </script>
+      </div>
+    </div>
+    {% endif %}
+    <div class="table_wrapper">
+      <table class="logs_table">
+        <thead>
+          <tr>
+            <th><span class="tableHeader">사용자</span></th>
+            <th><span class="tableHeader">시간</span></th>
+            <th><span class="tableHeader">접속 경로</span></th>
+          </tr>
+        </thead>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log[0] }}</td>
+          <td>{{ log[1] }}</td>
+          <td>
+            {% if log[2] is none %}
+            웹
+            {% elif log[2] == 1 %}
+            토큰
+            {% elif log[2] == 2 %}
+            앱
+            {% else %}
+            {{ log[2] }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endif %}
+  </main>
+
+
+
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="icon">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="icon">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
+
+
+
+
+
+</body>
+
+
+
+</html>

@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <title>DoorOpener</title>
+    
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  
+    
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var checkDoorStatus = setInterval(function () {
+                $.getJSON('/check_door_status', function (data) {
+                    if (data['status'] === 'done') {
+                        clearInterval(checkDoorStatus);
+                        window.location.href = '/success';  // Redirect to the success page
+                    }
+                });
+            }, 500);  // Check every half seconds
+        });
+    </script>
+    <script src="../static/js/noselect.js"></script></head>
+
+<body>
+    <header>
+    </header>
+
+    <main class="single_box">
+        <div class="login-form">
+            <h1 class="opening_message"> {{ message }} </h1>
+        </div>
+
+
+
+    </main>
+
+    <footer style="visibility: hidden;"></footer>
+
+</body>
+
+
+
+</html>

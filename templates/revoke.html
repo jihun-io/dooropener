@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <title>DoorOpener</title>
+    
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <script src="../static/js/noselect.js"></script>
+</head>
+
+<body>
+    <header></header>
+    <main class="single_box">
+        <div class="login-form revoke_form">
+            <h1 class="revoke_title">정말로 토큰을 파기하시겠습니까?</h1>
+            <p>토큰을 파기하면 기존에 등록한 단축어는 사용할 수 없습니다.</p>
+            <p>그래도 삭제하시겠습니까?</p>
+            <form action="/revoke" method="post" class="iUnderstand">
+                <label for="q" onclick="enableSubmit()"><input type="checkbox" id="q" name="qRevoke" value="1"
+                        onclick="enableSubmit()">위의 사항을 이해했습니다.</label>
+                <input type="hidden" name="qRevoke" value="0">
+
+                <div class="buttons_row">
+                    <a href="/settings/shortcuts/token" class="cancel_btn">취소</a>
+                    <input type="submit" id="delSubmit" class="del_btn" value="삭제">
+                </div>
+            </form>
+            <script>
+                function enableSubmit() {
+                    var checkBox = document.getElementById("q");
+                    var submitButton = document.getElementById("delSubmit");
+        
+                    if (checkBox.checked == true) {
+                        submitButton.disabled = false;
+                    } else {
+                        submitButton.disabled = true;
+                    }
+                }
+                enableSubmit();
+            </script>
+        </div>
+    </main>
+
+    <footer style="visibility: hidden;"></footer>
+
+</body>
+
+
+
+</html>

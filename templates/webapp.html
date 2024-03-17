@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <title>DoorOpener</title>
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <style>
+        * {
+            margin: 0px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        html {
+            overscroll-behavior: none;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: flex;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            /* enables “momentum” (smooth) scrolling */
+        }
+
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+
+            background-color: #f4f5f6;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #000000;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <iframe id='webapp' src="https://dooropener.jihun.io"></iframe>
+</body>
+
+</html>

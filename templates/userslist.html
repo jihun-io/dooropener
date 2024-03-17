@@ -1,0 +1,157 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+  <script>
+    function warn() {
+      alert("자기 자신은 관리자 권한을 해제할 수 없습니다.");
+    }
+
+    // 스크롤 위치를 저장할 변수
+    let scrollPosition = 0;
+
+    // 페이지를 벗어날 때 스크롤 위치를 저장
+    window.addEventListener('pagehide', function () {
+      let mainElement = document.querySelector('main');
+      if (mainElement) {
+        scrollPosition = mainElement.scrollTop;
+        localStorage.setItem('scrollPosition', scrollPosition);
+        console.log('Scroll position saved:', scrollPosition);  // 저장된 스크롤 위치를 콘솔에 출력
+      }
+    });
+
+    // 페이지를 로드할 때 이전 스크롤 위치로 이동
+    document.addEventListener('DOMContentLoaded', function () {
+      if (localStorage.getItem('scrollPosition') !== null) {
+        scrollPosition = localStorage.getItem('scrollPosition');
+        let mainElement = document.querySelector('main');
+        if (mainElement) {
+          setTimeout(function () {
+            mainElement.scrollTop = scrollPosition;
+          }, 0);
+        }
+      }
+    });
+
+
+  </script>
+
+
+</head>
+
+<body class="noCenter">
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings/admin'">
+        <span class="icon">arrow_back_ios_new</span>
+        <p>관리자 설정</p>
+      </div>
+      <div class="header_title">
+        <h1>사용자 목록</h1>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+    {% for i in lists %}
+    <div id="{{ i[5] }}" class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">이름</p>
+          <p id="name_{{ i[5] }}" class="settings_items_text_right">{{ i[0] }}</p>
+        </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">이메일</p>
+          <p id="email_{{ i[5] }}" class="settings_items_text_right">{{ i[1] }}</p>
+        </div>
+        <hr class="separation">
+        <div class="settings_items">
+          {% if (i[2] == None) and (i[3] == None) %}
+          {% else %}
+          <div class="settings_row">
+            <p class="settings_items_text">초대한 사용자</p>
+            <p class="settings_items_text_right">{{ i[2] }} | {{ i[3] }}</p>
+          </div>
+          <hr class="separation">
+          {% endif %}
+          <div class="settings_items toggleWrapper">
+            <div class="settings_row">
+              <p class="settings_items_text">관리자</p>
+              <div class="settings_row_two">
+                <p class="settings_items_text"></p>
+              </div>
+            </div>
+            {% if i[4] == 1 %}
+            {% if username == i[1] %}
+            <span class="icon toggleBtn_on" onclick="warn()">toggle_on</span>
+            {% else %}
+            <span class="icon toggleBtn_on"
+              onclick="location.href='userslist/permission?id={{ i[1] }}'">toggle_on</span>
+            {% endif %}
+            {% else %}
+            <span class="icon toggleBtn" onclick="location.href='userslist/permission?id={{ i[1] }}'">toggle_off</span>
+            {% endif %}
+          </div>
+        </div>
+        {% if username == i[1] %}
+        {% else %}
+        <hr class="separation">
+        <div class="settings_items" onclick="userDel({{ i[5] }})">
+          <div class="settings_row goto_success">
+            <p class="settings_items_text warnbtn">사용자 삭제</p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <script>
+      function userDel(serialnumber) {
+        var serialnumber;
+        var username = document.getElementById("name_" + serialnumber);
+        var email = document.getElementById("email_" + serialnumber);
+        var yn = confirm("정말로 이 사용자를 삭제하시겠습니까?\n해당 작업은 취소할 수 없습니다.\n\n사용자 이름: " + username.innerText + "\n이메일: " + email.innerText);
+        console.log(yn);
+        if (yn == true) {
+          location.href = "userlist/del?id=" + email.innerText;
+        }
+      }
+
+    </script>
+
+
+  </main>
+
+
+
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="icon">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="icon">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
+
+
+
+</body>
+
+
+
+</html>

@@ -1,0 +1,73 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+  <style>
+    .icon {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+
+      font-size: 70px;
+      color: rgb(95, 99, 104);
+    }
+  </style>
+  <script>
+    window.onload = function () {
+      if (window.self !== window.top) {
+        var tooltips = document.querySelectorAll('.tooltip_header');
+        for (var i = 0; i < tooltips.length; i++) {
+          tooltips[i].style.visibility = 'hidden';
+        }
+      }
+    };
+  </script>
+  <script src="../static/js/noselect.js"></script>
+</head>
+
+<body>
+  <header class="tooltip_header" style="visibility: hidden;">
+    <span class="icon">
+      arrow_upward
+    </span>
+    <div class="tooltip_wrapper">
+      <div class="tooltip">
+        <span class="icon">
+          lightbulb_circle
+        </span>
+        <p style="font-size: 16px;">완료 버튼을 누르면 닫습니다.</p>
+      </div>
+      <a href="success?tooltip=no"><span class="icon">close</span>다시 보지 않기</a>
+    </div>
+  </header>
+
+  <main class="single_box">
+    <div class="login-form">
+      <h1 class="welcome_message">{{ username }} 님,<br> 환영합니다!</h1>
+      <div class="dooropen_icons">
+        <span class="icon" style="font-size: 100px;">
+          door_open
+        </span>
+      </div>
+      <p class="success_message">문을 열었습니다.<br>이제 이 창을 닫으셔도 됩니다.</p>
+      <a href="/" class="goto">메인으로 이동</a>
+    </div>
+
+
+
+  </main>
+
+  <footer style="visibility: hidden;"></footer>
+
+</body>
+
+
+
+</html>

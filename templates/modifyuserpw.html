@@ -1,0 +1,96 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+
+
+</head>
+
+<body class="noCenter">
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings/user'">
+        <span class="icon">arrow_back_ios_new</span>
+        <p>사용자 정보</p>
+      </div>
+      <div class="header_title">
+        <h1>비밀번호 변경</h1>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+    <form action="password/request" method="post">
+      <div class="general_wrapper">
+        <div class="settings_items">
+          <div class="settings_row">
+            <p class="settings_items_text">신규</p>
+            <input id="pw1" type="password" name="password" class="modifyForm" placeholder="비밀번호" required minlength="8"
+            autocomplete="new-password" />
+          </div>
+        </div>
+        <hr class="separation">
+        <div class="settings_items">
+          <div class="settings_row">
+            <p class="settings_items_text">확인</p>
+            <input id="pw2" type="password" name="password2" class="modifyForm" placeholder="비밀번호 재확인" oninput="validatePassword()" required minlength="8"
+            autocomplete="new-password" />
+          </div>
+        </div>
+      </div>
+      <div class="general_wrapper">
+        <div class="settings_items">
+          <div class="settings_row goto_success noMargin">
+            <input type="submit" value="변경" class="settings_items_text executebtn noBtn">
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+  <script>
+    var pw1 = document.getElementById("pw1");
+    var pw2 = document.getElementById("pw2");
+
+    function validatePassword() {
+      if (pw1.value != pw2.value) {
+        pw2.setCustomValidity("비밀번호가 일치하지 않습니다.");
+      } else {
+        pw2.setCustomValidity(''); // 오류가 없으면 메시지를 빈 문자열로 설정해야한다. 오류 메시지가 비어 있지 않은 한 양식은 유효성 검사를 통과하지 않고 제출되지 않는다.
+      }
+    }
+
+
+  </script>
+
+
+
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="icon">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="icon">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
+
+
+
+
+
+</body>
+
+
+
+</html>

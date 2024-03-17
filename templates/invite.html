@@ -1,0 +1,82 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body class="noCenter">
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings'">
+        <span class="icon">arrow_back_ios_new</span>
+        <p>설정</p>
+      </div>
+      <div class="header_title">
+        <h1>사용자 초대</h1>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+    <div class="description">
+      <p>새로운 사용자를 초대하기 위해서는 초대 링크가 필요합니다. 초대 링크는 최대 15분 간 유효하며, 한 링크 당 한 명의 사용자만 가입 가능합니다.</p>
+    </div>
+    <div class="general_wrapper">
+      <div class="settings_items" onclick="location.href='/invitecode'">
+        <div class="settings_row executebtn">
+          <p class="settings_items_text">초대 링크 생성</p>
+        </div>
+      </div>
+    </div>
+    <div class="description">
+      <p>초대 링크 목록</p>
+    </div>
+    <div class="general_wrapper">
+      {% for i in invite_codes %}
+      <div class="settings_items" onclick="location.href='invite/info?code={{ i[1] }}'">
+        <div class="settings_row">
+          <p class="settings_items_text">{{ request.host_url }}join?code={{ i[1] }}</p>
+          <span class="icon">chevron_right</span>
+        </div>
+      </div>
+      {% if not loop.last %}
+      <hr class="separation">
+      {% endif %}
+      {% endfor %}
+    </div>
+
+
+  </main>
+
+
+
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="icon">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="icon">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
+
+
+
+
+
+</body>
+
+
+
+</html>
