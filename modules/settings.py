@@ -26,6 +26,7 @@ def invite_code(length):
     random_string = ''.join(random.choice(characters) for _ in range(length))
     return random_string
 
+# 관리자 체크
 def adminCheck(userID):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()

@@ -18,6 +18,16 @@ from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayloa
 
 account = Blueprint("open", __name__, template_folder="templates")
 
+# 관리자 체크 함수
+def adminCheck(userID):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (userID,))
+        result = c.fetchone()
+        isAdmin = result[0]
+        return isAdmin
+
 
 @account.route('/login', methods=['GET', 'POST'])
 def login():
@@ -44,15 +54,19 @@ def login():
                 session.permanent = True
                 session['user_username'] = username  
                 session['user_id'] = email # 사용자 아이디를 세션에 저장
-                if isOOBE:
+                
+                if os.path.isfile("OOBEPending"):
                     isOOBENext = True
+                else:
+                    isOOBENext = False
+                    
                 message = '로그인을\n완료했습니다.'
                 icon = 'done'
             else:
                 message = '해당 사용자를\n찾을 수 없습니다.'
                 icon = 'error'
 
-    return render_template('login.html', message=message, icon=icon, isOOBE=isOOBE, isOOBENext=isOOBENext)
+    return render_template('login.html', message=message, icon=icon, isOOBENext=isOOBENext)
 
 @account.route('/loginwithapp', methods=['POST'])
 def loginwithapp():
@@ -168,19 +182,28 @@ def signup():
 @account.route('/welcome')
 def oobe():
     global isOOBE
-    isOOBE = True
-    
-    session.pop('user_id', None)
     
     if os.path.isfile(".env") and os.path.isfile("database.db"):
-        warning = True
+        if 'user_id' in session:
+            if adminCheck(session['user_id']):
+                isOOBE = True
+                warning = True
+                return render_template('welcome.html', warning=warning)
+            else:
+                return redirect(url_for('index'))
+        else:
+            return redirect(url_for('index'))
     else:
+        isOOBE = True
         warning = False
-    return render_template('welcome.html', warning=warning)
+        return render_template('welcome.html', warning=warning)
+
+    
 
 @account.route('/welcome/join')
 def oobe_join():
     isOOBE = True
+    session.pop('user_id', None)
     return render_template('sign.html', isOOBE=isOOBE)
 
 @account.route('/welcome/signup', methods=['POST'])
@@ -196,9 +219,13 @@ def oobe_signup():
     secret_key = secretkey_generate()
     
     with open(".env", "w") as env_file:
-        env_file.write(f"SECRET_KEY='{secret_key}'")
-        env_file.write("\nOOBEPending=True")
-            
+        env_file.write(f"SECRET_KEY='{secret_key}'")        
+    
+    if os.path.isfile("OOBEPending"):
+        os.remove("OOBEPending")
+    
+    with open("OOBEPending", "w") as oobe_file:
+        oobe_file.write("pending")
     
     # DB 초기화
     if os.path.isfile("database.db"):
@@ -246,13 +273,8 @@ def oobe_problem():
 
 @account.route('/welcome/complete')
 def oobe_complete():
-    with open(".env", "r") as env_file:
-        env_content = env_file.read()
-        
-    env_content = env_content.replace("OOBEPending=True", "OOBEPending=False")
-    
-    with open(".env", "w") as env_file:
-        env_file.write(env_content)
+    if os.path.isfile("OOBEPending"):
+        os.remove("OOBEPending")
 
     return render_template('oobe_complete.html')
 

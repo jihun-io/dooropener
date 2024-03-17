@@ -14,7 +14,6 @@ load_dotenv(dotenv_path=os.path.join(script_dir, '../.env'))
 
 dev_path = 'dev.txt'
 dev_mode = os.path.isfile(dev_path)
-oobe_pending = os.getenv('OOBEPending')
 
 # 푸시 알림 키 설정
 opener_auth_key_path = os.getenv('auth_key_path')
@@ -123,7 +122,10 @@ def open():
     if 'user_id' in session:
         thread = Thread(target=dooropen_wrapper)
         thread.start()
-        print(oobe_pending)
+        if os.path.isfile("OOBEPending"):
+            oobe_pending = True
+        else:
+            oobe_pending = False
         return render_template('open.html', username=session['user_username'], message="문을 여는 중...", oobe_pending=oobe_pending)
     else:
         return redirect(url_for('index'))
@@ -200,6 +202,11 @@ def useragenttest():
 @opener.route('/success')
 def success():    
     if 'user_id' in session:
+        if os.path.isfile("OOBEPending"):
+            oobe_pending = True
+        else:
+            oobe_pending = False
+            
         return render_template('success.html', username=session['user_username'], oobe_pending=oobe_pending)
     else:
         return redirect(url_for('index'))
