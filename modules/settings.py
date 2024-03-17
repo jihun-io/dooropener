@@ -164,7 +164,7 @@ def generate_token():
         if request.method == 'POST':
             qGenerate = request.form['qGenerate']
             if qGenerate == "1":
-                s = URLSafeTimedSerializer(settings.config['SECRET_KEY'])
+                s = URLSafeTimedSerializer(settings.secret_key)
                 token = s.dumps(session['user_id']) 
 
                 conn = sqlite3.connect('database.db')
@@ -447,7 +447,7 @@ def generate_applewatch_token():
         email = session['user_id']
         username = session['user_username']
 
-        s = URLSafeTimedSerializer(settings.config['SECRET_KEY'])
+        s = URLSafeTimedSerializer(settings.secret_key)
         token = s.dumps(session['user_id'])  # 세션의 user_id를 이용해 토큰을 생성합니다.
         salt = settings.secret_key
         salt = salt.encode("utf-8")

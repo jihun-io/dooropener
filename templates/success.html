@@ -57,7 +57,12 @@
         </span>
       </div>
       <p class="success_message">문을 열었습니다.<br>이제 이 창을 닫으셔도 됩니다.</p>
+      {% if oobe_pending %}
+      <a href="/welcome/problem" class="oobe_problem">문이 열리지 않았습니까?</a>
+      <button type="button" onclick="location.href='/welcome/complete'">설정 마무리하기</button>
+      {% else %}
       <a href="/" class="goto">메인으로 이동</a>
+      {% endif %}
     </div>
 
 

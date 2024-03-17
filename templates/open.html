@@ -32,6 +32,9 @@
     <main class="single_box">
         <div class="login-form">
             <h1 class="opening_message"> {{ message }} </h1>
+            {% if oobe_pending %}
+            <a class="oobe_problem">문이 열리지 않습니까?</a>
+            {% endif %}
         </div>
 
 

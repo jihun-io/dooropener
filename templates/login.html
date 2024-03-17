@@ -22,8 +22,14 @@
           {{ icon }}
         </span>
       </div>
+      {% if isOOBENext %}
+      <button type="button" onclick="location.href='/welcome/setup'">이어서 설정하기</button>
+      {% elif isOOBE %}
+      <button type="button" onclick="location.href='/'">로그인</button>
+      {% else %}
       <button type="button" onclick="location.href='/'"><span class="icon">home</span>메인
         화면으로</button>
+      {% endif %}
     </div>
 
 
