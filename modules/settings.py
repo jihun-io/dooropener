@@ -87,7 +87,7 @@ def modifyInfoRequest():
             session['user_username'] = new_username
             session['user_id'] = new_email
 
-            return redirect(url_for('user'))
+            return redirect(url_for('settings.user'))
     else:
         return redirect(url_for('index'))
     
@@ -247,9 +247,9 @@ def logs_reset():
 
             c.execute("SELECT * FROM unlockLogs ORDER BY time DESC")
             conn.close()
-            return redirect(url_for('logs'))
+            return redirect(url_for('settings.logs'))
         else:
-            return redirect(url_for('logs'))
+            return redirect(url_for('settings.logs'))
     else:
         return redirect(url_for('index'))
 
@@ -283,7 +283,7 @@ def invite_link_gen():
         c.execute("INSERT INTO inviteCodes (invitor, code, expDate) VALUES (?, ?, ?)", (session['user_id'], code, expDate))
         conn.commit()
 
-        return redirect(url_for('invite_list'))
+        return redirect(url_for('settings.invite_list'))
     else:
         return redirect(url_for('index'))
     
@@ -303,7 +303,7 @@ def invite_link_info():
             formatted_time = dt_object.strftime('%Y-%m-%d %H:%M:%S')
             return render_template('codeinfo.html', data=data, time_convert=formatted_time)
         else:
-            return redirect(url_for('invite_list'))
+            return redirect(url_for('settings.invite_list'))
         
     else:
         return redirect(url_for('index'))
@@ -318,7 +318,7 @@ def invite_link_del():
         c.execute("DELETE FROM inviteCodes WHERE code=?", (code,))
         conn.commit()
 
-        return redirect(url_for('invite_list'))
+        return redirect(url_for('settings.invite_list'))
     else:
         return redirect(url_for('index'))
     
@@ -375,7 +375,7 @@ def users_lists_permission():
             email = request.args.get('id')
 
             if session['user_id'] == email:
-                return redirect(url_for('users_list'))
+                return redirect(url_for('settings.users_list'))
             else:
                 c.execute("SELECT isAdmin FROM users WHERE email = ?", (email,))
                 result = c.fetchone()
@@ -393,7 +393,7 @@ def users_lists_permission():
                     c.execute("UPDATE users SET isAdmin = 1 WHERE email = ?", (email,))
                     conn.commit()
                     conn.close()
-                return redirect(url_for('users_list'))
+                return redirect(url_for('settings.users_list'))
         else:
             return redirect(url_for('index'))
     else:
@@ -412,7 +412,7 @@ def users_lists_delete():
         if isAdmin == 1:
             email = request.args.get('id')
             if session['user_id'] == email:
-                return redirect(url_for('users_list'))
+                return redirect(url_for('settings.users_list'))
             else:
                 c.execute("SELECT serial FROM users WHERE email = ?", (email,))
                 result = c.fetchone()
@@ -420,7 +420,7 @@ def users_lists_delete():
                 c.execute("DELETE FROM users WHERE email = ?", (email,))
                 conn.commit()
                 conn.close()
-                return redirect(url_for('users_list'))
+                return redirect(url_for('settings.users_list'))
             
         else:
             return redirect(url_for('index'))
@@ -475,7 +475,7 @@ def generate_applewatch_token():
         scLink = domain + "applewatch/login?t=" + token
         return jsonify(link=scLink)
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('settings.index'))
 
 @settings.route('/applewatch/login', methods=['GET'])
 def login_applewatch_token():
