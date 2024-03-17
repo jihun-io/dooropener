@@ -158,7 +158,6 @@ def signup():
                 icon = "check_circle"
                 return render_template('login.html', message=message, icon=icon)
             else:
-                message = "다른 이메일을 사용해주세요."
+                message = "다른 이메일을 사용하십시오."
                 icon = "error"
                 return render_template('sign.html', message=message, username=username, code=invite_code)
-            
