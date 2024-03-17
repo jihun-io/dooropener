@@ -325,6 +325,72 @@ def invite_link_del():
     else:
         return redirect(url_for('index'))
     
+@settings.route('/settings/tempkey')
+def temp_key():
+    if 'user_id' in session:
+        return render_template('tempkey.html')
+    else:
+        return redirect(url_for('index'))
+    
+@settings.route('/settings/tempkey/setup')
+def temp_key_setup():
+    if 'user_id' in session:
+        now = datetime.now()
+        startDate = now.strftime("%Y-%m-%d")
+        end = now + timedelta(days=3)
+        endDate = end.strftime("%Y-%m-%d")
+        startTime = now.strftime("%H:%M")
+        
+        return render_template('tempkey_setup.html', startDate=startDate, endDate=endDate, startTime=startTime)
+    else:
+        return redirect(url_for('index'))
+
+@settings.route('/settings/tempkey/generate', methods=['POST'])
+def temp_key_generate():
+    if 'user_id' in session:
+        if request.method == 'POST':
+            user_id = session['user_id']
+            
+            keyName = request.form['keyname']
+            startDate = request.form['startDate']
+            startTime = request.form['startTime']
+            endDate = request.form['endDate']
+            endTime = request.form['endTime']
+            count = request.form['count']
+            print(keyName)
+            print(startDate)
+            print(startTime)
+            print(endDate)
+            print(endTime)
+            print(count)
+        
+            startStr = f"{startDate} {startTime}"
+            endStr = f"{endDate} {endTime}"
+            
+            start = datetime.strptime(startStr, "%Y-%m-%d %H:%M")
+            end = datetime.strptime(endStr, "%Y-%m-%d %H:%M")
+            
+            start_plus_3_days = start + timedelta(days=3)
+            if start > end:
+                print("날짜가 이상해")
+            elif end > start_plus_3_days:
+                print("너무커")
+            elif count > 100:
+                print("너무 많아")
+            else:
+                conn = sqlite3.connect('database.db')
+                c = conn.cursor()
+                c.execute("INSERT INTO tempKey (keyname, startDate, endDate, count, creator) VALUES (?, ?, ?, ?, ?)", (keyName, start, end, count, user_id))
+                conn.commit()
+                conn.close()
+            return redirect(url_for('index'))
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+
+
+    
 @settings.route('/settings/admin')
 def admin():
     if 'user_id' in session:
@@ -429,6 +495,7 @@ def users_delete():
             return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
+    
 
 
 # ---- 아래부터 앱 연동 기능 모음 ----
