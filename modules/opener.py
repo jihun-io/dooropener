@@ -9,7 +9,6 @@ from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayloa
 
 opener = Blueprint("opener", __name__, template_folder="templates")
 
-
 script_dir = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(dotenv_path=os.path.join(script_dir, '../.env'))
 
