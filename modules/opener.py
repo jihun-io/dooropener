@@ -33,7 +33,7 @@ def push(ptitle, psubtitle, pbody, sender, dev):
     if dev_mode == False:
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-
+ 
         if dev and sender == 0:
             c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
         elif dev and sender != 0:
