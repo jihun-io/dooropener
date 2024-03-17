@@ -29,59 +29,6 @@ def dooropen_wrapper():
     door_open_status = True
 
 # 푸시 알림 전송 함수
-def push(ptitle, psubtitle, pbody, sender, dev):
-    if dev_mode == False:
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-
-        if dev and sender == 0:
-            c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
-        elif dev and sender != 0:
-            c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1 AND apnstokens.email != ?", (sender,))
-        elif not dev and sender == 0:
-            c.execute("SELECT token FROM apnstokens")
-        else:  # not dev and sender != 0
-            c.execute("SELECT token FROM apnstokens WHERE email != ?", (sender,))
-        results = c.fetchall()
-        device_tokens = [row[0] for row in results]  # Extract the token from each row
-
-        # alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
-        alert = IOSPayloadAlert(title=psubtitle, body=pbody)
-        payload = IOSPayload(alert=alert, sound='default')
-        notification = IOSNotification(payload=payload, topic='io.jihun.DoorOpener')
-        
-        messages = []
-
-        print(opener_auth_key_id)
-        print(opener_auth_key_path)
-        print(opener_team_id)
-
-        with APNSClient(
-            mode=APNSClient.MODE_PROD,
-            authentificator=TokenBasedAuth(
-                auth_key_path=opener_auth_key_path,
-                auth_key_id=opener_auth_key_id,
-                team_id=opener_team_id
-            ),
-            root_cert_path = None,
-        ) as client:
-            for device_token in device_tokens:
-                try:
-                    client.push(notification=notification, device_token=device_token)
-                except UnregisteredException as e:
-                    messages.append(f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db')
-                except APNSDeviceException:
-                    messages.append('flag the device as potentially invalid and remove from db after a few tries')
-                except APNSServerException:
-                    messages.append('try again later')
-                except APNSProgrammingException:
-                    messages.append('check your code and try again later')
-                else:
-                    messages.append('everything is ok')
-        return messages
-    else:
-        messages = 'everything is ok'
-        return messages
 
 def log_write(username, path):
     # 문이 열린 후 DB에 기록을 남깁니다.
@@ -106,10 +53,6 @@ def check_door_status():
 
             thread_log_write = Thread(target=log_write, args=(session['user_username'], None))
             thread_log_write.start()
-
-            push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-            thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, session['user_id'], False))
-            thread_push.start()
 
             return jsonify({'status': 'done'})
         else:
@@ -151,10 +94,6 @@ def openwithapi():
                 # 문이 열린 후 DB에 기록을 남깁니다.
                 log_write(session['user_username'], 1)
 
-                push_message = username + " 님이 잠금을 해제했습니다."
-                thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, "", False))
-                thread_push.start()
-
                 return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
             else:
                 return render_template('openwithapi.html', message="오류가 발생했습니다.")
@@ -167,29 +106,15 @@ def openwithapi():
 def openwithapp():    
     if 'user_id' in session:
         isTest = request.args.get('isTest')
-        isNoPush = request.args.get('isNoPush')
         if isTest == '1':
             pass
         else:
             subprocess.run(['python3', 'controller.py'])
             thread_log_write = Thread(target=log_write, args=(session['user_username'], 2))
             thread_log_write.start()
-        
-        if isNoPush == '1':
-            pass
-        elif isTest == '1':
-            push_message = "(테스트) " + session['user_username'] + " 님이 잠금을 해제했습니다."
-            thread_push = Thread(target=push, args=("DoorOpener", "테스트 메시지", push_message, session['user_id'], True))
-            thread_push.start()
-        else:
-            push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
-            thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제", push_message, session['user_id'], False))
-            thread_push.start()
 
         result = "Success"
 
-        print(opener_auth_key_path)
-        print(opener_auth_key_id)
         return jsonify(result=result)
     else:
         return redirect(url_for('index'))
@@ -208,20 +133,5 @@ def success():
             oobe_pending = False
             
         return render_template('success.html', username=session['user_username'], oobe_pending=oobe_pending)
-    else:
-        return redirect(url_for('index'))
-
-
-@opener.route('/pushtest')
-def pushtest():
-    if 'user_id' in session:
-        thread_push = Thread(target=push, args=push("DoorOpener", "알림 테스트", "푸시 알림 테스트입니다.", 0, True))
-        thread_push.start()
-
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-        c.execute("SELECT email, token FROM apnstokens")
-        results = c.fetchall()
-        return results
     else:
         return redirect(url_for('index'))
