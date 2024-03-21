@@ -1,0 +1,41 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+
+  <script src="../static/js/noselect.js"></script>
+</head>
+
+<body>
+  <header></header>
+
+  <main class="single_box">
+    <div class="login-form">
+      <h1 class="status_message">설정 완료</h1>
+      <div class="setup_description">
+        <p>모든 설정이 완료되었습니다!<br>이제 스마트 홈 라이프를 즐길 수 있습니다.</p>
+      </div>
+
+      <button class="openbutton" type="button" onclick="location.href='/'">
+        <span class="icon">home</span>
+        메인 화면으로
+      </button>
+    </div>
+  </main>
+
+
+  <footer style="visibility: hidden;">
+
+  </footer>
+
+</body>
+
+
+
+</html>

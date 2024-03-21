@@ -7,8 +7,6 @@
     content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
 
-
-
 </head>
 
 <body class="noCenter">
@@ -19,7 +17,7 @@
         <p>설정</p>
       </div>
       <div class="header_title">
-        <h1>관리자 설정</h1>
+        <h1>임시 키 발급</h1>
       </div>
 
     </div>
@@ -27,31 +25,31 @@
 
   <main class="settings_wrapper" autofocus>
     <div class="general_wrapper">
-      <div class="settings_items" onclick="location.href='admin/userslist'">
-        <div class="settings_row">
-          <p class="settings_items_text">사용자 목록</p>
-          <span class="icon">chevron_right</span>
+      <div class="settings_items" onclick="location.href='/settings/tempkey/setup'">
+        <div class="settings_row executebtn">
+          <p class="settings_items_text">임시 키 생성</p>
         </div>
       </div>
     </div>
-  <div class="general_wrapper">
-    <div class="settings_items" onclick="reset()">
-      <div class="settings_row warnbtn">
-        <p class="settings_items_text">초기화</p>
-      </div>
+    <div class="description">
+      <p>임시 키 목록</p>
     </div>
-  </div>
+    <div class="general_wrapper">
+      {% for i in data %}
+      <div class="settings_items">
+        <div class="settings_row" onclick="location.href='tempkey/view?id={{ i[0][3] }}'">
+          <div class="settings_row_wrapper">
+            <p class="settings_items_text"><strong>{{ i[0][0] }}</strong></p>    
+            <p class="settings_items_text">{{ i[1] }}</p>
+          </div>
+          <span class="icon">chevron_right</span>
+      </div>
+      {% if not loop.last %}
+      <hr class="separation">
+      {% endif %}
+      {% endfor %}
+    </div>
   </main>
-
-  <script>
-    function reset() {
-      var yn = confirm("정말로 DoorOpener를 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.");
-      if (yn == true) {
-        location.href="/welcome";
-      }
-    }
-
-  </script>
 
 
 

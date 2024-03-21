@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, session, flash, abort, redirect, url_for, jsonify
-
 from dotenv import load_dotenv
 from time import time
-from datetime import timedelta
+from datetime import datetime, timedelta
 import os
 from modules import opener, settings, account
 
@@ -49,8 +48,26 @@ def index():
             return render_template('index.html', username=session['user_username'], devWarn="개발 - ")
         else:
             return render_template('index.html', username=session['user_username'])
+        
+    elif 'temp_keyvalue' in session:
+        now = datetime.now()
+        endDate = session['temp_keyexp']
+        endDate = endDate.replace(tzinfo=None) # 임시로 시간대를 날려 버림.
+        if now > endDate:
+            session.pop("temp_keyvalue", None)
+            session.pop("temp_keyname", None)
+            session.pop("temp_keyexp", None)
+            return redirect(url_for('index'))
+        else:
+            return render_template('tempkey_main.html', username=session['temp_keyname'], exp=endDate)
+
+        
+    
     else:
-        return render_template('index.html')
+        if os.path.isfile("database.db"):
+            return render_template('index.html')
+        else:
+            return redirect(url_for('open.oobe'))
 
 host_addr = "0.0.0.0"
 port_num = "4062"

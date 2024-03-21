@@ -1,0 +1,41 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+
+  <script src="../static/js/noselect.js"></script>
+</head>
+
+<body>
+  <header></header>
+
+  <main class="single_box">
+    <div class="login-form">
+      <h1 class="status_message">환영합니다!</h1>
+      <div class="welcome_description"><p><strong>DoorOpener</strong>로 더욱 편리한<br>스마트 홈을 만나보실 수 있습니다.</p></div>
+      {% if warning %}
+      <div class="warning_wrapper">
+        <span class="icon icon_on_paragraph">warning</span>
+        <p>다음 설정을 진행할 경우,<br>앱의 <strong>모든 정보가 초기화</strong>됩니다.<br>반드시 필요한 경우에만 초기화를 진행하십시오.</p>
+      </div>
+      {% endif %}
+      <button onclick="location.href='/welcome/join'">시작하기</button>
+    </div>
+  </main>
+
+
+  <footer style="visibility: hidden;">
+
+  </footer>
+
+</body>
+
+
+
+</html>

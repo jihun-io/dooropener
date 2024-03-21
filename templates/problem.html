@@ -1,0 +1,54 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+
+  <script src="../static/js/noselect.js"></script>
+</head>
+
+<body>
+  <header></header>
+
+  <main class="single_box">
+    <div class="login-form">
+      <h1 class="status_message">문제 해결하기</h1>
+      <!-- <div class="setup_description"><p>DoorOpener로 도어록의 잠금을 해제하기 위해서는 DoorOpener와 도어록의 무선 송수신기를 연결해야 합니다.</p></div> -->
+      <div class="setup_description">
+        <p>다음 사항을 확인하십시오.</p>
+        <ul class="info_list">
+          <li>무선 송신기의 전원 선과 신호 선을 DoorOpener의 본체와 연결했습니까?</li>
+          <li>무선 수신기를 디지털 도어록의 본체에 장착했습니까?</li>
+          <li>디지털 도어록에서 무선 송신기를 등록했습니까?
+            <ul>
+              <li class="second_li">일반적인 경우, 디지털 도어록의 비밀번호 등록 버튼을 누른 후 DoorOpener에서 잠금 해제를 실행하면 무선 송신기가 등록됩니다. 더 자세한 무선 송신기 등록 절차는 디지털 도어록의 설명서를 참고하십시오.</li>
+            </ul>
+          </li>
+      </ul>
+      </div>
+
+      <button class="openbutton" type="button" onclick="location.href='/open'">
+        <span class="icon">key</span>
+        잠금 해제
+      </button>
+      <a href='/welcome/complete' class="goto">
+        건너뛰기
+      </a>
+    </div>
+  </main>
+
+
+  <footer style="visibility: hidden;">
+
+  </footer>
+
+</body>
+
+
+
+</html>

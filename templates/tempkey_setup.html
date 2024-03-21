@@ -1,0 +1,120 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body class="noCenter">
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings/tempkey'">
+        <span class="icon">arrow_back_ios_new</span>
+        <p>임시 키 발급 </p>
+      </div>
+      <div class="header_title">
+        <h1>임시 키 생성</h1>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+    <div class="description">
+      <p>임시 키는 최대 3일 동안만 유효합니다. 또한, 횟수 제한이 0일 경우 잠금 해제 제한은 없습니다.</p>
+    </div>
+    <form action="generate" method="post" onsubmit="tempkey_check(); return false;">
+      <div class="general_wrapper">
+        <div class="settings_items">
+          <div class="settings_row">
+            <p class="settings_items_text">임시 키 이름</p>
+            <input id="keyname" type="text" name="keyname" class="modifyForm" placeholder="이름" value="{{ keyname }}" required>
+          </div>
+        </div>
+        <hr class="separation">
+        <div class="settings_items">
+          <div class="settings_row">
+            <p class="settings_items_text">시작 시간</p>
+            <div class="formWrapper">
+              <input id="startDate" type="date" min="{{startDate}}" name="startDate" class="modifyForm formDouble" value="{{ startDate }}" required>
+              <input id="startTime" type="time" name="startTime" class="modifyForm formDouble" value="{{ startTime }}" required>
+            </div>
+
+          </div>
+        </div>
+        <hr class="separation">
+        <div class="settings_items">
+          <div class="settings_row">
+            <p class="settings_items_text">만료 시간</p>
+            <div class="formWrapper">
+              <input id="endDate" type="date" min="{{startDate}}" name="endDate" class="modifyForm formDouble" value="{{ endDate }}" required>
+              <input id="endTime" type="time" name="endTime" class="modifyForm formDouble" value="{{ startTime }}" required>
+            </div>
+          </div>
+        </div>
+        <hr class="separation">
+        <div class="settings_items">
+          <div class="settings_row">
+            <p class="settings_items_text">횟수 제한</p>
+            <input id="count" type="number" min="0" max="100" name="count" class="modifyForm" placeholder="횟수" value="{{ count }}" required>
+          </div>
+        </div>
+      </div>
+      <div class="general_wrapper">
+        <div class="settings_items">
+          <div class="settings_row goto_success noMargin">
+            <!-- <a href="#" class="settings_items_text executebtn noBtn" onclick="tempkey_check()">생성</a> -->
+            <input type="submit" value="생성" class="settings_items_text executebtn noBtn">
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    function tempkey_check() {
+      startDate = document.getElementById("startDate").value;
+      startTime = document.getElementById("startTime").value;
+      endDate = document.getElementById("endDate").value;
+      endTime = document.getElementById("endTime").value;
+
+      console.log(startDate + " " + startTime + " / " + endDate + " " + endTime);
+
+      if (startDate + startTime >= endDate + endTime) {
+        alert("시작 시간과 만료 시간을 다시 확인하십시오.");
+      } else {
+        document.getElementById('generate').submit();
+      }
+    }
+  </script>
+
+
+
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="icon">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="icon">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
+
+
+
+
+
+</body>
+
+
+
+</html>
