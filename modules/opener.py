@@ -28,8 +28,6 @@ def dooropen_wrapper():
         subprocess.run(['python3', 'controller.py'])
     door_open_status = True
 
-# 푸시 알림 전송 함수
-
 def log_write(username, path):
     # 문이 열린 후 DB에 기록을 남깁니다.
     conn = sqlite3.connect('database.db')  # DB에 연결합니다.
