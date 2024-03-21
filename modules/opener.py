@@ -113,7 +113,7 @@ def check_door_status():
             thread_log_write.start()
             
             push_message = username + " 님이 잠금을 해제했습니다."
-            thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, session['user_id'], False))
+            thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, username, False))
             thread_push.start()
 
             return jsonify({'status': 'done'})
