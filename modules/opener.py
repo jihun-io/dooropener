@@ -14,7 +14,6 @@ load_dotenv(dotenv_path=os.path.join(script_dir, '../.env'))
 
 dev_path = 'dev.txt'
 dev_mode = os.path.isfile(dev_path)
-opener.secret_key = os.getenv('SECRET_KEY')
 
 # 푸시 알림 키 설정
 opener_auth_key_path = os.getenv('auth_key_path')
@@ -34,7 +33,7 @@ def push(ptitle, psubtitle, pbody, sender, dev):
     if dev_mode == False:
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-
+ 
         if dev and sender == 0:
             c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
         elif dev and sender != 0:
@@ -121,11 +120,13 @@ def check_door_status():
 @opener.route('/open')
 def open():    
     if 'user_id' in session:
-        # Create a new thread to run the dooropen function
         thread = Thread(target=dooropen_wrapper)
         thread.start()
-        # While the door is opening, render the open.html template with a message
-        return render_template('open.html', username=session['user_username'], message="문을 여는 중...")
+        if os.path.isfile("OOBEPending"):
+            oobe_pending = True
+        else:
+            oobe_pending = False
+        return render_template('open.html', username=session['user_username'], message="문을 여는 중...", oobe_pending=oobe_pending)
     else:
         return redirect(url_for('index'))
 
@@ -171,7 +172,6 @@ def openwithapp():
             pass
         else:
             subprocess.run(['python3', 'controller.py'])
-            # 문이 열린 후 DB에 기록을 남깁니다.
             thread_log_write = Thread(target=log_write, args=(session['user_username'], 2))
             thread_log_write.start()
         
@@ -202,7 +202,12 @@ def useragenttest():
 @opener.route('/success')
 def success():    
     if 'user_id' in session:
-        return render_template('success.html', username=session['user_username'])
+        if os.path.isfile("OOBEPending"):
+            oobe_pending = True
+        else:
+            oobe_pending = False
+            
+        return render_template('success.html', username=session['user_username'], oobe_pending=oobe_pending)
     else:
         return redirect(url_for('index'))
 

@@ -17,13 +17,9 @@
 
   <main class="single_box">
     <div class="login-form">
-      {% if isOOBE %}
       <div class="welcome_title_wrapper"><h1 class="status_message welcome_title">1. 사용자 등록</h1></div>
       <div class="welcome_join_description"><p>DoorOpener를 사용하기 위해서는 사용자 등록을 해야 합니다.<br>최초로 등록한 사용자는 관리자 권한이 부여됩니다.</p></div>
       <form action="signup" method="post">
-      {% else %}
-      <form action="signup?code={{ code }}" method="post">
-      {% endif %}
         <input id="realname" type="text" name="realname" class="text-field username_margin" placeholder="사용자 이름" required />
         {% if message %}
         <input id="email" type="text" name="email" class="text-field" placeholder="이메일" value="{{ email }}" required

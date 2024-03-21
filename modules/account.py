@@ -18,6 +18,16 @@ from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayloa
 
 account = Blueprint("open", __name__, template_folder="templates")
 
+# 관리자 체크 함수
+def adminCheck(userID):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        c.execute("SELECT isAdmin FROM users WHERE email = ?", (userID,))
+        result = c.fetchone()
+        isAdmin = result[0]
+        return isAdmin
+
 
 @account.route('/login', methods=['GET', 'POST'])
 def login():
@@ -44,13 +54,19 @@ def login():
                 session.permanent = True
                 session['user_username'] = username  
                 session['user_id'] = email # 사용자 아이디를 세션에 저장
+                
+                if os.path.isfile("OOBEPending"):
+                    isOOBENext = True
+                else:
+                    isOOBENext = False
+                    
                 message = '로그인을\n완료했습니다.'
                 icon = 'done'
             else:
                 message = '해당 사용자를\n찾을 수 없습니다.'
                 icon = 'error'
 
-    return render_template('login.html', message=message, icon=icon)
+    return render_template('login.html', message=message, icon=icon, isOOBENext=isOOBENext)
 
 @account.route('/loginwithapp', methods=['POST'])
 def loginwithapp():
@@ -154,10 +170,111 @@ def signup():
                 conn.commit()
                 conn.close()
 
-                message = "회원가입이 완료되었습니다!"
+                message = "사용자 등록이 완료되었습니다!"
                 icon = "check_circle"
                 return render_template('login.html', message=message, icon=icon)
             else:
                 message = "다른 이메일을 사용하십시오."
                 icon = "error"
                 return render_template('sign.html', message=message, username=username, code=invite_code)
+            
+
+@account.route('/welcome')
+def oobe():
+    global isOOBE
+    
+    if os.path.isfile(".env") and os.path.isfile("database.db"):
+        if 'user_id' in session:
+            if adminCheck(session['user_id']):
+                isOOBE = True
+                warning = True
+                return render_template('welcome.html', warning=warning)
+            else:
+                return redirect(url_for('index'))
+        else:
+            return redirect(url_for('index'))
+    else:
+        isOOBE = True
+        warning = False
+        return render_template('welcome.html', warning=warning)
+
+    
+
+@account.route('/welcome/join')
+def oobe_join():
+    isOOBE = True
+    session.pop('user_id', None)
+    return render_template('sign.html', isOOBE=isOOBE)
+
+@account.route('/welcome/signup', methods=['POST'])
+def oobe_signup():
+    # 환경 변수 초기화 및 생성
+    if os.path.isfile(".env"):
+        os.remove(".env")
+        
+    def secretkey_generate(length=40):
+        characters = string.ascii_letters + string.digits
+        return ''.join(random.choice(characters) for _ in range(length))
+    
+    secret_key = secretkey_generate()
+    
+    with open(".env", "w") as env_file:
+        env_file.write(f"SECRET_KEY='{secret_key}'")        
+    
+    if os.path.isfile("OOBEPending"):
+        os.remove("OOBEPending")
+    
+    with open("OOBEPending", "w") as oobe_file:
+        oobe_file.write("pending")
+    
+    # DB 초기화
+    if os.path.isfile("database.db"):
+        os.remove("database.db")
+    f = open("database.db", 'w')
+    f.close()
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+
+    c.execute("CREATE TABLE users (email TEXT, username text, password text, salt TEXT, isAdmin INTEGER, token TEXT, invitorEmail TEXT, invitorUsername TEXT, serial INTEGER, signDate TEXT, PRIMARY KEY(serial AUTOINCREMENT))")
+    c.execute("CREATE TABLE unlockLogs (user TEXT, time TEXT, isToken INTEGER)")
+    c.execute("CREATE TABLE inviteCodes (invitor TEXT, code TEXT, expDate INTEGER)")
+    c.execute("CREATE TABLE awtokens (email TEXT, username TEXT, token BLOB, salt BLOB, expDate INTEGER)")
+    c.execute("CREATE TABLE apnstokens (email TEXT, token TEXT)")
+    
+    # 사용자 등록
+    if request.method == 'POST':
+        username = request.form['realname']
+        password = request.form['password']
+        email = request.form['email']
+
+        salt = os.urandom(32) # 32 bytes long salt
+        hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+        c.execute("INSERT INTO users (email, username, password, salt, isAdmin) VALUES (?, ?, ?, ?, ?)",
+                (email, username, hashed_password, salt, 1))
+
+        conn.commit()
+        conn.close()
+
+        message = "사용자 등록이 완료되었습니다!"
+        icon = "check_circle"
+        isOOBE = True
+        return render_template('login.html', message=message, icon=icon, isOOBE=isOOBE)
+    else:
+        return redirect(url_for('index'))
+
+    
+@account.route('/welcome/setup')
+def oobe_setup():
+    return render_template('setup.html')
+
+@account.route('/welcome/problem')
+def oobe_problem():
+    return render_template('problem.html')
+
+@account.route('/welcome/complete')
+def oobe_complete():
+    if os.path.isfile("OOBEPending"):
+        os.remove("OOBEPending")
+
+    return render_template('oobe_complete.html')
+

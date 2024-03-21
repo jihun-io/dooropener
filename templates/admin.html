@@ -32,27 +32,26 @@
           <p class="settings_items_text">사용자 목록</p>
           <span class="icon">chevron_right</span>
         </div>
-      <!-- </div>
-      <hr class="separation">
-      <div class="settings_items">
-        <div class="settings_row goto_success">
-          <p class="settings_items_text"> </p>
-          <span class="icon">chevron_right</span>
-        </div>
       </div>
     </div>
-
+  <div class="general_wrapper">
+    <div class="settings_items" onclick="reset()">
+      <div class="settings_row warnbtn">
+        <p class="settings_items_text">초기화</p>
+      </div>
     </div>
-    <div class="general_wrapper" style="margin-top: 50px;">
-      <div class="settings_items">
-        <div class="settings_row goto_success">
-          <p class="settings_items_text warnbtn"> </p>
-        </div>
-      </div> -->
-    </div>
-
-
+  </div>
   </main>
+
+  <script>
+    function reset() {
+      var yn = confirm("정말로 DoorOpener를 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.");
+      if (yn == true) {
+        location.href="/welcome";
+      }
+    }
+
+  </script>
 
 
 

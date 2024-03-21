@@ -321,6 +321,46 @@ h1, strong {
 
 }
 
+.welcome_description {
+  margin-top: 60px;
+  margin-bottom: 60px;
+  line-height: 1.5;
+}
+
+.welcome_join_description {
+  text-align: left;
+  line-height: 1.5;
+}
+
+.welcome_title_wrapper {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.welcome_title {
+  font-size: 24px;
+  width: 100%;
+  text-align: left;
+}
+
+.setup_description {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.warning_wrapper {
+  line-height: 1.5;
+}
+
+.oobe_problem {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-family: "Pretendard-Bold";
+  font-weight: bold;
+  color: rgb(0,122,255)
+}
+
 .tooltip_header {
   width: 100%;
   height: 100px;
@@ -596,6 +636,12 @@ a .icon { font-size: 14px; }
   text-align: justify;
   margin-bottom: 10px;
   line-height: 150%;
+}
+
+.second_li {
+  font-size: 14px;
+  margin-top: 10px;
+  margin-left: 20px;
 }
 
 ::marker {

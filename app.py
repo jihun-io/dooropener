@@ -50,7 +50,10 @@ def index():
         else:
             return render_template('index.html', username=session['user_username'])
     else:
-        return render_template('index.html')
+        if os.path.isfile("database.db"):
+            return render_template('index.html')
+        else:
+            return redirect(url_for('open.oobe'))
 
 host_addr = "0.0.0.0"
 port_num = "4062"

@@ -273,3 +273,4 @@ dev.txt
 *.p8
 app_dev.py
 robots.txt
+.env_backup
