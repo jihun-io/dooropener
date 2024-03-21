@@ -12,7 +12,7 @@
 <body class="noCenter">
   <header>
     <div class="header_wrapper_history">
-      <div class="header_back" onclick="location.href='/settings'">
+      <div class="header_back" onclick="location.href='/settings/tempkey'">
         <span class="icon">arrow_back_ios_new</span>
         <p>임시 키 발급 </p>
       </div>
@@ -27,7 +27,7 @@
     <div class="description">
       <p>임시 키는 최대 3일 동안만 유효합니다. 또한, 횟수 제한이 0일 경우 잠금 해제 제한은 없습니다.</p>
     </div>
-    <form action="generate" method="post">
+    <form action="generate" method="post" onsubmit="tempkey_check(); return false;">
       <div class="general_wrapper">
         <div class="settings_items">
           <div class="settings_row">
@@ -51,7 +51,7 @@
           <div class="settings_row">
             <p class="settings_items_text">만료 시간</p>
             <div class="formWrapper">
-              <input id="endDate" type="date" name="endDate" class="modifyForm formDouble" value="{{ endDate }}" required>
+              <input id="endDate" type="date" min="{{startDate}}" name="endDate" class="modifyForm formDouble" value="{{ endDate }}" required>
               <input id="endTime" type="time" name="endTime" class="modifyForm formDouble" value="{{ startTime }}" required>
             </div>
           </div>
@@ -67,12 +67,30 @@
       <div class="general_wrapper">
         <div class="settings_items">
           <div class="settings_row goto_success noMargin">
-            <input type="submit" value="변경" class="settings_items_text executebtn noBtn">
+            <!-- <a href="#" class="settings_items_text executebtn noBtn" onclick="tempkey_check()">생성</a> -->
+            <input type="submit" value="생성" class="settings_items_text executebtn noBtn">
           </div>
         </div>
       </div>
     </form>
   </main>
+
+  <script>
+    function tempkey_check() {
+      startDate = document.getElementById("startDate").value;
+      startTime = document.getElementById("startTime").value;
+      endDate = document.getElementById("endDate").value;
+      endTime = document.getElementById("endTime").value;
+
+      console.log(startDate + " " + startTime + " / " + endDate + " " + endTime);
+
+      if (startDate + startTime >= endDate + endTime) {
+        alert("시작 시간과 만료 시간을 다시 확인하십시오.");
+      } else {
+        document.getElementById('generate').submit();
+      }
+    }
+  </script>
 
 
 

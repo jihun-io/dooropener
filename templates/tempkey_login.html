@@ -1,0 +1,44 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+  <script src="../static/js/noselect.js"></script>
+</head>
+
+<body>
+  <div class="index_wrapper">
+    <header>
+      <!-- <div class="header_wrapper" onclick="location.href='/'"> -->
+      <div class="header_wrapper">
+        <h1>DoorOpener</h1>
+      </div>
+    </header>
+
+    <main class="single_box">
+      <div class="login-form">
+        <p class="temp_ask">임시 키는 한 번만 받을 수 있습니다.</p>
+        <form action="tempkey/get" method="post">
+          <input type="text" name="username" class="text-field" placeholder="임시 키 이름">
+          <input type="password" name="password" class="text-field" placeholder="인증 번호">
+          <input type="submit" value="임시 키 받기" class="submit-btn">
+        </form>
+        <p class="temp_ask"><a href="/" class="temp_ask">로그인 화면으로</a></p>
+      </div>
+    </main>
+    <footer style="visibility: hidden;"></footer>
+  </div>
+
+
+
+
+
+</body>
+
+
+
+</html>

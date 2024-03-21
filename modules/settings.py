@@ -328,9 +328,51 @@ def invite_link_del():
 @settings.route('/settings/tempkey')
 def temp_key():
     if 'user_id' in session:
-        return render_template('tempkey.html')
+        now = datetime.now()
+
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        
+        # c.execute("DELETE FROM tempKey WHERE endDate < ?", (now,))
+        # conn.commit()
+        
+        c.execute("SELECT keyname, startDate, endDate, serial FROM tempKey ORDER BY startDate DESC")
+        data = c.fetchall()
+        conn.close()
+        
+        remain_values = []
+        for i in data:
+            startDateRow = i[1]
+            endDateRow = i[2]
+            
+            startDate = datetime.strptime(startDateRow, "%Y-%m-%d %H:%M:%S")
+            endDate = datetime.strptime(endDateRow, "%Y-%m-%d %H:%M:%S")
+            
+            if now < startDate:
+                dif = startDate - now
+                if dif.days > 1:
+                    remain = f"{dif.days}일 후 시작"
+                elif dif.seconds // 3600 >= 1:
+                    remain = f"{dif.seconds // 3600}시간 후 시작"
+                else:
+                    remain = f"{dif.seconds // 60}분 후 시작"
+            else:
+                dif = endDate - now
+                if dif.days < 0:
+                    remain = "만료된 임시 키"
+                elif dif.days > 1:
+                    remain = f"{dif.days}일 후 만료"
+                elif dif.seconds // 3600 >= 1:
+                    remain = f"{dif.seconds // 3600}시간 후 만료"
+                else:
+                    remain = f"{dif.seconds // 60}분 후 만료"
+            remain_values.append(remain)
+        data = list(zip(data, remain_values))
+
+        return render_template('tempkey.html', data=data, remain_values=remain_values)
     else:
         return redirect(url_for('index'))
+
     
 @settings.route('/settings/tempkey/setup')
 def temp_key_setup():
@@ -342,6 +384,23 @@ def temp_key_setup():
         startTime = now.strftime("%H:%M")
         
         return render_template('tempkey_setup.html', startDate=startDate, endDate=endDate, startTime=startTime)
+    else:
+        return redirect(url_for('index'))
+    
+@settings.route('/settings/tempkey/view', methods=['GET'])
+def temp_key_view():
+    if 'user_id' in session:
+        serial = request.args.get('id')
+        
+        if serial == None:
+            return redirect(url_for('settings.temp_key'))
+        else:
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+            c.execute("SELECT keyname, authnum, startDate, endDate, count, creator, isLogin, serial FROM tempKey WHERE serial = ?", (serial,))
+            result = c.fetchone()
+            print(result)
+            return render_template('tempkey_view.html', result=result)
     else:
         return redirect(url_for('index'))
 
@@ -375,17 +434,33 @@ def temp_key_generate():
                 print("날짜가 이상해")
             elif end > start_plus_3_days:
                 print("너무커")
-            elif count > 100:
+            elif int(count) > 100:
                 print("너무 많아")
             else:
                 conn = sqlite3.connect('database.db')
                 c = conn.cursor()
-                c.execute("INSERT INTO tempKey (keyname, startDate, endDate, count, creator) VALUES (?, ?, ?, ?, ?)", (keyName, start, end, count, user_id))
+                c.execute("INSERT INTO tempKey (keyname, authnum, startDate, endDate, count, creator, isLogin) VALUES (?, ?, ?, ?, ?, ?, ?)", (keyName, invite_code(8), start, end, count, user_id, 0))
                 conn.commit()
                 conn.close()
-            return redirect(url_for('index'))
+            return redirect(url_for('settings.temp_key'))
         else:
             return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+    
+@settings.route('/settings/tempkey/delete', methods=['GET'])
+def temp_key_delete():
+    if 'user_id' in session:
+        id = request.args.get('id')
+        if id == None:
+            return redirect(url_for('settings.temp_key'))
+        else:
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+            c.execute("DELETE from tempKey WHERE serial = ?", (id,))
+            conn.commit()
+            conn.close()
+            return redirect(url_for('settings.temp_key'))
     else:
         return redirect(url_for('index'))
 
@@ -495,6 +570,9 @@ def users_delete():
             return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
+    
+    
+
     
 
 

@@ -1,0 +1,126 @@
+<html>
+
+<head>
+  <title>DoorOpener</title>
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body class="noCenter">
+  <header>
+    <div class="header_wrapper_history">
+      <div class="header_back" onclick="location.href='/settings/tempkey'">
+        <span class="icon">arrow_back_ios_new</span>
+        <p>임시 키 발급 </p>
+      </div>
+      <div class="header_title">
+        <h1>{{ result[0] }}</h1>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="settings_wrapper" autofocus>
+    <div class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">임시 키 이름</p>
+          <p class="settings_items_text_right">{{ result[0] }}</p>
+        </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">인증 번호</p>
+          <p class="settings_items_text_right">{{ result[1] }}</p>
+        </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">시작 시간</p>
+          <p class="settings_items_text_right">{{ result[2] }}</p>
+        </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">만료 시간</p>
+          <p class="settings_items_text_right">{{ result[3] }}</p>
+        </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">상태</p>
+          {% if result[6] == 0 %}
+          <p class="settings_items_text_right">아직 로그인하지 않음</p>
+          {% elif result[6] == 1 %}
+          <p class="settings_items_text_right">로그인 됨</p>
+          {% endif %}
+        </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">잠금 해제 가능 횟수</p>
+          {% if result[4] == 0 %}
+          <p class="settings_items_text_right">무제한</p>
+          {% else %}
+          <p class="settings_items_text_right">{{ result[4] }}</p>
+          {% endif %}
+        </div>
+      </div>
+      <hr class="separation">
+      <div class="settings_items">
+        <div class="settings_row">
+          <p class="settings_items_text">키를 발급한 사용자</p>
+          <p class="settings_items_text_right">{{ result[5] }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="general_wrapper">
+      <div class="settings_items">
+        <div class="settings_row goto_success noMargin">
+          <a href="#" class="settings_items_text warnbtn noBtn" onclick="tempkey_del()">임시 키 삭제</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function tempkey_del() {
+      if(confirm("정말로 이 임시 키를 삭제하시겠습니까?")) {
+        location.href='/settings/tempkey/delete?id={{ result[7] }}'
+      }
+    }
+  </script>
+
+
+
+  <footer class="footer_settings">
+    <div class="homebtn nav_unselected" onclick="location.href='/'">
+      <span class="icon">
+        home
+      </span>
+      <p>홈</p>
+    </div>
+    <div class="settingbtn nav_selected" onclick="location.href='/settings'">
+      <span class="icon">
+        settings
+      </span>
+      <p>설정</p>
+    </div>
+  </footer>
+
+
+
+
+
+</body>
+
+
+
+</html>

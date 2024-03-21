@@ -35,20 +35,20 @@
       <p>임시 키 목록</p>
     </div>
     <div class="general_wrapper">
-      {% for i in invite_codes %}
-      <div class="settings_items" onclick="location.href='invite/info?code={{ i[1] }}'">
-        <div class="settings_row">
-          <p class="settings_items_text">{{ request.host_url }}join?code={{ i[1] }}</p>
+      {% for i in data %}
+      <div class="settings_items">
+        <div class="settings_row" onclick="location.href='tempkey/view?id={{ i[0][3] }}'">
+          <div class="settings_row_wrapper">
+            <p class="settings_items_text"><strong>{{ i[0][0] }}</strong></p>    
+            <p class="settings_items_text">{{ i[1] }}</p>
+          </div>
           <span class="icon">chevron_right</span>
-        </div>
       </div>
       {% if not loop.last %}
       <hr class="separation">
       {% endif %}
       {% endfor %}
     </div>
-
-
   </main>
 
 
