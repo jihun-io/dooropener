@@ -20,14 +20,6 @@ opener_auth_key_path = os.getenv('auth_key_path')
 opener_auth_key_id = os.getenv('auth_key_id')
 opener_team_id= os.getenv('team_id')
 
-# 문 열어주는 코드 실행하기
-door_open_status = False
-def dooropen_wrapper():
-    global door_open_status
-    if dev_mode == False:
-        subprocess.run(['python3', 'controller.py'])
-    door_open_status = True
-
 # 푸시 알림 전송 함수
 def push(ptitle, psubtitle, pbody, sender, dev):
     if dev_mode == False:
@@ -83,6 +75,14 @@ def push(ptitle, psubtitle, pbody, sender, dev):
         messages = 'everything is ok'
         return messages
 
+# 문 열어주는 코드 실행하기
+door_open_status = False
+def dooropen_wrapper():
+    global door_open_status
+    if dev_mode == False:
+        subprocess.run(['python3', 'controller.py'])
+    door_open_status = True
+
 def log_write(username, path):
     # 문이 열린 후 DB에 기록을 남깁니다.
     conn = sqlite3.connect('database.db')  # DB에 연결합니다.
@@ -99,14 +99,19 @@ def log_write(username, path):
 
 @opener.route('/check_door_status')
 def check_door_status():
-    if 'user_id' in session:
+    if 'user_id' in session or 'temp_keyvalue' in session:
+        if 'temp_keyvalue' in session:
+            username = session['temp_keyname']
+        else:
+            username = session['user_username']
+
         global door_open_status
         if door_open_status:
             door_open_status = False  # Reset the status
 
-            thread_log_write = Thread(target=log_write, args=(session['user_username'], None))
+            thread_log_write = Thread(target=log_write, args=(username, None))
             thread_log_write.start()
-
+            
             push_message = session['user_username'] + " 님이 잠금을 해제했습니다."
             thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, session['user_id'], False))
             thread_push.start()
@@ -119,14 +124,28 @@ def check_door_status():
 
 @opener.route('/open')
 def open():    
-    if 'user_id' in session:
+    if 'user_id' in session or 'temp_keyvalue' in session:
         thread = Thread(target=dooropen_wrapper)
         thread.start()
         if os.path.isfile("OOBEPending"):
             oobe_pending = True
         else:
             oobe_pending = False
-        return render_template('open.html', username=session['user_username'], message="문을 여는 중...", oobe_pending=oobe_pending)
+            
+        if 'temp_keyvalue' in session:
+            username = session['temp_keyname']
+            
+            now = datetime.now()
+            endDate = session['temp_keyexp']
+            endDate = endDate.replace(tzinfo=None) # 임시로 시간대를 날려 버림.
+            if now > endDate:
+                session.pop("temp_keyvalue", None)
+                session.pop("temp_keyname", None)
+                session.pop("temp_keyexp", None)
+                return redirect(url_for('index'))
+        else:
+            username = session['user_username']
+        return render_template('open.html', username=username, message="문을 여는 중...", oobe_pending=oobe_pending)
     else:
         return redirect(url_for('index'))
 
@@ -150,7 +169,7 @@ def openwithapi():
                     pass
                 # 문이 열린 후 DB에 기록을 남깁니다.
                 log_write(session['user_username'], 1)
-
+                
                 push_message = username + " 님이 잠금을 해제했습니다."
                 thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, "", False))
                 thread_push.start()
@@ -198,20 +217,37 @@ def openwithapp():
 def useragenttest():   
     return jsonify(message=request.user_agent.string)
 
-
 @opener.route('/success')
 def success():    
-    if 'user_id' in session:
+    if 'user_id' in session or 'temp_keyvalue' in session:
         if os.path.isfile("OOBEPending"):
             oobe_pending = True
         else:
             oobe_pending = False
+        
+        if 'temp_keyvalue' in session:
+            username = session['temp_keyname']
             
-        return render_template('success.html', username=session['user_username'], oobe_pending=oobe_pending)
+            conn = sqlite3.connect('database.db')
+            c = conn.cursor()
+            c.execute("SELECT count FROM tempKey WHERE authnum = ?", (session['temp_keyvalue'],))
+            result = c.fetchone()
+            
+            count = result[0] - 1
+            
+            c.execute("UPDATE tempKey SET count = ? WHERE authnum = ?", (count, session['temp_keyvalue'],))
+            conn.commit()
+            conn.close()
+            
+            if count <= 0:
+                session['temp_keyexp'] = datetime.strptime('0001-01-01 00:00:00',  "%Y-%m-%d %H:%M:%S")
+                            
+        else:
+            username = session['user_username']
+        return render_template('success.html', username=username, oobe_pending=oobe_pending)
     else:
         return redirect(url_for('index'))
-
-
+    
 @opener.route('/pushtest')
 def pushtest():
     if 'user_id' in session:

@@ -100,7 +100,11 @@ def loginwithapp():
 
 @account.route('/logout')
 def logout():
-    session.pop('user_id', None)  # 세션에서 사용자 아이디 제거
+    session.pop('user_id', None)
+    session.pop('user_username', None)
+    session.pop('temp_keyname', None)
+    session.pop('temp_keyvalue', None)
+    session.pop('temp_keyexp', None)
     return redirect(url_for('index'))
 
 @account.route('/join', methods=['GET'])
@@ -177,6 +181,75 @@ def signup():
                 message = "다른 이메일을 사용하십시오."
                 icon = "error"
                 return render_template('sign.html', message=message, username=username, code=invite_code)
+
+
+@account.route('/tempkey')            
+def temp_key_login():
+    session.pop('user_id', None)
+    session.pop('tempkey_id', None)
+
+    return render_template('tempkey_login.html')
+
+
+@account.route('/tempkey/get', methods=['POST'])
+def temp_key_get():
+    session.pop('user_id', None)
+    session.pop('tempkey_id', None)
+    
+    message = ''
+    icon = ''
+    if request.method == 'POST':
+        keyname = request.form['username']
+        authnum = request.form['password']
+        
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        
+        c.execute("SELECT keyname, authnum, startDate, endDate, isLogin FROM tempKey WHERE authnum = ?", (authnum,))
+        result = c.fetchone()
+        
+        if result is None:
+            message = '임시 키를\n찾을 수 없습니다.'
+            icon = 'error'
+        else:
+            print(result)
+            keynameDB, authnum, startDateDB, endDateDB, isLogin = result
+            
+            now = datetime.now()
+            startDate = datetime.strptime(startDateDB, "%Y-%m-%d %H:%M:%S")
+            endDate = datetime.strptime(endDateDB, "%Y-%m-%d %H:%M:%S")            
+            
+            
+            if isLogin == 1:
+                message = '이미 발급받은\n임시 키입니다.'
+                icon = 'error'
+            elif keyname != keynameDB:
+                message = '임시 키를\n찾을 수 없습니다.'
+                icon = 'error'
+            elif startDate > now:
+                message = '임시 키를\n찾을 수 없습니다.'
+                icon = 'error'
+            elif endDate < now:
+                message = '임시 키가\만료되었습니다.'
+                icon = 'error'
+            elif keyname == keynameDB:
+                session.permanent = True
+                
+                session['temp_keyname'] = keynameDB
+                session['temp_keyvalue'] = authnum
+                session['temp_keyexp'] = endDate
+                message = '임시 키를\n발급받았습니다.'
+                icon = 'done'
+                
+                c.execute("UPDATE tempKey SET isLogin = 1 WHERE authnum = ?", (authnum,))
+                conn.commit()
+                conn.close()
+                
+            else:
+                message = '임시 키를\n찾을 수 없습니다.'
+                icon = 'error'
+    return render_template('login.html', message=message, icon=icon)
+
             
 
 @account.route('/welcome')
