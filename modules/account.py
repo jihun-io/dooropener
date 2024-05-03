@@ -34,6 +34,8 @@ def login():
     message = ''
     icon = ''
     if request.method == 'POST':
+        isOOBENext = False
+        
         email = request.form['email']
         password = request.form['password']
 
@@ -313,6 +315,7 @@ def oobe_signup():
     c.execute("CREATE TABLE inviteCodes (invitor TEXT, code TEXT, expDate INTEGER)")
     c.execute("CREATE TABLE awtokens (email TEXT, username TEXT, token BLOB, salt BLOB, expDate INTEGER)")
     c.execute("CREATE TABLE apnstokens (email TEXT, token TEXT)")
+    c.execute("CREATE TABLE tempkey (keyname TEXT, authnum INTEGER, startDate TEXT, endDate TEXT, count INTEGER, creator TEXT, isLogin INTEGER, serial INTEGER, PRIMARY KEY(serial AUTOINCREMENT))")
     
     # 사용자 등록
     if request.method == 'POST':

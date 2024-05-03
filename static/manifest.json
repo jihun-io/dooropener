@@ -1,0 +1,18 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "dooropener",
+  "orientation": "portrait",
+  "scope": "/",
+  "short_name": "dooropener",
+  "start_url": "/pwa",
+  "theme_color": "#f7ce45",
+  "id": "io.jihun.dooropener",
+  "lang": "ko",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "window-controls-overlay"
+  ]
+}

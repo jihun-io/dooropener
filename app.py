@@ -69,6 +69,10 @@ def index():
         else:
             return redirect(url_for('open.oobe'))
 
+@app.route('/pwa')
+def pwa():
+    return render_template('pwa.html')
+
 host_addr = "0.0.0.0"
 port_num = "4062"
 
