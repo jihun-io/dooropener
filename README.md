@@ -8,7 +8,6 @@ DoorOpener는 디지털 도어록을 온라인으로 해제하기 위한 프로�
 - 임시 키를 만들어서 다른 사람이 임시로 디지털 도어록을 해제할 수 있게 하고, 임시 키를 관리할 수 있습니다.
 - 사용자를 초대하고 관리할 수 있습니다.
 - 잠금 해제 기록을 열람할 수 있습니다.
-- [DoorOpener iOS 앱](https://github.com/jihun-io/DoorOpener_iOS)과 연동하여 iOS 앱에서도 DoorOpener의 기능을 이용할 수 있습니다.
 
 ## 요구 사양
 1. Raspberry Pi 4
