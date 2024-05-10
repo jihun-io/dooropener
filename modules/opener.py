@@ -7,6 +7,8 @@ import os
 import subprocess
 from pyapns_client import APNSClient, TokenBasedAuth, IOSPayloadAlert, IOSPayload, IOSNotification, APNSDeviceException, APNSServerException, APNSProgrammingException, UnregisteredException
 
+from fcm_push import send
+
 opener = Blueprint("opener", __name__, template_folder="templates")
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -47,6 +49,9 @@ def push(ptitle, psubtitle, pbody, sender, dev):
         print(opener_auth_key_id)
         print(opener_auth_key_path)
         print(opener_team_id)
+        
+        # for android
+        
 
         with APNSClient(
             mode=APNSClient.MODE_PROD,
@@ -60,6 +65,7 @@ def push(ptitle, psubtitle, pbody, sender, dev):
             for device_token in device_tokens:
                 try:
                     client.push(notification=notification, device_token=device_token)
+                    send(device_token, psubtitle, pbody)
                 except UnregisteredException as e:
                     messages.append(f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db')
                 except APNSDeviceException:
