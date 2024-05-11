@@ -675,7 +675,7 @@ def apns_token_get():
             if platform == "fcm":
                 c.execute("INSERT OR IGNORE INTO apnstokens (email, token, platform) VALUES(?, ?, ?)", (email, token, "fcm"))
             else:
-                c.execute("INSERT OR IGNORE INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
+                c.execute("INSERT OR IGNORE INTO apnstokens (email, token) VALUES(?, ?, ?)", (email, token, None))
 
             
             conn.commit()
