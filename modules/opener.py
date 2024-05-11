@@ -65,7 +65,7 @@ def push(ptitle, psubtitle, pbody, sender, dev):
         ) as client:
             for result in results:
                 try:
-                    if result[1] is "fcm":
+                    if result[1] == "fcm":
                         send(result[0], psubtitle, pbody)
                     else:
                         client.push(notification=notification, device_token=result[0])
