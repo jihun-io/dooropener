@@ -29,9 +29,9 @@ def push(ptitle, psubtitle, pbody, sender, dev):
         c = conn.cursor()
  
         if dev and sender == 0:
-            c.execute("SELECT token, platform FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
+            c.execute("SELECT apnstokens.token, apnstokens.platform FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
         elif dev and sender != 0:
-            c.execute("SELECT token, platform FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1 AND apnstokens.email != ?", (sender,))
+            c.execute("SELECT apnstokens.token, apnstokens.platform FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1 AND apnstokens.email != ?", (sender,))
         elif not dev and sender == 0:
             c.execute("SELECT token, platform FROM apnstokens")
         else:  # not dev and sender != 0
