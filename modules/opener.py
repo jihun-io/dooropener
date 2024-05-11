@@ -29,15 +29,16 @@ def push(ptitle, psubtitle, pbody, sender, dev):
         c = conn.cursor()
  
         if dev and sender == 0:
-            c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
+            c.execute("SELECT token, platform FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1")
         elif dev and sender != 0:
-            c.execute("SELECT apnstokens.token FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1 AND apnstokens.email != ?", (sender,))
+            c.execute("SELECT token, platform FROM apnstokens JOIN users ON apnstokens.email = users.email WHERE users.isAdmin = 1 AND apnstokens.email != ?", (sender,))
         elif not dev and sender == 0:
-            c.execute("SELECT token FROM apnstokens")
+            c.execute("SELECT token, platform FROM apnstokens")
         else:  # not dev and sender != 0
-            c.execute("SELECT token FROM apnstokens WHERE email != ?", (sender,))
+            c.execute("SELECT token, platform FROM apnstokens WHERE email != ?", (sender,))
         results = c.fetchall()
         device_tokens = [row[0] for row in results]  # Extract the token from each row
+        platforms = [row[1] for row in results]  # Extract the token from each row
 
         # alert = IOSPayloadAlert(title=ptitle, subtitle=psubtitle, body=pbody)
         alert = IOSPayloadAlert(title=psubtitle, body=pbody)
@@ -62,10 +63,12 @@ def push(ptitle, psubtitle, pbody, sender, dev):
             ),
             root_cert_path = None,
         ) as client:
-            for device_token in device_tokens:
+            for result in results:
                 try:
-                    client.push(notification=notification, device_token=device_token)
-                    send(device_token, psubtitle, pbody)
+                    if result[1] is "fcm":
+                        send(result[0], psubtitle, pbody)
+                    else:
+                        client.push(notification=notification, device_token=result[0])
                 except UnregisteredException as e:
                     messages.append(f'device is unregistered, compare timestamp {e.timestamp_datetime} and remove from db')
                 except APNSDeviceException:

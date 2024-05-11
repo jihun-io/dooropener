@@ -668,10 +668,15 @@ def apns_token_get():
     if request.method == 'POST':
         email = request.form['email']
         token = request.form['token']
+        platform = request.form['platform']
         if token is not None:
             conn = sqlite3.connect('database.db')
             c = conn.cursor()
-            c.execute("INSERT OR IGNORE INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
+            if platform is "fcm":
+                c.execute("INSERT OR IGNORE INTO apnstokens (email, token, platform) VALUES(?, ?, ?)", (email, token, "fcm"))
+            else:
+                c.execute("INSERT OR IGNORE INTO apnstokens (email, token) VALUES(?, ?)", (email, token))
+
             
             conn.commit()
             conn.close()
