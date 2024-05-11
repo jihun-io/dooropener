@@ -668,7 +668,7 @@ def apns_token_get():
     if request.method == 'POST':
         email = request.form['email']
         token = request.form['token']
-        platform = request.form['platform']
+        platform = request.form.get('platform')  # 수정된 부분
         if token is not None:
             conn = sqlite3.connect('database.db')
             c = conn.cursor()
@@ -677,7 +677,6 @@ def apns_token_get():
             else:
                 c.execute("INSERT OR IGNORE INTO apnstokens (email, token, platform) VALUES(?, ?, ?)", (email, token, None))
 
-            
             conn.commit()
             conn.close()
             return 'Token Registration Completed', 200
@@ -685,6 +684,7 @@ def apns_token_get():
             return 'No token provided!', 400
     else:
         return 'Invalid request method!', 405
+
 
 # APNs 토큰 제거
 @settings.route('/apnstokenremove', methods=['GET', 'POST'])
