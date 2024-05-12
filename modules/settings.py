@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, send_file
 import sqlite3
 from dotenv import load_dotenv
 import random
@@ -704,3 +704,9 @@ def apns_token_remove():
             return 'No token provided!', 400
     else:
         return 'Invalid request method!', 405
+
+@settings.route('/apk')
+def apk_download():
+    return send_file('/static/files/dooropener.apk', as_attachment=True, minetype='application/vnd.android.package-archive', attachment_filename='dooropener.apk')
+
+    
