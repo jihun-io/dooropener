@@ -707,6 +707,6 @@ def apns_token_remove():
 
 @settings.route('/apk')
 def apk_download():
-    return send_file('/static/files/dooropener.apk', as_attachment=True, mimetype='application/vnd.android.package-archive', attachment_filename='dooropener.apk')
+    return send_file('/static/files/dooropener.apk')
 
     
