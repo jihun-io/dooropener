@@ -163,33 +163,30 @@ def open():
 def openwithapi():
     usertoken = request.args.get('t')
     useragent = request.user_agent.string
-    if useragent.startswith("BackgroundShortcutRunner"):
-        if usertoken is not None:
-            conn = sqlite3.connect('database.db')
-            c = conn.cursor()
-            c.execute("SELECT * FROM users WHERE token=?", (usertoken,))
-            data = c.fetchone()
+    if usertoken is not None:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM users WHERE token=?", (usertoken,))
+        data = c.fetchone()
 
-            if data is not None:
-                username = data[1]
-                if dev_mode == False:
-                    subprocess.run(['python3', 'controller.py'])
-                else:
-                    pass
-                # 문이 열린 후 DB에 기록을 남깁니다.
-                log_write(session['user_username'], 1)
-                
-                push_message = username + " 님이 잠금을 해제했습니다."
-                thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, "", False))
-                thread_push.start()
-
-                return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
+        if data is not None:
+            username = data[1]
+            if dev_mode == False:
+                subprocess.run(['python3', 'controller.py'])
             else:
-                return render_template('openwithapi.html', message="오류가 발생했습니다.")
+                pass
+            # 문이 열린 후 DB에 기록을 남깁니다.
+            log_write(session['user_username'], 1)
+            
+            push_message = username + " 님이 잠금을 해제했습니다."
+            thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, "", False))
+            thread_push.start()
+
+            return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
         else:
-            return render_template('openwithapi.html', message="토큰이 제공되지 않았습니다.")
+            return render_template('openwithapi.html', message="오류가 발생했습니다.")
     else:
-        return redirect(url_for('index'))
+        return render_template('openwithapi.html', message="토큰이 제공되지 않았습니다.")
     
 @opener.route('/openwithapp', methods=['GET', 'POST'])
 def openwithapp():    
