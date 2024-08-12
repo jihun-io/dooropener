@@ -176,7 +176,7 @@ def openwithapi():
             else:
                 pass
             # 문이 열린 후 DB에 기록을 남깁니다.
-            log_write(session['user_username'], 1)
+            log_write(username, 1)
             
             push_message = username + " 님이 잠금을 해제했습니다."
             thread_push = Thread(target=push, args=("DoorOpener", "잠금 해제됨", push_message, "", False))
