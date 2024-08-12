@@ -109,7 +109,8 @@ def openwithapi():
                 else:
                     pass
                 # 문이 열린 후 DB에 기록을 남깁니다.
-                log_write(session['user_username'], 1)
+                log_write(username, 1)
+
 
                 return render_template('openwithapi.html', message=f"{username} 님, 환영합니다!")
             else:
